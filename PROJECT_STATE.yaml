@@ -7,7 +7,11 @@ completed_tasks:
 - R01
 - R02
 in_progress: null
-blocked_tasks: {}
+blocked_tasks:
+  D00:
+    reason: ADB responds but reports no connected device. Connect/unlock the Infinix Hot 40i over USB-C and allow
+      USB debugging if prompted.
+    at: '2026-08-07T14:32:49.486652+00:00'
 task_evidence:
   R00: artifacts/runs/20260807T140229Z_R00/evidence.json
   R01: artifacts/runs/20260807T142448Z_R01/evidence.json
@@ -25,3 +29,4 @@ task_started_at:
   R00: '2026-08-07T14:02:29.494729+00:00'
   R01: '2026-08-07T14:24:48.724729+00:00'
   R02: '2026-08-07T14:27:12.488020+00:00'
+  D00: '2026-08-07T14:28:50.299812+00:00'

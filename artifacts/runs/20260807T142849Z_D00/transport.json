@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "task_id": "D00",
+  "status": "blocked",
+  "adb_devices": [],
+  "selected_serial": null,
+  "push_pull_verified": false,
+  "forward_verified": false,
+  "blocker": "ADB is installed and responds, but `hot40 devices` / `adb devices -l` reported no connected Android device.",
+  "required_user_action": "Connect the Infinix Hot 40i over USB-C, unlock the phone, enable/allow USB debugging if prompted, then resume D00."
+}

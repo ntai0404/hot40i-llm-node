@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "task_id": "D00",
+  "started_at": "2026-08-07T14:28:49.785460+00:00",
+  "finished_at": "2026-08-07T14:32:41.262048+00:00",
+  "status": "blocked",
+  "git_commit": "054cdccd62a2e976fe13affb0841e8f7cefb707b",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "hot40 devices",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T142849Z_D00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260807T142849Z_D00\\stderr\\001.log"
+    },
+    {
+      "argv": "powershell -NoProfile -Command 'adb devices -l | Tee-Object -FilePath artifacts\\runs\\20260807T142849Z_D00\\adb_devices.txt'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T142849Z_D00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260807T142849Z_D00\\stderr\\002.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260807T142849Z_D00/",
+    "hot40i_llm_node.egg-info/"
+  ],
+  "verification": [],
+  "metrics": {},
+  "artifacts": [
+    "artifacts\\runs\\20260807T142849Z_D00\\adb_devices.txt",
+    "artifacts\\runs\\20260807T142849Z_D00\\transport.json"
+  ],
+  "limitations": [
+    "External blocker: no Android device is visible to ADB, so D00 cannot select a serial, verify push/pull, or establish adb forward."
+  ],
+  "notes": []
+}
