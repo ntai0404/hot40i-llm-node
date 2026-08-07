@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "task_id": "D04",
+  "started_at": "2026-08-07T16:07:24.890998+00:00",
+  "finished_at": "2026-08-07T16:25:09.367210+00:00",
+  "status": "pass",
+  "git_commit": "dfb25fa4f1fccbd1e5e3cfba302e2511a13ad01e",
+  "sources": [
+    {
+      "url": "https://developer.android.com/ndk/downloads",
+      "ref": "android-ndk-r27d-windows.zip sha1=56607cbccd3642d4a1991f6bb3114a00f884f426",
+      "note": "Android NDK r27d official download used for ARM64 clang build; downloaded archive SHA1 was verified before extraction."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "--timeout 180 'C:\\Progra~1\\CMake\\bin\\cmake.exe' -S . -B build -DCMAKE_BUILD_TYPE=Release",
+      "exit_code": 127,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\001.log"
+    },
+    {
+      "argv": "'C:\\Progra~1\\CMake\\bin\\cmake.exe' -S . -B build -DCMAKE_BUILD_TYPE=Release",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\Progra~1\\CMake\\bin\\cmake.exe' --build build --config Release -j 4",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\003.log"
+    },
+    {
+      "argv": "'C:\\Progra~1\\CMake\\bin\\cmake.exe' --build build --config Release --target h40_io_bench -j 4",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\004.log"
+    },
+    {
+      "argv": "pytest -q 'tests\\python\\test_io_bench_args.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\005.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -Command '=(Resolve-Path .\\.local-tools\\android-ndk-r27d).Path; ='\"'\"'android-26'\"'\"'; .\\scripts\\build_android.ps1'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\006.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -ExecutionPolicy Bypass -Command '$env:ANDROID_NDK_HOME=(Resolve-Path .\\.local-tools\\android-ndk-r27d).Path; $env:ANDROID_PLATFORM='\"'\"'android-26'\"'\"'; .\\scripts\\build_android.ps1'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\007.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -ExecutionPolicy Bypass -Command '$ndk=(Resolve-Path .\\.local-tools\\android-ndk-r27d).Path; C:\\Progra~1\\CMake\\bin\\cmake.exe -S . -B build-android-d04 -G Ninja -DCMAKE_TOOLCHAIN_FILE=$ndk\\build\\cmake\\android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-26 -DCMAKE_BUILD_TYPE=Release'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\008.log"
+    },
+    {
+      "argv": "'C:\\Progra~1\\CMake\\bin\\cmake.exe' -S . -B build-android-d04 -G Ninja '-DCMAKE_MAKE_PROGRAM=C:\\Users\\pc\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ninja.exe' -DCMAKE_TOOLCHAIN_FILE= .local-tools/android-ndk-r27d/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-26 -DCMAKE_BUILD_TYPE=Release",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\009.log"
+    },
+    {
+      "argv": "'C:\\Windows\\System32\\cmd.exe' /c 'C:\\Progra~1\\CMake\\bin\\cmake.exe' -S . -B build-android-ndk -G Ninja '-DCMAKE_MAKE_PROGRAM=C:\\Users\\pc\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ninja.exe' -DCMAKE_TOOLCHAIN_FILE= '.local-tools\\android-ndk-r27d\\build\\cmake\\android.toolchain.cmake' -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-26 -DCMAKE_BUILD_TYPE=Release",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\010.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -Command 'New-Item -ItemType Directory -Force build-android-direct'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\011.log"
+    },
+    {
+      "argv": "'.\\.local-tools\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android26-clang++.cmd' -std=c++20 -O3 -DNDEBUG 'device\\bench\\io_bench.cpp' -o 'build-android-direct\\h40_io_bench'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\012.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\012.log"
+    },
+    {
+      "argv": "python -m host.device_lab.cli storage-bench --serial 112193741U000563 --binary 'build-android-direct\\h40_io_bench' --samples-jsonl 'artifacts\\runs\\20260807T160724Z_D04\\storage_samples.jsonl' --out 'benchmarks\\stock\\storage.json' --repeats 3 --file-size-mib 512",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\013.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\013.log"
+    },
+    {
+      "argv": "'.\\.local-tools\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android26-clang++.cmd' -std=c++20 -O3 -DNDEBUG -static-libstdc++ 'device\\bench\\io_bench.cpp' -o 'build-android-direct\\h40_io_bench'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\014.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\014.log"
+    },
+    {
+      "argv": "python -m host.device_lab.cli storage-bench --serial 112193741U000563 --binary 'build-android-direct\\h40_io_bench' --samples-jsonl 'artifacts\\runs\\20260807T160724Z_D04\\storage_samples.jsonl' --out 'benchmarks\\stock\\storage.json' --repeats 3 --file-size-mib 512",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\015.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\015.log"
+    },
+    {
+      "argv": "python -m json.tool 'benchmarks\\stock\\storage.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\016.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\016.log"
+    },
+    {
+      "argv": "python -c 'import json, pathlib; p=pathlib.Path('\"'\"'artifacts/runs/20260807T160724Z_D04/storage_samples.jsonl'\"'\"'); rows=[json.loads(x) for x in p.read_text().splitlines() if x.strip()]; doc=json.loads(pathlib.Path('\"'\"'benchmarks/stock/storage.json'\"'\"').read_text()); assert len(rows)==42, len(rows); assert doc['\"'\"'metrics'\"'\"']['\"'\"'sample_count'\"'\"']==42; assert sorted(set(r['\"'\"'repeat'\"'\"'] for r in rows))==[1,2,3]; assert all(r['\"'\"'exit_code'\"'\"']==0 for r in rows); print('\"'\"'valid_jsonl_rows=42 repeats=1,2,3 aggregate_sample_count=42'\"'\"')'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\017.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\017.log"
+    },
+    {
+      "argv": "pytest -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160724Z_D04\\stdout\\018.log",
+      "stderr_file": "artifacts\\runs\\20260807T160724Z_D04\\stderr\\018.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260807T160724Z_D04/",
+    "benchmarks/stock/storage.json",
+    "device/bench/io_bench.cpp",
+    "host/device_lab/adb.py",
+    "host/device_lab/cli.py",
+    "host/device_lab/io_bench.py",
+    "tests/python/test_io_bench_args.py"
+  ],
+  "verification": [
+    {
+      "name": "Android ARM64 binary exits 0 on device.",
+      "passed": true,
+      "detail": "storage-bench pushed build-android-direct/h40_io_bench, chmodded it under /data/local/tmp, and all 42 device invocations exited 0 on serial 112193741U000563."
+    },
+    {
+      "name": "Host unit test for benchmark argument parsing.",
+      "passed": true,
+      "detail": "pytest -q tests/python/test_io_bench_args.py passed 2 parser tests against build/h40_io_bench.exe."
+    },
+    {
+      "name": "Three repeat runs produce valid JSON.",
+      "passed": true,
+      "detail": "benchmarks/stock/storage.json parsed with json.tool; storage_samples.jsonl parsed line-by-line with 42 rows covering repeats 1, 2, and 3."
+    }
+  ],
+  "metrics": {
+    "random_4096_mib_per_second_median": 711.304,
+    "sample_count": 42,
+    "sequential_4096_mib_per_second_median": 804.188
+  },
+  "artifacts": [
+    "artifacts\\runs\\20260807T160724Z_D04\\storage_samples.jsonl",
+    "benchmarks\\stock\\storage.json"
+  ],
+  "limitations": [
+    "D04 storage access numbers are page-cache-inclusive userspace file reads on stock Android /data/local/tmp, not direct block-device I/O."
+  ],
+  "notes": [
+    "Initial dynamically linked Android binary failed at runtime because libc++ symbols were unavailable on device; rebuilt with -static-libstdc++ and reran full sweep successfully."
+  ]
+}

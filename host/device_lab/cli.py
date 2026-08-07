@@ -10,6 +10,7 @@ from rich.console import Console
 from rich.table import Table
 
 from .adb import AdbClient, AdbError, collect_manifest, save_json
+from .io_bench import run_storage_benchmark
 from .memory_budget import measure_memory_budget
 from .parsers import human_bytes, parse_meminfo
 from .storage_identity import identify_storage
@@ -119,6 +120,31 @@ def thermal_baseline(
         summary_out=out,
     )
     console.print(f"wrote {out} and {thermal_jsonl}")
+
+
+@app.command("storage-bench")
+def storage_bench(
+    serial: str = typer.Option(..., "--serial"),
+    binary: Path = typer.Option(Path("build-android/h40_io_bench"), "--binary"),
+    samples_jsonl: Path = typer.Option(Path("artifacts/runs/storage_samples.jsonl"), "--samples-jsonl"),
+    out: Path = typer.Option(Path("benchmarks/stock/storage.json"), "--out"),
+    manifest: Path = typer.Option(Path("artifacts/device-manifest.json"), "--manifest"),
+    repeats: int = typer.Option(3, "--repeats"),
+    file_size_mib: int = typer.Option(512, "--file-size-mib"),
+) -> None:
+    document = run_storage_benchmark(
+        serial=serial,
+        local_binary=binary,
+        manifest_path=manifest,
+        samples_jsonl=samples_jsonl,
+        out=out,
+        repeats=repeats,
+        file_size_mib=file_size_mib,
+    )
+    console.print(
+        f"wrote {out} with {document['metrics']['sample_count']} samples; "
+        f"samples={samples_jsonl}"
+    )
 
 
 @app.command("forward")

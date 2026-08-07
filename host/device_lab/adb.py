@@ -60,6 +60,8 @@ SAFE_PROBES: dict[str, str] = {
     "battery": "dumpsys battery",
 }
 
+CANONICAL_ADB = Path(r"C:\mobile-remote-tools\platform-tools\adb.exe")
+
 # Repository wrappers reject destructive patterns. This does not pretend to sandbox
 # an agent that bypasses the wrapper and invokes a system executable directly.
 BLOCKED_TOKENS = (
@@ -84,7 +86,9 @@ class AdbClient:
     /data/local/tmp. Destructive operations do not exist in this API.
     """
 
-    def __init__(self, serial: str | None = None, adb_path: str = "adb") -> None:
+    def __init__(self, serial: str | None = None, adb_path: str | None = None) -> None:
+        if adb_path is None:
+            adb_path = str(CANONICAL_ADB) if CANONICAL_ADB.exists() else "adb"
         resolved = shutil.which(adb_path) or (adb_path if Path(adb_path).exists() else None)
         if not resolved:
             raise AdbError("adb was not found in PATH")
@@ -175,6 +179,15 @@ class AdbClient:
             f"cat {quoted} >/dev/null 2>&1; "
             f"rm -f {quoted}"
         )
+        return self._run(["shell", command], timeout=timeout, policy_checked=True)
+
+    def create_tmp_zero_file(self, remote_path: str, size_mib: int, *, timeout: float = 300) -> CommandResult:
+        if not remote_path.startswith("/data/local/tmp/"):
+            raise UnsafeDeviceCommand("benchmark file must be under /data/local/tmp")
+        if size_mib < 1 or size_mib > 4096:
+            raise AdbError("benchmark file size must be between 1 and 4096 MiB")
+        quoted = shlex.quote(remote_path)
+        command = f"dd if=/dev/zero of={quoted} bs=1M count={size_mib} conv=fsync"
         return self._run(["shell", command], timeout=timeout, policy_checked=True)
 
 
