@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "benchmark": "mnn_android_backend_evaluation",
+  "status": "blocked",
+  "runnable": false,
+  "finished_at": "2026-08-07T17:20:41.810219+00:00",
+  "reason": "mnn_gguf_conversion_requires_existing_template_model",
+  "details": {
+    "missing_template_files": [
+      "C:\\My-Project\\hot40i-llm-node\\artifacts\\runs\\20260807T165722Z_B01\\stories260K_mnn\\llm.mnn.json",
+      "C:\\My-Project\\hot40i-llm-node\\artifacts\\runs\\20260807T165722Z_B01\\stories260K_mnn\\llm_config.json"
+    ],
+    "model_dir": "C:\\My-Project\\hot40i-llm-node\\artifacts\\runs\\20260807T165722Z_B01\\stories260K_mnn",
+    "converter": "third_party/MNN/transformers/llm/export/gguf2mnn.py"
+  },
+  "config": {
+    "mnn_ref": "3c97f7e19b3da8454bf9b46855d9c0c29e40658f",
+    "requested_equivalence": {
+      "fixture": "C:\\tmp\\stories260K.gguf",
+      "threads": 4,
+      "n_prompt": 512,
+      "n_gen": 128,
+      "runs": 3
+    }
+  },
+  "limitations": [
+    "MNN gguf2mnn requires an existing MNN LLM model directory containing llm.mnn.json and llm_config.json; the llama.cpp tiny GGUF fixture alone is not a complete runnable MNN model."
+  ]
+}

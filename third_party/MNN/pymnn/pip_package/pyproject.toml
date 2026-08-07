@@ -1,0 +1,43 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel",
+    "ninja; sys_platform == 'windows'",
+    "numpy<2.5"
+]
+
+build-backend = "setuptools.build_meta"
+
+[tool.cibuildwheel.macos]
+archs = ["native"]
+build = "cp*-macosx_*"
+before-all = [
+    "pushd pymnn/pip_package",
+    "python3 build_deps.py llm",
+    "popd"
+]
+repair-wheel-command = ""
+
+[tool.cibuildwheel.linux]
+build = "cp*-manylinux*"
+skip = "pp*"
+manylinux-x86_64-image = "manylinux2014"
+manylinux-aarch64-image = "manylinux2014"
+before-all = [
+    "pushd pymnn/pip_package",
+    "python3 build_deps.py llm",
+    "popd"
+]
+archs = ["native"]
+repair-wheel-command = [
+    "export LD_LIBRARY_PATH=$(pwd)/pymnn_build/tools/converter/libtorch/lib:$LD_LIBRARY_PATH",
+    "echo $LD_LIBRARY_PATH",
+    "auditwheel repair -w {dest_dir} {wheel}"
+]
+
+[tool.cibuildwheel.windows]
+before-all = [
+    "cd pymnn/pip_package",
+    "python3 build_deps.py llm",
+    "cd ../.."
+]

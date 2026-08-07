@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task_id": "B01",
+  "started_at": "2026-08-07T16:57:22.442200+00:00",
+  "finished_at": "2026-08-07T17:22:02.479801+00:00",
+  "status": "pass",
+  "git_commit": "fd0d2b483ecc07f81d405c5dd991c6e217cc9fc0",
+  "sources": [
+    {
+      "url": "https://github.com/alibaba/MNN",
+      "ref": "3c97f7e19b3da8454bf9b46855d9c0c29e40658f",
+      "note": "MNN source archive for Android llm_bench and gguf2mnn evaluation"
+    }
+  ],
+  "commands": [
+    {
+      "argv": "curl.exe -L https://github.com/alibaba/MNN/archive/3c97f7e19b3da8454bf9b46855d9c0c29e40658f.zip -o 'C:\\tmp\\mnn-3c97f7e.zip'",
+      "exit_code": 7,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\001.log"
+    },
+    {
+      "argv": "curl.exe -L https://github.com/alibaba/MNN/archive/3c97f7e19b3da8454bf9b46855d9c0c29e40658f.zip -o 'C:\\tmp\\mnn-3c97f7e.zip'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -Command 'Expand-Archive -LiteralPath C:\\tmp\\mnn-3c97f7e.zip -DestinationPath third_party -Force; if (Test-Path third_party\\MNN) { Remove-Item -LiteralPath third_party\\MNN -Recurse -Force }; Rename-Item -LiteralPath third_party\\MNN-3c97f7e19b3da8454bf9b46855d9c0c29e40658f -NewName MNN'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\003.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\004.log"
+    },
+    {
+      "argv": "powershell.exe -NoProfile -Command 'New-Item -ItemType Directory -Force -Path artifacts\\runs\\20260807T165722Z_B01\\stories260K_mnn | Out-Null; Get-ChildItem artifacts\\runs\\20260807T165722Z_B01\\stories260K_mnn'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\005.log"
+    },
+    {
+      "argv": "python 'third_party\\MNN\\transformers\\llm\\export\\gguf2mnn.py' --gguf 'C:\\tmp\\stories260K.gguf' --mnn_dir 'artifacts\\runs\\20260807T165722Z_B01\\stories260K_mnn'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\006.log"
+    },
+    {
+      "argv": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'scripts\\build_mnn_android.ps1'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\007.log"
+    },
+    {
+      "argv": "python 'scripts\\run_mnn_android_baseline.py' --serial 112193741U000563 --run-dir 'artifacts\\runs\\20260807T165722Z_B01' --model-dir 'artifacts\\runs\\20260807T165722Z_B01\\stories260K_mnn' --gguf 'C:\\tmp\\stories260K.gguf' --out 'benchmarks\\runtimes\\mnn.json' --runs 3 --threads 4 --n-prompt 512 --n-gen 128",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\008.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 push 'artifacts\\build\\mnn-android-arm64\\llm_bench' /data/local/tmp/b01_llm_bench",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\009.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell chmod 700 /data/local/tmp/b01_llm_bench",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\010.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell /data/local/tmp/b01_llm_bench --help",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\011.log"
+    },
+    {
+      "argv": "python -m py_compile 'scripts\\run_mnn_android_baseline.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T165722Z_B01\\stdout\\012.log",
+      "stderr_file": "artifacts\\runs\\20260807T165722Z_B01\\stderr\\012.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260807T165722Z_B01/",
+    "benchmarks/runtimes/mnn.json",
+    "scripts/build_mnn_android.ps1",
+    "scripts/run_mnn_android_baseline.py",
+    "third_party/MNN/"
+  ],
+  "verification": [
+    {
+      "name": "Three runs if runnable; otherwise exact build/runtime blocker evidence.",
+      "passed": true,
+      "detail": "Android llm_bench target built and launched on Hot 40i; equivalent three-run benchmark not runnable because MNN gguf2mnn requires llm.mnn.json and llm_config.json template files before converting the B00 stories260K GGUF."
+    }
+  ],
+  "metrics": {
+    "runnable": false,
+    "build_target": "llm_bench"
+  },
+  "artifacts": [
+    "benchmarks\\runtimes\\mnn.json"
+  ],
+  "limitations": [
+    "MNN llm_bench built and launched on device, but equivalent B00 tiny GGUF runs are blocked because gguf2mnn requires an existing MNN template model directory with llm.mnn.json and llm_config.json."
+  ],
+  "notes": [
+    "Device-side /data/local/tmp/b01_llm_bench --help exited 0 and exposed -pg prompt/decode benchmark semantics; model execution was not run because conversion stopped at the missing llm.mnn.json template requirement."
+  ]
+}
