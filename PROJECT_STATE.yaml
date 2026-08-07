@@ -2,10 +2,12 @@ schema_version: 1
 project: hot40i-llm-node
 goal_gate: FINAL_DEPLOYMENT
 current_phase: bootstrap
-completed_tasks: []
+completed_tasks:
+- R00
 in_progress: null
 blocked_tasks: {}
-task_evidence: {}
+task_evidence:
+  R00: artifacts/runs/20260807T140229Z_R00/evidence.json
 skipped_optional_tasks: []
 decisions:
   destructive_device_authorized: false
@@ -14,5 +16,6 @@ decisions:
   safe_rss_budget_bytes: null
   device_serial: null
 notes:
-- Initial handoff state. Existing scaffold code is not evidence that device/model
-  milestones passed.
+- Initial handoff state. Existing scaffold code is not evidence that device/model milestones passed.
+task_started_at:
+  R00: '2026-08-07T14:02:29.494729+00:00'

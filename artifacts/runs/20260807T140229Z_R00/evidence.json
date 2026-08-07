@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "task_id": "R00",
+  "started_at": "2026-08-07T14:02:29.731313+00:00",
+  "finished_at": "2026-08-07T14:24:11.866632+00:00",
+  "status": "pass",
+  "git_commit": "629e9f766ddaef7bd31518f7c9848da96c045f01",
+  "sources": [
+    {
+      "url": "https://github.com/openai/gpt-oss.git",
+      "ref": "599476783c6f88508dab8577808b5ead5cbee8d2",
+      "note": "canonical model architecture/reference/MXFP4; Apache-2.0"
+    },
+    {
+      "url": "https://github.com/openai/harmony.git",
+      "ref": "abd677f7ac962629c808197caa1feb9e3e95d2b0",
+      "note": "canonical Harmony format; package pin openai-harmony==0.0.8; Apache-2.0"
+    },
+    {
+      "url": "https://github.com/openai/codex.git",
+      "ref": "8c68d4c87dc54d38861f5114e920c3de2efa5876",
+      "note": "OpenAI Codex workflow reference; Apache-2.0"
+    },
+    {
+      "url": "https://github.com/ml-explore/mlx.git",
+      "ref": "7a1d4f5c12ac82f4b4d0a6e71538d89ca0605247",
+      "note": "Apple MLX runtime design reference only; MIT"
+    },
+    {
+      "url": "https://github.com/SJTU-IPADS/PowerInfer.git",
+      "ref": "8bd56d69906c9d2dba4d3bf6899763401e01a9a4",
+      "note": "activation locality/out-of-core reference; MIT"
+    },
+    {
+      "url": "https://github.com/powerserve-project/PowerServe.git",
+      "ref": "0ec6d643249c6f48724f2e2091755f904b637cd4",
+      "note": "Android/HarmonyOS mobile serving reference; Apache-2.0"
+    },
+    {
+      "url": "https://github.com/ggml-org/llama.cpp.git",
+      "ref": "e9fa0781f1c25fc4fe8c86be1edc6970661ad6f0",
+      "note": "ARM/GGML/GGUF/gpt-oss baseline; MIT"
+    },
+    {
+      "url": "https://github.com/alibaba/MNN.git",
+      "ref": "3c97f7e19b3da8454bf9b46855d9c0c29e40658f",
+      "note": "Android backend candidate; upstream default branch is master; Apache-2.0"
+    },
+    {
+      "url": "https://github.com/pytorch/executorch.git",
+      "ref": "812c7f0227d04fd343042fdf376aa90631c25995",
+      "note": "XNNPACK/ARM backend candidate; BSD"
+    },
+    {
+      "url": "https://github.com/mlc-ai/mlc-llm.git",
+      "ref": "2f78caa4db0f90730a11ee3bb5cbd5f23bf67f9f",
+      "note": "Android/Mali backend candidate; Apache-2.0"
+    },
+    {
+      "url": "https://github.com/anthropics/claude-code.git",
+      "ref": "7ef6eec9d9ba84ea6f233f26c45f1df5c5991843",
+      "note": "workflow reference only; Anthropic Commercial Terms; not vendored"
+    },
+    {
+      "url": "https://github.com/modelcontextprotocol/modelcontextprotocol.git",
+      "ref": "38c84e9f93ad191d9eb26d92b945d17bd0efcaf3",
+      "note": "official MCP specification reference; MIT"
+    }
+  ],
+  "commands": [
+    {
+      "argv": "python 'scripts\\resolve_upstreams.py'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T140229Z_R00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260807T140229Z_R00\\stderr\\001.log"
+    },
+    {
+      "argv": "python 'scripts\\resolve_upstreams.py'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T140229Z_R00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260807T140229Z_R00\\stderr\\002.log"
+    },
+    {
+      "argv": "git ls-remote --symref https://github.com/alibaba/MNN.git HEAD refs/heads/master refs/heads/main",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T140229Z_R00\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260807T140229Z_R00\\stderr\\003.log"
+    },
+    {
+      "argv": "python 'scripts\\resolve_upstreams.py' --name mnn",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T140229Z_R00\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260807T140229Z_R00\\stderr\\004.log"
+    },
+    {
+      "argv": "python 'scripts\\handoff_check.py' --quick",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T140229Z_R00\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260807T140229Z_R00\\stderr\\005.log"
+    },
+    {
+      "argv": "pytest -q",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T140229Z_R00\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260807T140229Z_R00\\stderr\\006.log"
+    },
+    {
+      "argv": "python -c 'import re,yaml; d=yaml.safe_load(open('\"'\"'third_party/LOCK.yaml'\"'\"',encoding='\"'\"'utf-8'\"'\"')); bad=[i['\"'\"'name'\"'\"'] for i in d['\"'\"'upstreams'\"'\"'] if i.get('\"'\"'priority'\"'\"') in {'\"'\"'S'\"'\"','\"'\"'S-workflow'\"'\"','\"'\"'A'\"'\"','\"'\"'A-reference'\"'\"','\"'\"'A-mobile'\"'\"'} and not re.fullmatch(r'\"'\"'[0-9a-f]{40}'\"'\"', str(i.get('\"'\"'resolved_commit'\"'\"') or '\"'\"''\"'\"')) and not i.get('\"'\"'deferred_reason'\"'\"')]; assert not bad, bad; print('\"'\"'LOCK_PRIORITY_S_A_REFS_OK'\"'\"')'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T140229Z_R00\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260807T140229Z_R00\\stderr\\007.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/",
+    "third_party/LOCK.yaml",
+    "third_party/manifest.yaml"
+  ],
+  "verification": [
+    {
+      "name": "python scripts/handoff_check.py --quick",
+      "passed": true,
+      "detail": "Command exited 0 in evidence run; handoff quick reported HANDOFF_CHECK_PASS."
+    },
+    {
+      "name": "Verify every priority S/A code source has either a resolved full commit SHA or an explicit evidence-backed deferred reason.",
+      "passed": true,
+      "detail": "Lock assertion exited 0; all priority S/S-workflow/A/A-reference/A-mobile entries have 40-hex resolved_commit values."
+    }
+  ],
+  "metrics": {},
+  "artifacts": [
+    "third_party\\LOCK.yaml"
+  ],
+  "limitations": [],
+  "notes": [
+    "Baseline pytest was run as requested and failed on Windows because tests monkeypatch adb to /bin/true; failure is recorded in command logs and should be fixed under the device-safety task scope."
+  ]
+}

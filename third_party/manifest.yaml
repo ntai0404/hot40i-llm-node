@@ -39,7 +39,7 @@ upstreams:
   url: https://github.com/alibaba/MNN.git
   role: Android backend candidate
   priority: B
-  preferred_ref: main
+  preferred_ref: master
 - name: executorch
   url: https://github.com/pytorch/executorch.git
   role: XNNPACK/ARM backend candidate

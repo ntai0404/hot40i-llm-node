@@ -1,78 +1,149 @@
 as_of: '2026-08-07'
-note: Handoff seed only. No commit is treated as immutable until R00 resolves it from the upstream. This delivery
-  environment did not resolve Git remotes; R00 must refresh current refs and record full SHAs before reproducible
-  use.
+note: R00 resolved Git remotes to immutable commits. Mutable branch pins record the matched ref and retrieval time;
+  no benchmark or copied code may cite an unpinned moving branch.
 upstreams:
 - name: openai-gpt-oss
   url: https://github.com/openai/gpt-oss.git
+  role: canonical model architecture/reference/MXFP4
+  priority: S
+  license: Apache-2.0
+  provenance: official OpenAI repository
   requested_ref: v0.0.9
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: 599476783c6f88508dab8577808b5ead5cbee8d2
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/tags/v0.0.9
+  resolved_at: '2026-08-07T14:09:44.399198+00:00'
 - name: openai-harmony
   url: https://github.com/openai/harmony.git
+  role: canonical gpt-oss prompt/response format
+  priority: S
+  license: Apache-2.0
+  provenance: official OpenAI repository and PyPI package pin
   requested_ref: main
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: abd677f7ac962629c808197caa1feb9e3e95d2b0
+  resolution_required: false
+  verification_status: RESOLVED
   package_pin: openai-harmony==0.0.8
+  matched_ref: refs/heads/main
+  resolved_at: '2026-08-07T14:09:45.438171+00:00'
 - name: openai-codex
   url: https://github.com/openai/codex.git
+  role: primary coding-agent/client reference
+  priority: S-workflow
+  license: Apache-2.0
+  provenance: official OpenAI repository
   requested_ref: rust-v0.144.4
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: 8c68d4c87dc54d38861f5114e920c3de2efa5876
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/tags/rust-v0.144.4^{}
+  resolved_at: '2026-08-07T14:09:46.946597+00:00'
 - name: apple-mlx
   url: https://github.com/ml-explore/mlx.git
+  role: Apple runtime design reference only
+  priority: A-reference
+  license: MIT
+  provenance: official Apple MLX repository
   requested_ref: v0.32.0
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: 7a1d4f5c12ac82f4b4d0a6e71538d89ca0605247
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/tags/v0.32.0
+  resolved_at: '2026-08-07T14:09:49.032305+00:00'
 - name: powerinfer
   url: https://github.com/SJTU-IPADS/PowerInfer.git
+  role: activation locality/out-of-core reference
+  priority: A
+  license: MIT
+  provenance: research/runtime reference repository
   requested_ref: main
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: 8bd56d69906c9d2dba4d3bf6899763401e01a9a4
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/heads/main
+  resolved_at: '2026-08-07T14:09:50.249512+00:00'
 - name: powerserve
   url: https://github.com/powerserve-project/PowerServe.git
+  role: Android/HarmonyOS mobile LLM serving and deployment reference
+  priority: A-mobile
+  license: Apache-2.0
+  provenance: mobile serving reference repository
   requested_ref: main
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: 0ec6d643249c6f48724f2e2091755f904b637cd4
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/heads/main
+  resolved_at: '2026-08-07T14:09:51.521364+00:00'
 - name: llama-cpp
   url: https://github.com/ggml-org/llama.cpp.git
+  role: ARM/GGML/GGUF/gpt-oss baseline
+  priority: A
+  license: MIT
+  provenance: ggml-org runtime/backend reference
   requested_ref: b10173
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: e9fa0781f1c25fc4fe8c86be1edc6970661ad6f0
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/tags/b10173
+  resolved_at: '2026-08-07T14:09:53.115389+00:00'
 - name: mnn
   url: https://github.com/alibaba/MNN.git
-  requested_ref: main
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  role: Android backend candidate
+  priority: B
+  license: Apache-2.0
+  provenance: Alibaba mobile inference backend reference; upstream HEAD advertises refs/heads/master, not main
+  requested_ref: master
+  resolved_commit: 3c97f7e19b3da8454bf9b46855d9c0c29e40658f
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/heads/master
+  resolved_at: '2026-08-07T14:20:37.365753+00:00'
 - name: executorch
   url: https://github.com/pytorch/executorch.git
+  role: XNNPACK/ARM backend candidate
+  priority: B
+  license: BSD
+  provenance: PyTorch ExecuTorch repository
   requested_ref: main
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: 812c7f0227d04fd343042fdf376aa90631c25995
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/heads/main
+  resolved_at: '2026-08-07T14:09:56.178219+00:00'
 - name: mlc-llm
   url: https://github.com/mlc-ai/mlc-llm.git
+  role: Android/Mali backend candidate
+  priority: B
+  license: Apache-2.0
+  provenance: MLC LLM repository
   requested_ref: main
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: 2f78caa4db0f90730a11ee3bb5cbd5f23bf67f9f
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/heads/main
+  resolved_at: '2026-08-07T14:09:57.377877+00:00'
 - name: claude-code
   url: https://github.com/anthropics/claude-code.git
+  role: independent agent/review workflow reference
+  priority: workflow
+  license: Anthropic Commercial Terms
+  provenance: Anthropic workflow reference repository; not used as vendored code
   requested_ref: v2.1.220
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: 7ef6eec9d9ba84ea6f233f26c45f1df5c5991843
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/tags/v2.1.220
+  resolved_at: '2026-08-07T14:09:58.573504+00:00'
 - name: mcp-spec
   url: https://github.com/modelcontextprotocol/modelcontextprotocol.git
+  role: tool protocol reference
+  priority: workflow
+  license: MIT
+  provenance: official Model Context Protocol specification repository
   requested_ref: '2025-11-25'
-  resolved_commit: null
-  resolution_required: true
-  verification_status: UNRESOLVED_HANDOFF_SEED
+  resolved_commit: 38c84e9f93ad191d9eb26d92b945d17bd0efcaf3
+  resolution_required: false
+  verification_status: RESOLVED
+  matched_ref: refs/tags/2025-11-25
+  resolved_at: '2026-08-07T14:09:59.790610+00:00'
