@@ -10,6 +10,7 @@ from rich.console import Console
 from rich.table import Table
 
 from .adb import AdbClient, AdbError, collect_manifest, save_json
+from .memory_budget import measure_memory_budget
 from .parsers import human_bytes, parse_meminfo
 
 app = typer.Typer(no_args_is_help=True, help="Safe Hot 40i device laboratory")
@@ -70,6 +71,24 @@ def mem(serial: str | None = typer.Option(None, "--serial")) -> None:
     for key in ["MemTotal", "MemAvailable", "MemFree", "Cached", "SwapTotal", "SwapFree"]:
         if key in info:
             console.print(f"{key:14} {human_bytes(info[key])}")
+
+
+@app.command("memory-budget")
+def memory_budget(
+    out: Path = typer.Option(Path("benchmarks/stock/memory_budget.json"), "--out"),
+    samples: int = typer.Option(3, "--samples"),
+    interval: float = typer.Option(5.0, "--interval"),
+    serial: str | None = typer.Option(None, "--serial"),
+    manifest: Path = typer.Option(Path("artifacts/device-manifest.json"), "--manifest"),
+) -> None:
+    budget = measure_memory_budget(
+        out=out,
+        samples_count=samples,
+        interval_seconds=interval,
+        serial=serial,
+        manifest_path=manifest,
+    )
+    console.print(f"safe_rss_budget_bytes={budget}")
 
 
 @app.command("forward")

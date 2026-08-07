@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "benchmark": "stock_memory_budget",
+  "device": {
+    "serial": "112193741U000563",
+    "manifest_summary": {
+      "product": "X6528-OP",
+      "model": "Infinix X6528",
+      "device": "Infinix-X6528",
+      "manufacturer": "INFINIX",
+      "brand": "Infinix",
+      "android_release": "13",
+      "sdk": "33",
+      "build_fingerprint": "Infinix/X6528-OP/Infinix-X6528:13/TP1A.220624.014/250917V1996:user/release-keys",
+      "hardware": "X6528",
+      "board_platform": "ums9230",
+      "soc": "T606",
+      "boot_devices": "soc/soc:ap-apb/20200000.ufs",
+      "ddrsize": "4096M",
+      "slot_suffix": "_b",
+      "dynamic_partitions": "true",
+      "verified_boot_state": "green",
+      "mem_total_bytes": 3936628736,
+      "mem_available_bytes": 1128710144,
+      "cpu_online": "0-7",
+      "processor_count": 8,
+      "storage_roots": [
+        "sda",
+        "sdb",
+        "sdc"
+      ],
+      "data_filesystem": "f2fs",
+      "thermal_zone_count": 17
+    }
+  },
+  "started_at": "2026-08-07T15:34:31.481991+00:00",
+  "finished_at": "2026-08-07T15:34:41.687080+00:00",
+  "git_commit": "0622c2ac1dd2a10d1d39b9d52ba9126ff77ad99d",
+  "config": {
+    "samples": 3,
+    "interval_seconds": 5.0,
+    "budget_rule": "min(MemAvailable_samples) / 2 capped at 768MiB",
+    "native_allocator_probe": "not_run_ndk_toolchain_unavailable"
+  },
+  "metrics": {
+    "mem_available_min_bytes": 1300897792,
+    "mem_available_median_bytes": 1301250048,
+    "safe_rss_budget_bytes": 650448896,
+    "headroom_bytes": 650448896,
+    "swap_total_bytes": 2165141504,
+    "swap_free_bytes": 830025728
+  },
+  "samples": [
+    {
+      "label": "settled_idle_1",
+      "captured_at": "2026-08-07T15:34:31.573112+00:00",
+      "mem_total_bytes": 3936628736,
+      "mem_available_bytes": 1303293952,
+      "mem_free_bytes": 110469120,
+      "cached_bytes": 1475969024,
+      "swap_total_bytes": 2165141504,
+      "swap_free_bytes": 828977152,
+      "raw": "MemTotal:        3844364 kB\nMemFree:          107880 kB\nMemAvailable:    1272748 kB\nBuffers:            1836 kB\nCached:          1441376 kB\nSwapCached:        25500 kB\nActive:          1081812 kB\nInactive:        1045960 kB\nActive(anon):     603336 kB\nInactive(anon):   394808 kB\nActive(file):     478476 kB\nInactive(file):   651152 kB\nUnevictable:      308944 kB\nMlocked:          308944 kB\nSwapTotal:       2114396 kB\nSwapFree:         809548 kB\nDirty:               368 kB\nWriteback:             0 kB\nAnonPages:        989508 kB\nMapped:          1057272 kB\nShmem:             10588 kB\nKReclaimable:     134608 kB\nSlab:             382068 kB\nSReclaimable:     105736 kB\nSUnreclaim:       276332 kB\nKernelStack:       62928 kB\nShadowCallStack:   15732 kB\nPageTables:       104736 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   207185224 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      139788 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:           49816 kB\nIonTotalHeap:     109992 kB\nIonTotalPool:      34276 kB\nHighAtomicFree:      648 kB\n"
+    },
+    {
+      "label": "settled_idle_2",
+      "captured_at": "2026-08-07T15:34:36.623157+00:00",
+      "mem_total_bytes": 3936628736,
+      "mem_available_bytes": 1301250048,
+      "mem_free_bytes": 108355584,
+      "cached_bytes": 1475997696,
+      "swap_total_bytes": 2165141504,
+      "swap_free_bytes": 830025728,
+      "raw": "MemTotal:        3844364 kB\nMemFree:          105816 kB\nMemAvailable:    1270752 kB\nBuffers:            1836 kB\nCached:          1441404 kB\nSwapCached:        25500 kB\nActive:          1082364 kB\nInactive:        1046944 kB\nActive(anon):     603868 kB\nInactive(anon):   395760 kB\nActive(file):     478496 kB\nInactive(file):   651184 kB\nUnevictable:      308944 kB\nMlocked:          308944 kB\nSwapTotal:       2114396 kB\nSwapFree:         810572 kB\nDirty:               348 kB\nWriteback:             0 kB\nAnonPages:        991040 kB\nMapped:          1057272 kB\nShmem:             10588 kB\nKReclaimable:     134624 kB\nSlab:             382020 kB\nSReclaimable:     105752 kB\nSUnreclaim:       276268 kB\nKernelStack:       62880 kB\nShadowCallStack:   15720 kB\nPageTables:       104700 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   207184368 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      139748 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:           49816 kB\nIonTotalHeap:     109992 kB\nIonTotalPool:      34276 kB\nHighAtomicFree:      648 kB\n"
+    },
+    {
+      "label": "settled_idle_3",
+      "captured_at": "2026-08-07T15:34:41.673813+00:00",
+      "mem_total_bytes": 3936628736,
+      "mem_available_bytes": 1300897792,
+      "mem_free_bytes": 107982848,
+      "cached_bytes": 1476001792,
+      "swap_total_bytes": 2165141504,
+      "swap_free_bytes": 830025728,
+      "raw": "MemTotal:        3844364 kB\nMemFree:          105452 kB\nMemAvailable:    1270408 kB\nBuffers:            1836 kB\nCached:          1441408 kB\nSwapCached:        25500 kB\nActive:          1082804 kB\nInactive:        1046952 kB\nActive(anon):     604308 kB\nInactive(anon):   395764 kB\nActive(file):     478496 kB\nInactive(file):   651188 kB\nUnevictable:      308944 kB\nMlocked:          308944 kB\nSwapTotal:       2114396 kB\nSwapFree:         810572 kB\nDirty:               344 kB\nWriteback:             0 kB\nAnonPages:        991604 kB\nMapped:          1057272 kB\nShmem:             10588 kB\nKReclaimable:     134640 kB\nSlab:             382132 kB\nSReclaimable:     105768 kB\nSUnreclaim:       276364 kB\nKernelStack:       62880 kB\nShadowCallStack:   15720 kB\nPageTables:       104700 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   207183552 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      139748 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:           49816 kB\nIonTotalHeap:     109992 kB\nIonTotalPool:      34276 kB\nHighAtomicFree:      648 kB\n"
+    }
+  ],
+  "limitations": [
+    "Native bounded allocation pressure probe was not run because no Android NDK/aarch64 toolchain is installed on the host.",
+    "Cold-reboot and screen-off variants were not used for this first budget to avoid losing an active authorized ADB session mid-DAG."
+  ]
+}

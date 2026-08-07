@@ -9,7 +9,11 @@ completed_tasks:
 - D00
 - D01
 in_progress: null
-blocked_tasks: {}
+blocked_tasks:
+  D02:
+    reason: Android NDK/aarch64 toolchain is unavailable, so the required bounded native allocation pressure probe
+      cannot be built/run yet. Settled MemAvailable samples were collected as provisional evidence only.
+    at: '2026-08-07T15:36:58.738698+00:00'
 task_evidence:
   R00: artifacts/runs/20260807T140229Z_R00/evidence.json
   R01: artifacts/runs/20260807T142448Z_R01/evidence.json
@@ -31,3 +35,4 @@ task_started_at:
   R02: '2026-08-07T14:27:12.488020+00:00'
   D00: '2026-08-07T15:13:03.468510+00:00'
   D01: '2026-08-07T15:15:20.753142+00:00'
+  D02: '2026-08-07T15:20:11.933954+00:00'
