@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hot40i-llm-node.local/schemas/benchmark_result.schema.json",
+  "title": "Benchmark result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "benchmark",
+    "device",
+    "started_at",
+    "finished_at",
+    "git_commit",
+    "config",
+    "metrics",
+    "samples"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "benchmark": {"type": "string", "minLength": 1},
+    "device": {"type": "object"},
+    "started_at": {"type": "string"},
+    "finished_at": {"type": "string"},
+    "git_commit": {"type": ["string", "null"]},
+    "config": {"type": "object"},
+    "metrics": {"type": "object"},
+    "samples": {"type": "array"},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

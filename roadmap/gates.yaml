@@ -1,0 +1,81 @@
+schema_version: 1
+gates:
+- id: HANDOFF_READY
+  type: static
+  requires_tasks: []
+  criteria:
+  - handoff_check quick passes
+  - task DAG is acyclic
+  - README/CLI entry point is valid
+  description: Repository control plane is internally coherent.
+- id: HARDWARE_CHARACTERIZED
+  type: milestone
+  requires_tasks:
+  - D02
+  - D04
+  - D05
+  - D06
+  criteria:
+  - safe RSS budget measured
+  - expert-shaped flash metrics measured
+  - CPU/DRAM measured
+  - thermal harness working
+  description: Actual device bottlenecks are known.
+- id: BACKEND_SELECTED
+  type: milestone
+  requires_tasks:
+  - B04
+  criteria:
+  - selected_compute_backend recorded
+  - comparison artifact exists
+  description: Compute-kernel base selected by device evidence.
+- id: NUMERICAL_PARITY
+  type: milestone
+  requires_tasks:
+  - C04
+  criteria:
+  - tiny end-to-end parity passes
+  description: Model semantics are correct before out-of-core work.
+- id: STORAGE_RUNTIME_READY
+  type: milestone
+  requires_tasks:
+  - S06
+  criteria:
+  - bounded graph passes scaled fixture
+  - expert cache/provider traced
+  description: Bounded out-of-core machinery is correctness-ready.
+- id: OFFICIAL_MODEL_PROOF
+  type: milestone
+  requires_tasks:
+  - P01
+  criteria:
+  - official model generates >=128 stable tokens
+  - peak RSS respects safe budget
+  - Harmony provenance recorded
+  description: Official gpt-oss runs as more than a one-token demo.
+- id: RECOVERY_READY
+  type: safety
+  requires_tasks:
+  - OS01
+  optional: true
+  criteria:
+  - exact variant
+  - partition map
+  - legitimate stock firmware/restore source
+  - boot/recovery entry method
+  - documented restore procedure
+  - independent checklist review
+  description: Required before any destructive device operation.
+- id: FINAL_DEPLOYMENT
+  type: final
+  requires_tasks:
+  - F03
+  criteria:
+  - official gpt-oss-20b semantics/weights
+  - bounded measured RAM
+  - explicit expert storage/cache metrics
+  - USB laptop service path
+  - final correctness regression
+  - '>=30 minute sustained run'
+  - FINAL_REPORT.md and summary artifacts
+  description: End-to-end project Definition of Done.

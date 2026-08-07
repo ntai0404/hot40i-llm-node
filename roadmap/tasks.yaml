@@ -1,0 +1,1737 @@
+schema_version: 1
+goal_gate: FINAL_DEPLOYMENT
+selection_policy: lowest priority number among ready mandatory tasks; optional tasks only when activation condition
+  is explicitly satisfied/decided
+tasks:
+- id: R00
+  title: Resolve and pin upstream references
+  phase: research
+  priority: 1
+  depends_on: []
+  optional: false
+  goal: Make all external reference code reproducible before it affects implementation/benchmark decisions.
+  allowed_paths:
+  - third_party/**
+  - research/**
+  - artifacts/**
+  implementation:
+  - Read third_party/manifest.yaml, third_party/LOCK.yaml and research/sources.yaml.
+  - Refresh requested refs from current official upstream release/project pages when the handoff seed is stale.
+  - Run scripts/resolve_upstreams.py (or equivalent recorded git ls-remote commands) to resolve full 40-hex commit
+    SHAs.
+  - Update third_party/LOCK.yaml with retrieval date, requested/matched ref, full commit, license and role/provenance
+    notes. Do not vendor full repositories unless a later task needs checked-out source.
+  - Optionally verify selected sources with scripts/sync_third_party.py --require-locked before basing code or benchmarks
+    on them.
+  verification:
+  - python scripts/handoff_check.py --quick
+  - Verify every priority S/A code source has either a resolved full commit SHA or an explicit evidence-backed deferred
+    reason.
+  required_artifacts:
+  - third_party/LOCK.yaml
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - OpenAI gpt-oss, Harmony, Codex and every source actually used for implementation/benchmark decisions are immutable/pinned.
+  - No benchmark or copied code cites an unpinned mutable branch.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: R01
+  title: Revalidate scientific/model assumptions
+  phase: research
+  priority: 2
+  depends_on:
+  - R00
+  optional: false
+  goal: Ensure the handoff thesis reflects current official model facts and the cited out-of-core systems before
+    coding against them.
+  allowed_paths:
+  - docs/**
+  - research/**
+  - third_party/**
+  - artifacts/**
+  implementation:
+  - Check OpenAI model card/repo, Harmony, Apple LLM-in-a-Flash/MLX/on-device reports and the A-tier systems/mobile
+    references listed in research/sources.yaml, including PowerInfer-2, PowerServe, ActiveFlow, EdgeMoE, MoE-Infinity
+    and SmallThinker.
+  - Update docs only when a material fact changed.
+  - Write a contradiction log if a source disagrees with the repository model contract.
+  verification:
+  - python scripts/handoff_check.py --quick
+  required_artifacts:
+  - artifacts/runs/<run>/sources.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Every material architecture/quantization fact used by the runtime has an authoritative source.
+  - Any uncertainty is explicitly marked UNKNOWN rather than guessed.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: R02
+  title: Harden autonomous device-tool boundary
+  phase: research
+  priority: 3
+  depends_on:
+  - R00
+  optional: false
+  goal: Give coding agents a safe repository-level device interface for stock-Android phases.
+  allowed_paths:
+  - host/device_lab/**
+  - tests/python/**
+  - docs/**
+  - artifacts/**
+  implementation:
+  - Remove ordinary call-sites that depend on arbitrary public shell strings.
+  - Expose named probes and explicit temp-binary/push/pull/forward operations.
+  - Add tests proving destructive ADB/fastboot-like commands are rejected by repository wrappers.
+  - Do not claim this sandbox prevents an agent from invoking an external executable directly; AGENTS.md remains
+    binding.
+  verification:
+  - pytest -q
+  - python scripts/handoff_check.py --quick
+  required_artifacts:
+  - tests/python/test_device_safety.py
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Repository device API has explicit safe operations and rejection tests.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: D00
+  title: Verify USB-C ADB connectivity
+  phase: device
+  priority: 10
+  depends_on:
+  - R00
+  - R02
+  optional: false
+  goal: Establish a reproducible laptop-to-phone development transport without destructive operations.
+  allowed_paths:
+  - host/**
+  - scripts/**
+  - tests/**
+  - PROJECT_STATE.yaml
+  - artifacts/**
+  implementation:
+  - Detect authorized device; select explicit serial if multiple.
+  - Verify push/pull in /data/local/tmp using a harmless nonce file.
+  - Establish adb forward localhost:18080 -> device:8080 and verify forwarding setup.
+  - Repeat reconnect/transport checks; record failures instead of hiding them.
+  verification:
+  - hot40 devices
+  - Repository-defined connectivity test/harness must exit 0.
+  required_artifacts:
+  - artifacts/runs/<run>/adb_devices.txt
+  - artifacts/runs/<run>/transport.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Exactly one target serial is recorded in PROJECT_STATE.yaml.
+  - Push/pull succeeds without root.
+  - ADB transport is stable enough for subsequent tasks.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: D01
+  title: Capture normalized device manifest
+  phase: device
+  priority: 11
+  depends_on:
+  - D00
+  optional: false
+  goal: Record exact Hot 40i hardware/software state from the physical unit.
+  allowed_paths:
+  - host/**
+  - schemas/**
+  - artifacts/**
+  - PROJECT_STATE.yaml
+  implementation:
+  - Collect getprop, CPU/meminfo, mounts, partitions, block sysfs, thermal zones and CPU topology using named safe
+    probes.
+  - Normalize stable fields into device-manifest.json while retaining raw probe output.
+  - Validate against schemas/device_manifest.schema.json.
+  verification:
+  - hot40 probe --out artifacts/device-manifest.json
+  - python scripts/validate_artifact.py schemas/device_manifest.schema.json artifacts/device-manifest.json
+  required_artifacts:
+  - artifacts/device-manifest.json
+  - artifacts/runs/<run>/raw/
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Manifest identifies product/model/build/SoC-visible CPU topology, MemTotal, storage/block evidence and thermal
+    sources.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: D02
+  title: Derive safe RSS budget
+  phase: device
+  priority: 12
+  depends_on:
+  - D01
+  optional: false
+  goal: "Measure\u2014not guess\u2014the maximum repeatable process RSS budget under stock Android."
+  allowed_paths:
+  - device/bench/**
+  - host/**
+  - benchmarks/**
+  - PROJECT_STATE.yaml
+  - artifacts/**
+  implementation:
+  - Collect MemTotal/MemAvailable/swap/zram at cold reboot, settled idle, screen-off and representative native load.
+  - Run a bounded allocation pressure probe that never intentionally triggers system OOM.
+  - Derive conservative LLM_SAFE_RSS_BUDGET with headroom; store decision in PROJECT_STATE.yaml.
+  verification:
+  - At least three repeated settled measurements.
+  - Validate benchmark JSON.
+  required_artifacts:
+  - benchmarks/stock/memory_budget.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - safe_rss_budget_bytes is non-null and justified by measurements.
+  - No OOM/factory/system instability occurred.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: D03
+  title: Identify storage/controller evidence
+  phase: device
+  priority: 13
+  depends_on:
+  - D01
+  optional: false
+  goal: Determine actual storage characteristics of this exact device variant rather than relying on retail specs.
+  allowed_paths:
+  - host/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Gather block/sysfs/model/queue evidence available without root.
+  - Classify UFS/eMMC only when evidence supports it; otherwise record UNKNOWN.
+  - Record filesystem/location used for model benchmarks.
+  verification:
+  - Cross-check at least two independent on-device evidence sources when available.
+  required_artifacts:
+  - benchmarks/stock/storage_identity.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Storage classification has device evidence or is explicitly UNKNOWN.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: D04
+  title: Benchmark expert-shaped flash access
+  phase: device
+  priority: 14
+  depends_on:
+  - D02
+  - D03
+  optional: false
+  goal: Measure the I/O patterns that determine whether expert streaming can work.
+  allowed_paths:
+  - device/bench/**
+  - host/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Extend h40_io_bench for sequential and deterministic random regions at 4KiB,64KiB,256KiB,1MiB and expert-shaped
+    8/16/32MiB reads.
+  - Report throughput, IOPS where meaningful, p50/p95/p99 latency, CPU time and exact file size/location.
+  - Run cold/warm-cache variants where feasible and distinguish page-cache effects.
+  - Run repeated and sustained samples while collecting thermal/frequency data.
+  verification:
+  - Host unit test for benchmark argument parsing.
+  - Android ARM64 binary exits 0 on device.
+  - Three repeat runs produce valid JSON.
+  required_artifacts:
+  - benchmarks/stock/storage.json
+  - artifacts/runs/<run>/storage_samples.jsonl
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Expert-shaped read latency/throughput is known with percentiles.
+  - Results distinguish at least sequential vs random/expert-shaped access.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: D05
+  title: Benchmark CPU and DRAM
+  phase: device
+  priority: 15
+  depends_on:
+  - D02
+  optional: false
+  goal: Establish compute/memory ceilings and useful core-affinity configurations on T606.
+  allowed_paths:
+  - device/bench/**
+  - host/**
+  - benchmarks/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Implement/read benchmark for memcpy/read bandwidth and representative FP16/INT8/INT4 or available low-bit matvec
+    kernels.
+  - Measure A75-focused, A55-focused and mixed/all-core configurations using real CPU topology.
+  - Capture frequency and temperature with each run.
+  verification:
+  - Repeat each configuration at least 3 times.
+  - Validate output schema.
+  required_artifacts:
+  - benchmarks/stock/cpu_memory.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Memory bandwidth and representative matvec throughput are measured.
+  - Best thread/core configuration is evidence-based.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: D06
+  title: Build sustained thermal harness
+  phase: device
+  priority: 16
+  depends_on:
+  - D01
+  optional: false
+  goal: Make thermal throttling visible in every long inference/benchmark run.
+  allowed_paths:
+  - host/**
+  - device/bench/**
+  - benchmarks/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Implement host collector for thermal zones, CPU frequencies, battery state/current when readable and process
+    RSS.
+  - Use monotonic timestamps and JSONL.
+  - Provide start/stop integration for benchmark commands.
+  verification:
+  - Run 15-minute harmless sustained CPU/I/O workload and produce valid thermal JSONL.
+  required_artifacts:
+  - benchmarks/stock/thermal_baseline.json
+  - artifacts/runs/<run>/thermal.jsonl
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Thermal/frequency time series can be correlated with benchmark time.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: B00
+  title: Build llama.cpp/ggml Android baseline
+  phase: backend
+  priority: 20
+  depends_on:
+  - D04
+  - D05
+  - D06
+  - R00
+  optional: false
+  goal: Establish a known C/C++ ARM baseline and gpt-oss-capable reference backend.
+  allowed_paths:
+  - third_party/**
+  - scripts/**
+  - benchmarks/**
+  - artifacts/**
+  - docs/**
+  implementation:
+  - Checkout pinned llama.cpp ref.
+  - Build Android arm64 CPU baseline with reproducible flags.
+  - Run same small fixture/model with fixed prompt/context/threads.
+  - Capture RSS, prompt/decode rate and thermal.
+  verification:
+  - Binary/version records pinned ref.
+  - At least 3 device runs.
+  required_artifacts:
+  - benchmarks/runtimes/llama_cpp.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - llama.cpp baseline runs on the physical phone and produces reproducible metrics.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: B01
+  title: Evaluate MNN backend
+  phase: backend
+  priority: 21
+  depends_on:
+  - D04
+  - D05
+  - D06
+  - R00
+  optional: false
+  goal: Measure MNN only on an equivalent operator/model fixture; avoid reputation-based selection.
+  allowed_paths:
+  - third_party/**
+  - scripts/**
+  - benchmarks/**
+  - artifacts/**
+  - docs/**
+  implementation:
+  - Build pinned MNN Android target or record a reproducible incompatibility.
+  - Use equivalent model/quant/context/thread conditions where technically possible.
+  - Capture the same metrics as B00.
+  verification:
+  - Three runs if runnable; otherwise exact build/runtime blocker evidence.
+  required_artifacts:
+  - benchmarks/runtimes/mnn.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Runnable benchmark or rigorously evidenced incompatibility.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: B02
+  title: Evaluate ExecuTorch/XNNPACK backend
+  phase: backend
+  priority: 22
+  depends_on:
+  - D04
+  - D05
+  - D06
+  - R00
+  optional: false
+  goal: Measure XNNPACK/ExecuTorch ARM kernels on an equivalent fixture.
+  allowed_paths:
+  - third_party/**
+  - scripts/**
+  - benchmarks/**
+  - artifacts/**
+  - docs/**
+  implementation:
+  - Build pinned backend/fixture.
+  - Match quant/operator dimensions where possible.
+  - Capture compute throughput/RSS/thermal.
+  verification:
+  - Three runs if runnable; otherwise exact blocker evidence.
+  required_artifacts:
+  - benchmarks/runtimes/executorch.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Runnable benchmark or rigorously evidenced incompatibility.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: B03
+  title: Evaluate MLC/Mali path
+  phase: backend
+  priority: 23
+  depends_on:
+  - D04
+  - D05
+  - D06
+  - R00
+  optional: false
+  goal: Determine whether MLC/OpenCL/Vulkan on the Mali-G57 path is useful versus CPU.
+  allowed_paths:
+  - third_party/**
+  - scripts/**
+  - benchmarks/**
+  - artifacts/**
+  - docs/**
+  implementation:
+  - Probe supported GPU compute APIs without rooting.
+  - Build/run only if support is real; do not spend unbounded effort porting unsupported GPU paths.
+  - Capture same metrics.
+  verification:
+  - Evidence either a runnable benchmark or a hardware/software support decision.
+  required_artifacts:
+  - benchmarks/runtimes/mlc.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - GPU path is measured or explicitly rejected with evidence.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: B04
+  title: Select compute backend
+  phase: backend
+  priority: 24
+  depends_on:
+  - B00
+  - B01
+  - B02
+  - B03
+  optional: false
+  goal: Choose the reusable compute-kernel base for the custom storage runtime.
+  allowed_paths:
+  - benchmarks/**
+  - docs/decisions/**
+  - PROJECT_STATE.yaml
+  - artifacts/**
+  implementation:
+  - Compare identical/equivalent device evidence.
+  - Score kernel coverage, speed, RSS, Android build complexity and gpt-oss/MXFP4 adaptation cost.
+  - Record selected_compute_backend in PROJECT_STATE.yaml.
+  - Prefer reusing kernels to writing matmul from scratch.
+  verification:
+  - Comparison script/table is generated from benchmark artifacts rather than hand-entered headline numbers.
+  required_artifacts:
+  - benchmarks/runtimes/comparison.json
+  - docs/decisions/ADR_001_COMPUTE_BACKEND.md
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - One backend is selected with reproducible evidence and fallback order.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: C00
+  title: Generate tiny gpt-oss-shaped fixture
+  phase: correctness
+  priority: 30
+  depends_on:
+  - R01
+  - B04
+  optional: false
+  goal: Create a small deterministic network that exercises the same operator classes without debugging 20B tensors.
+  allowed_paths:
+  - tests/**
+  - tools/**
+  - artifacts/**
+  implementation:
+  - Use official/reference semantics to create a tiny residual/MoE/attention/output network.
+  - Include router, top-k expert weighting, gpt-oss SwiGLU behavior, attention pattern fixtures and deterministic
+    weights/inputs.
+  - Export golden intermediate tensors and metadata.
+  verification:
+  - Laptop reference reproduces identical outputs across two runs.
+  required_artifacts:
+  - tests/fixtures/tiny_gpt_oss/**
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Golden fixture includes router IDs/scores, expert outputs, attention outputs, layer output and logits.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: C01
+  title: Implement and verify router
+  phase: correctness
+  priority: 31
+  depends_on:
+  - C00
+  optional: false
+  goal: Match official top-4 router selection/weight semantics.
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Implement backend-independent router contract.
+  - Test top-k selection, selected-expert softmax and deterministic tie behavior against golden fixture.
+  verification:
+  - Unit tests pass on host and Android backend adapter.
+  required_artifacts:
+  - tests/**
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Expert IDs and weights match golden tolerance exactly/within documented numerical tolerance.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: C02
+  title: Implement MXFP4 expert path
+  phase: correctness
+  priority: 32
+  depends_on:
+  - C00
+  - B04
+  optional: false
+  goal: Correctly consume official gpt-oss MXFP4 expert representation using the selected backend.
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Implement/adapter for packed blocks + scales based on official format.
+  - Validate dequant/matvec on small tensors against trusted reference.
+  - Do not silently convert full experts to high-precision resident copies in the final path.
+  verification:
+  - Golden low-bit operator tests pass on host and device.
+  required_artifacts:
+  - tests/**
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - MXFP4 numerical tolerance is documented and passed.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: C03
+  title: Implement gpt-oss attention fixture
+  phase: correctness
+  priority: 33
+  depends_on:
+  - C00
+  - B04
+  optional: false
+  goal: Match the model attention semantics required for end-to-end parity.
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Implement/adapter RMSNorm, RoPE, GQA dimensions, alternating attention fixture and attention-sink/bias behavior
+    represented in the official source.
+  - Keep long-context optimizations out of this task.
+  verification:
+  - Golden attention outputs pass.
+  required_artifacts:
+  - tests/**
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Attention fixture passes documented tolerance.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: C04
+  title: Tiny end-to-end numerical parity
+  phase: correctness
+  priority: 34
+  depends_on:
+  - C01
+  - C02
+  - C03
+  optional: false
+  goal: Prove model semantics before adding out-of-core complexity.
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Run complete tiny network on selected ARM backend.
+  - Compare router traces, intermediate layer tensors and logits with golden outputs.
+  verification:
+  - Host and device parity tests pass.
+  required_artifacts:
+  - benchmarks/correctness/tiny_parity.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - No unexplained routing/logit mismatch.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: M00
+  title: Inspect official gpt-oss-20b checkpoint
+  phase: model
+  priority: 40
+  depends_on:
+  - C04
+  - R00
+  optional: false
+  goal: Replace theoretical memory estimates with an exact tensor inventory from the official checkpoint.
+  allowed_paths:
+  - tools/model/**
+  - artifacts/model/**
+  - tests/**
+  - artifacts/runs/**
+  implementation:
+  - Acquire official checkpoint according to OpenAI/HF provenance.
+  - 'Inventory every tensor: name, shape, dtype/quant, byte size, layer, role, expert ID, source shard and checksum.'
+  - Measure aggregate bytes per role and verify against model-card scale.
+  verification:
+  - Inspector output is deterministic.
+  - Spot-check tensors against official/reference loader.
+  required_artifacts:
+  - artifacts/model/gpt_oss_20b_inventory.json
+  - artifacts/model/checksums.txt
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - All checkpoint tensors are classified or explicitly UNKNOWN.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: M01
+  title: Finalize H40M/1 contract and converter
+  phase: model
+  priority: 41
+  depends_on:
+  - M00
+  optional: false
+  goal: Create deterministic project-local storage metadata with full provenance and validation.
+  allowed_paths:
+  - tools/model/**
+  - docs/07_H40M_FORMAT.md
+  - schemas/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - 'Implement H40M schema fields: role/layer/expert/shape/dtype/quant/layout/alignment/file/offset/length/checksum/source.'
+  - Converter must be deterministic and streaming; do not duplicate >RAM tensors unnecessarily.
+  - Validate manifest against schemas/h40m_manifest.schema.json.
+  verification:
+  - Round-trip sample tensors and checksum.
+  - Converter repeated run produces same logical manifest.
+  required_artifacts:
+  - artifacts/model/h40m/manifest.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Manifest fully describes physical ranges and provenance.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: M02
+  title: Repack expert weights contiguously
+  phase: model
+  priority: 42
+  depends_on:
+  - M01
+  - D04
+  optional: false
+  goal: Build a flash layout that favors large aligned expert reads.
+  allowed_paths:
+  - tools/model/**
+  - artifacts/model/**
+  - benchmarks/**
+  - tests/**
+  - artifacts/runs/**
+  implementation:
+  - Pack experts into one/few arenas rather than thousands of files.
+  - Choose initial alignment from D04 evidence; record it.
+  - Preserve exact MXFP4 payload and checksums.
+  verification:
+  - Randomly sample expert ranges and compare bytes/checksums to source.
+  - Measure read behavior of H40M arena.
+  required_artifacts:
+  - artifacts/model/h40m/expert_arena.*
+  - benchmarks/model/h40m_layout.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Every expert is addressable by deterministic (file,offset,length) and verifies against source.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: M03
+  title: Quantize dense/shared candidates
+  phase: model
+  priority: 43
+  depends_on:
+  - M00
+  - C04
+  - B04
+  optional: false
+  goal: Reduce unavoidable resident dense memory while preserving acceptable correctness.
+  allowed_paths:
+  - tools/model/**
+  - device/runtime/**
+  - benchmarks/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Measure exact attention/embed/unembed/router bytes.
+  - Test backend-supported Q8/Q6/Q5/Q4 variants selectively; keep input embedding eligible for row lookup.
+  - Evaluate logit/perplexity/task proxy degradation with fixed prompts/fixtures; do not blindly quantize to minimum
+    bits.
+  verification:
+  - Quality/numerical comparison for each accepted quant.
+  - Memory byte reduction recorded.
+  required_artifacts:
+  - benchmarks/model/dense_quant.json
+  - artifacts/model/h40m/dense.*
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Accepted quant choices have measured memory and correctness impact.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: M04
+  title: Implement embedding row lookup
+  phase: model
+  priority: 44
+  depends_on:
+  - M01
+  - M00
+  optional: false
+  goal: Avoid keeping full input embedding resident when only token rows are required.
+  allowed_paths:
+  - device/runtime/**
+  - tools/model/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Add token_lookup placement and row-range resolver.
+  - Implement small bounded row cache if benchmark supports it.
+  - Verify token rows byte/numerical parity.
+  verification:
+  - Fixture and sampled official rows match source.
+  required_artifacts:
+  - benchmarks/model/embedding_lookup.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Input embedding path does not require full matrix residency.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: M05
+  title: Select output-head strategy
+  phase: model
+  priority: 45
+  depends_on:
+  - M03
+  - D04
+  - D05
+  optional: false
+  goal: Handle the non-sparse vocabulary projection without turning flash bandwidth into a per-token catastrophe.
+  allowed_paths:
+  - device/runtime/**
+  - benchmarks/**
+  - docs/decisions/**
+  - artifacts/**
+  implementation:
+  - Benchmark resident quantized head versus chunked/streamed alternatives allowed by measured RAM.
+  - Include compute and flash bytes/token cost.
+  - Prefer resident quantized output head when safe budget permits; otherwise use measured chunking.
+  verification:
+  - Same hidden input must produce logits within accepted tolerance.
+  required_artifacts:
+  - docs/decisions/ADR_002_OUTPUT_HEAD.md
+  - benchmarks/model/output_head.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - One output-head strategy fits the memory budget and has measured latency.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: M06
+  title: Select dense attention placement
+  phase: model
+  priority: 46
+  depends_on:
+  - M03
+  - D02
+  optional: false
+  goal: Determine which attention/shared tensors stay resident under the real budget.
+  allowed_paths:
+  - tools/model/**
+  - docs/decisions/**
+  - artifacts/**
+  - PROJECT_STATE.yaml
+  implementation:
+  - Calculate exact bytes for accepted quantization.
+  - Build a memory plan including runtime, KV/state, output head, I/O buffers and minimum expert cache.
+  - Mark every dense tensor placement.
+  verification:
+  - Memory plan total <= safe_rss_budget with explicit headroom.
+  required_artifacts:
+  - artifacts/model/memory_plan.json
+  - docs/decisions/ADR_003_MEMORY_PLACEMENT.md
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - No unbudgeted full-matrix allocation is required by the plan.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: S00
+  title: Harden FlashTensorProvider on Android
+  phase: storage
+  priority: 50
+  depends_on:
+  - M02
+  - B04
+  optional: false
+  goal: Provide measured aligned/range reads with observability on the real device.
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Add robust EINTR/short-read handling and validated range bounds.
+  - Expose read operations/bytes/nanoseconds and optional trace sink.
+  - Benchmark H40M ranges.
+  verification:
+  - Unit boundary/error tests.
+  - Android read tests against checksum-known ranges.
+  required_artifacts:
+  - benchmarks/custom/flash_provider.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Provider returns exact bytes and trustworthy stats on device.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: S01
+  title: Implement fixed memory budget/arenas
+  phase: storage
+  priority: 51
+  depends_on:
+  - M06
+  - D02
+  optional: false
+  goal: Make model working-set allocations deterministic and bounded.
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Replace ad-hoc working-set allocations with named preallocated regions/slab/slots.
+  - Track resident, KV/state, expert cache, scratch and I/O buffers separately.
+  - Fail startup before model load if minimum plan exceeds configured budget.
+  verification:
+  - Allocation boundary/alignment tests.
+  - RSS test on device.
+  required_artifacts:
+  - benchmarks/custom/memory_arena.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Runtime refuses over-budget plans and stays inside target allocation envelope.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: S02
+  title: Implement indexed expert loader
+  phase: storage
+  priority: 52
+  depends_on:
+  - S00
+  - S01
+  - M02
+  optional: false
+  goal: Load a selected layer/expert directly from H40M into a provided cache slot.
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Resolve expert slices from manifest/index.
+  - Read into caller-owned/preallocated span; no per-miss vector allocation.
+  - Verify checksums in debug/test path.
+  verification:
+  - Load sampled experts on device and compare source hash.
+  required_artifacts:
+  - tests/**
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Expert loading is zero-unbounded-allocation and byte-correct.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: S03
+  title: Integrate fixed-budget expert cache
+  phase: storage
+  priority: 53
+  depends_on:
+  - S02
+  optional: false
+  goal: Replace prototype vector-backed cache with arena-backed slots and explicit policy.
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Implement byte-budgeted cache backed by S01 arena.
+  - Start with LRU; emit hit/miss/eviction/bytes-loaded metrics.
+  - Support expert sizes/alignment from H40M.
+  verification:
+  - Deterministic cache policy tests.
+  - Long churn test proves used_bytes never exceeds budget.
+  required_artifacts:
+  - benchmarks/custom/expert_cache.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Cache budget cannot be exceeded and stats are exact.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: S04
+  title: Implement unified trace format
+  phase: storage
+  priority: 54
+  depends_on:
+  - S00
+  - S03
+  optional: false
+  goal: Make every later optimization explainable by token/layer/expert/I/O events.
+  allowed_paths:
+  - device/runtime/**
+  - tools/trace/**
+  - schemas/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Emit JSONL events for token, layer, router selection, cache lookup, read begin/end, compute begin/end, prefetch
+    and eviction.
+  - Use monotonic timestamps and byte counts.
+  - Validate with schemas/expert_trace_event.schema.json.
+  verification:
+  - Trace parser/analyzer handles sample and device run.
+  required_artifacts:
+  - artifacts/runs/<run>/expert_trace.jsonl
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Trace can reconstruct flash bytes/token and cache hit rate.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: S05
+  title: Implement MoE layer scheduler without prefetch
+  phase: storage
+  priority: 55
+  depends_on:
+  - C04
+  - S02
+  - S03
+  - S04
+  optional: false
+  goal: "Establish correctness-first route\u2192cache\u2192load\u2192compute sequence."
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - For each layer, execute official router semantics, cache lookup selected top-4 experts, load misses, run selected
+    experts, weight outputs and continue.
+  - No prediction/prefetch in this task.
+  - Keep compute/storage contracts separate.
+  verification:
+  - Tiny fixture full output still matches C04 golden with streaming enabled.
+  required_artifacts:
+  - benchmarks/custom/tiny_streaming.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Streaming path is numerically equivalent to resident tiny baseline.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: S06
+  title: Integrate full bounded runtime graph
+  phase: storage
+  priority: 56
+  depends_on:
+  - S05
+  - M04
+  - M05
+  - M06
+  optional: false
+  goal: Join dense placement, token lookup, output head, KV/state and MoE storage path under one memory plan.
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Build model/runtime graph interfaces for selected backend.
+  - Ensure no component assumes full checkpoint residency.
+  - Run scaled fixture larger than tiny model to stress memory/cache.
+  verification:
+  - Memory/accounting checks.
+  - Numerical regression.
+  required_artifacts:
+  - benchmarks/custom/bounded_graph.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Runtime graph starts/stops cleanly and obeys memory plan.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: P00
+  title: Generate first official gpt-oss-20b token
+  phase: proof
+  priority: 60
+  depends_on:
+  - S06
+  - M02
+  - R01
+  optional: false
+  goal: Cross the core feasibility milestone using official model semantics/weights and Harmony.
+  allowed_paths:
+  - device/runtime/**
+  - host/**
+  - benchmarks/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Load deterministic H40M derived from official checkpoint.
+  - Render a minimal valid Harmony prompt using official library/reference on host.
+  - Run one-token decode on device with full tracing and bounded memory.
+  - Compare first-token/logit behavior against a trusted full-model reference on the same prompt where feasible.
+  verification:
+  - No OOM/unbounded swap.
+  - Trace and memory metrics captured.
+  - Harmony input/tokenization provenance recorded.
+  required_artifacts:
+  - benchmarks/proof/first_token.json
+  - artifacts/runs/<run>/expert_trace.jsonl
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Official model emits a valid token through bounded runtime.
+  - Peak RSS <= configured safe budget plus documented measurement tolerance.
+  failure_policy:
+  - If memory plan fails, return to M03/M05/M06 decisions with measured allocation evidence; do not use unbounded
+    swap.
+  - If I/O dominates, first complete correctness then proceed to optimization tasks.
+  - If model semantics mismatch, stop performance optimization and fix correctness.
+- id: P01
+  title: Stable 128-token official generation
+  phase: proof
+  priority: 61
+  depends_on:
+  - P00
+  optional: false
+  goal: Prove repeated decode is stable rather than a one-token stunt.
+  allowed_paths:
+  - device/runtime/**
+  - host/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Generate fixed 128-token sequence/run configuration.
+  - Capture TTFT, prompt/decode rate, RSS, bytes/token, cache stats, frequencies and thermal.
+  - Run at least 3 times after clean runtime restart.
+  verification:
+  - No crash/OOM/corrupt output.
+  - Metrics schema valid.
+  required_artifacts:
+  - benchmarks/proof/128_tokens.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Three successful bounded runs with comparable token behavior.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: P02
+  title: Stable 512/1024-token characterization
+  phase: proof
+  priority: 62
+  depends_on:
+  - P01
+  optional: false
+  goal: Measure steady-state bottlenecks before optimization.
+  allowed_paths:
+  - device/runtime/**
+  - host/**
+  - benchmarks/**
+  - tools/trace/**
+  - artifacts/**
+  implementation:
+  - Run 512 tokens and, if runtime remains stable, 1024 tokens.
+  - Compute per-token flash traffic distribution, I/O wait, compute time and cache hit evolution.
+  - Classify bottleneck CPU/I/O/memory/thermal with evidence.
+  verification:
+  - Full trace analyzer report.
+  required_artifacts:
+  - benchmarks/proof/long_decode.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - At least 512 stable tokens; 1024 required unless external time/thermal safety limit is evidenced.
+  - Bottleneck classification is measured.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: O00
+  title: Overlap reads with compute
+  phase: optimization
+  priority: 70
+  depends_on:
+  - P02
+  optional: false
+  goal: Hide measurable storage latency with bounded double/triple buffering.
+  allowed_paths:
+  - device/runtime/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Implement preallocated I/O worker/buffers using portable pread+threads first.
+  - Issue known upcoming layer work early enough to overlap; no predictor yet.
+  - Trace overlap and compare against P02 baseline.
+  verification:
+  - Same correctness regression.
+  - Before/after same device/config.
+  required_artifacts:
+  - benchmarks/optimization/double_buffer.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Useful overlap is measured; no speedup claim without trace evidence.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: O01
+  title: Compare expert cache policies
+  phase: optimization
+  priority: 71
+  depends_on:
+  - O00
+  optional: false
+  goal: Exploit hot-expert/locality behavior only when actual traces support it.
+  allowed_paths:
+  - device/runtime/**
+  - tools/trace/**
+  - benchmarks/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Compare LRU baseline with LFU/decay and per-layer hot-set variants under identical byte budget.
+  - Use recorded traces plus live runs.
+  - Select policy by decode latency/bytes-token, not hit rate alone.
+  verification:
+  - Correctness unchanged.
+  - Reproducible before/after metrics.
+  required_artifacts:
+  - benchmarks/optimization/cache_policies.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Selected cache policy has measured benefit or LRU is retained with negative-result evidence.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: O02
+  title: Evaluate Apple-style reuse/windowing
+  phase: optimization
+  priority: 72
+  depends_on:
+  - O01
+  - R01
+  optional: false
+  goal: Test whether activation-history reuse reduces expert reads on gpt-oss traces without semantic drift.
+  allowed_paths:
+  - device/runtime/**
+  - benchmarks/**
+  - research/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Translate only applicable LLM-in-a-Flash reuse concepts; do not assume ReLU-neuron sparsity maps directly to
+    MoE.
+  - Test bounded history/window policies.
+  - Track bytes saved and any approximation/quality effect.
+  verification:
+  - Correctness/quality proxy and I/O metrics.
+  required_artifacts:
+  - benchmarks/optimization/windowing.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Policy is accepted only if quality constraint and net latency/traffic improve.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: O03
+  title: Evaluate expert prediction/prefetch
+  phase: optimization
+  priority: 73
+  depends_on:
+  - O00
+  - O01
+  - R01
+  optional: false
+  goal: Use cross-layer/router-history prediction to fetch experts before they are needed.
+  allowed_paths:
+  - device/runtime/**
+  - tools/trace/**
+  - benchmarks/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Start with trace-derived simple predictor before learned predictor.
+  - Measure prediction precision/recall, useful-prefetch bytes, wasted-prefetch bytes and hidden I/O.
+  - If simple method plateaus, test a small learned predictor only within fixed RAM/compute budget.
+  verification:
+  - Correctness unaffected because prediction changes timing, not selected-expert semantics.
+  required_artifacts:
+  - benchmarks/optimization/prefetch.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Accepted predictor improves end-to-end latency/traffic under bounded cache/buffer budget.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: O04
+  title: Trace-guided physical repacking
+  phase: optimization
+  priority: 74
+  depends_on:
+  - O01
+  - O03
+  optional: false
+  goal: Improve flash locality based on actual expert transition statistics.
+  allowed_paths:
+  - tools/model/**
+  - tools/trace/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Compute expert transition/co-access matrix from long traces.
+  - Create alternate H40M arena ordering/grouping; preserve provenance/checksums.
+  - Benchmark expert-shaped reads and end-to-end decode.
+  verification:
+  - Byte correctness checks.
+  - Before/after same runtime/cache policy.
+  required_artifacts:
+  - benchmarks/optimization/repacking.json
+  - artifacts/model/h40m/layout_v2.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Repacked layout retained only if end-to-end result improves.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: O05
+  title: Tune context/KV memory
+  phase: optimization
+  priority: 75
+  depends_on:
+  - P02
+  - M06
+  optional: false
+  goal: Maximize useful context without violating RAM budget.
+  allowed_paths:
+  - device/runtime/**
+  - benchmarks/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Begin at 512/1K/2K/4K context; measure state growth and performance.
+  - Evaluate supported KV quantization/sliding-window behavior without violating model attention semantics.
+  - Do not target 128K on this device by default.
+  verification:
+  - Correctness regression for accepted context path.
+  required_artifacts:
+  - benchmarks/optimization/context_kv.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - A default context is selected with memory headroom and measured performance.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: O06
+  title: Tune core affinity and thermal behavior
+  phase: optimization
+  priority: 76
+  depends_on:
+  - P02
+  - D05
+  - D06
+  optional: false
+  goal: "Optimize sustained\u2014not peak\u2014decode on the T606 CPU/thermal envelope."
+  allowed_paths:
+  - device/runtime/**
+  - host/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Sweep thread/core affinity around best D05 configurations.
+  - Run >=15-minute comparisons.
+  - Select based on sustained tok/s, energy/thermal stability and no system instability.
+  verification:
+  - Thermal/frequency traces attached.
+  required_artifacts:
+  - benchmarks/optimization/affinity_thermal.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Selected configuration is sustained-measurement winner.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: O07
+  title: Optimize dense/output bottlenecks
+  phase: optimization
+  priority: 77
+  depends_on:
+  - M05
+  - P02
+  optional: false
+  goal: Reduce unavoidable non-MoE per-token cost after profiling identifies it.
+  allowed_paths:
+  - device/runtime/**
+  - tools/model/**
+  - benchmarks/**
+  - tests/**
+  - artifacts/**
+  implementation:
+  - Profile output projection, attention and embedding separately.
+  - Apply selected backend kernel/quant/layout improvements only to measured bottlenecks.
+  - Preserve golden/logit tolerances.
+  verification:
+  - Before/after component and end-to-end benchmarks.
+  required_artifacts:
+  - benchmarks/optimization/dense_output.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Every retained optimization has measured end-to-end value and correctness evidence.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: A00
+  title: Implement minimal device inference service
+  phase: service
+  priority: 80
+  depends_on:
+  - P01
+  optional: false
+  goal: Expose bounded inference locally on the phone with minimal overhead.
+  allowed_paths:
+  - device/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Implement health, metrics and token/inference endpoint around runtime.
+  - Do not put heavy Harmony/tool orchestration on phone yet.
+  - Support clean start/stop and memory-budget configuration.
+  verification:
+  - Restart service after changes.
+  - Health/metrics and inference tests via device localhost.
+  required_artifacts:
+  - benchmarks/service/device_service.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Service survives repeated requests without RSS growth beyond budget.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: A01
+  title: Implement laptop Harmony/Responses gateway
+  phase: service
+  priority: 81
+  depends_on:
+  - A00
+  - R00
+  optional: false
+  goal: Keep protocol/tool formatting on laptop using official OpenAI Harmony behavior.
+  allowed_paths:
+  - host/gateway/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  - pyproject.toml
+  implementation:
+  - Integrate official openai-harmony pinned package/source.
+  - Render requests to token/input protocol and parse model channels/tool calls.
+  - Expose a small Responses/OpenAI-compatible surface sufficient for Codex/local clients.
+  verification:
+  - Golden Harmony render/parse fixtures.
+  - Gateway tests.
+  required_artifacts:
+  - tests/**
+  - benchmarks/service/gateway.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Gateway renders/parses official Harmony-compatible sequences and streams device output.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: A02
+  title: Make USB ADB-forward service path robust
+  phase: service
+  priority: 82
+  depends_on:
+  - A01
+  - D00
+  optional: false
+  goal: Provide laptop localhost endpoint backed by phone over the C-to-C cable.
+  allowed_paths:
+  - host/**
+  - scripts/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Automate adb forward setup/recovery.
+  - Detect serial changes/disconnect and provide explicit health failure.
+  - Run repeated reconnect/request test.
+  verification:
+  - 100 request loop; reconnect scenario.
+  required_artifacts:
+  - benchmarks/service/usb_transport.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Laptop can reliably call phone service through USB without Wi-Fi.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: A03
+  title: Codex/local-client end-to-end demo
+  phase: service
+  priority: 83
+  depends_on:
+  - A02
+  - P01
+  optional: false
+  goal: Demonstrate a real laptop client reaching gpt-oss on the phone via gateway/USB.
+  allowed_paths:
+  - host/**
+  - docs/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Use an OpenAI-compatible client or Codex local-server configuration supported by the pinned version.
+  - Run deterministic simple request and one tool-format/request scenario where supported.
+  - Record exact client version/config.
+  verification:
+  - End-to-end request returns model response and metrics correlate with device trace.
+  required_artifacts:
+  - benchmarks/service/end_to_end.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - "Client\u2192gateway\u2192USB\u2192phone\u2192gpt-oss round trip is proven."
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: OS00
+  title: Measure non-destructive Android trimming benefit
+  phase: os
+  priority: 90
+  depends_on:
+  - P02
+  - A02
+  optional: true
+  activation_condition: Always allowed after proof; run only if memory pressure is a measured bottleneck.
+  goal: Quantify reclaimable RAM/service overhead without flashing the device.
+  allowed_paths:
+  - host/**
+  - benchmarks/**
+  - artifacts/**
+  - docs/**
+  implementation:
+  - Use only reversible settings/process reductions permitted on stock device.
+  - Measure safe RSS budget, inference and thermal before/after.
+  - Restore original settings after test unless explicitly retained.
+  verification:
+  - Before/after same configuration.
+  required_artifacts:
+  - benchmarks/os/android_trim.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Benefit is quantified and reversible.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: OS01
+  title: Prepare recovery gate for destructive experiments
+  phase: os
+  priority: 91
+  depends_on:
+  - OS00
+  optional: true
+  activation_condition: Only when os_optimization_activated=true; destructive operations still forbidden.
+  goal: Document a verified restore path before any bootloader/partition work.
+  allowed_paths:
+  - docs/device/**
+  - artifacts/**
+  - PROJECT_STATE.yaml
+  implementation:
+  - Identify exact device variant/firmware/partition map/recovery modes.
+  - Obtain legitimate stock restore resources and verify hashes/source.
+  - Do not unlock or flash in this task.
+  verification:
+  - Independent review checklist in evidence.
+  required_artifacts:
+  - docs/device/RECOVERY_PLAN.md
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - RECOVERY_READY requirements can be objectively checked.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: OS02
+  title: Evaluate minimal Linux only after authorization
+  phase: os
+  priority: 92
+  depends_on:
+  - OS01
+  optional: true
+  activation_condition: os_optimization_activated=true AND destructive_device_authorized=true AND RECOVERY_READY=PASS
+  goal: Explore UMS9230/X6528 minimal Linux only when it is necessary, recoverable and explicitly authorized.
+  allowed_paths:
+  - kernel/**
+  - rootfs/**
+  - docs/device/**
+  - benchmarks/**
+  - artifacts/**
+  - PROJECT_STATE.yaml
+  implementation:
+  - Verify PROJECT_STATE destructive authorization before any destructive command.
+  - Prefer non-persistent boot path if supported.
+  - Bring up only CPU/RAM/storage/USB/thermal required for inference.
+  - Re-run memory/I/O/runtime benchmarks and retain Linux only if measured benefit justifies complexity.
+  verification:
+  - RECOVERY_READY gate PASS first.
+  - Rollback test.
+  - Benchmark comparison.
+  required_artifacts:
+  - benchmarks/os/minimal_linux.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - No destructive command without both gates.
+  - Linux path retained only on measured benefit.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: F00
+  title: Run final correctness regression
+  phase: final
+  priority: 100
+  depends_on:
+  - A03
+  - O00
+  - O01
+  - O02
+  - O03
+  - O04
+  - O05
+  - O06
+  - O07
+  optional: false
+  goal: Verify optimizations did not silently change model/protocol behavior.
+  allowed_paths:
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Run tiny golden suite, official prompt/tokenization fixtures and fixed end-to-end prompt set.
+  - Compare accepted numerical/token behavior with reference and documented quantization tolerance.
+  verification:
+  - All mandatory correctness tests pass.
+  required_artifacts:
+  - benchmarks/final/correctness.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - No unexplained correctness regression remains.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: F01
+  title: Run 30-minute sustained deployment test
+  phase: final
+  priority: 101
+  depends_on:
+  - F00
+  - A02
+  optional: false
+  goal: Prove deployed service stability under realistic sustained inference.
+  allowed_paths:
+  - benchmarks/**
+  - artifacts/**
+  - host/**
+  - device/**
+  implementation:
+  - Restart runtime/service from clean state.
+  - Run repeated requests/generation for >=30 minutes.
+  - Collect decode throughput, TTFT, RSS, flash bytes/token, cache/prefetch metrics, CPU frequency, thermal and
+    battery current when available.
+  verification:
+  - No OOM/crash/unbounded RSS.
+  - Metrics cover full duration.
+  required_artifacts:
+  - benchmarks/final/sustained_30m.json
+  - artifacts/runs/<run>/thermal.jsonl
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Service remains usable and bounded for >=30 minutes.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: F02
+  title: Produce final performance/feasibility report
+  phase: final
+  priority: 102
+  depends_on:
+  - F01
+  - P02
+  optional: false
+  goal: Close the research loop with reproducible facts, not marketing conclusions.
+  allowed_paths:
+  - FINAL_REPORT.md
+  - benchmarks/**
+  - artifacts/**
+  - docs/**
+  implementation:
+  - Aggregate model provenance, device config, memory plan, backend, quantization, context, cache/prefetch policy
+    and all final metrics.
+  - Classify proof/P0/P1/P2/stretch.
+  - Identify measured bottleneck and theoretical/empirical lower bounds.
+  - List negative results and rejected alternatives.
+  verification:
+  - Report generator references raw artifacts.
+  - No headline metric lacks a source artifact.
+  required_artifacts:
+  - FINAL_REPORT.md
+  - benchmarks/final/summary.json
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Another engineer can reproduce the final configuration from the report and locks.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.
+- id: F03
+  title: Final deployment gate audit
+  phase: final
+  priority: 103
+  depends_on:
+  - F02
+  optional: false
+  goal: Validate the repository and deployment against the complete Definition of Done.
+  allowed_paths:
+  - '**'
+  implementation:
+  - Run full handoff check, test suites and gate evaluator.
+  - Verify final service endpoint over USB after clean restart.
+  - Ensure project state has no hidden mandatory blocked tasks.
+  verification:
+  - python scripts/handoff_check.py
+  - Clean-restart device service and verify USB health + one inference request.
+  - Verify every mandatory predecessor task has pass evidence.
+  required_artifacts:
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Full repository checks pass.
+  - Clean-restart USB deployment is healthy.
+  - After F03 is marked pass, FINAL_DEPLOYMENT gate must evaluate PASS.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Fix only within task scope; retry verification.
+  - If externally blocked, mark blocked and continue independent ready tasks.

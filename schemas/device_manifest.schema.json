@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hot40i-llm-node.local/schemas/device_manifest.schema.json",
+  "title": "Hot40i device manifest",
+  "type": "object",
+  "required": ["schema_version", "captured_at", "adb_devices", "serial", "probes"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "captured_at": {"type": "string"},
+    "adb_devices": {"type": "string"},
+    "serial": {"type": ["string", "null"]},
+    "probes": {
+      "type": "object",
+      "minProperties": 5,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["command", "returncode", "stdout", "stderr"],
+        "properties": {
+          "command": {"type": "string"},
+          "returncode": {"type": "integer"},
+          "stdout": {"type": "string"},
+          "stderr": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+build/
+build-*/
+artifacts/runs/*/stdout/
+artifacts/runs/*/stderr/
+# Keep small manifests/evidence intentionally; do not commit multi-GB model payloads.
+artifacts/model/**/*.bin
+artifacts/model/**/*.safetensors
+artifacts/model/**/*.gguf
+third_party/src/

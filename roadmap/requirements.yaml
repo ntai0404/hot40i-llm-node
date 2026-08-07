@@ -1,0 +1,146 @@
+schema_version: 1
+requirements:
+  - id: FR-001
+    type: functional
+    statement: The laptop shall discover and communicate with the target Hot 40i over USB-C using authorized stock-Android ADB before any inference work proceeds.
+    mandatory: true
+    verified_by_tasks: [D00]
+    acceptance_gate: HARDWARE_CHARACTERIZED
+  - id: FR-002
+    type: functional
+    statement: The project shall capture a normalized, machine-readable manifest of the exact device build, CPU, memory, partitions, mounts, thermal zones and block-device evidence.
+    mandatory: true
+    verified_by_tasks: [D01, D03]
+    acceptance_gate: HARDWARE_CHARACTERIZED
+  - id: FR-003
+    type: functional
+    statement: The runtime shall use a measured safe process-memory budget derived from the physical device rather than assuming all 4 GB of RAM is available.
+    mandatory: true
+    verified_by_tasks: [D02, S01, F01]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: FR-004
+    type: functional
+    statement: Storage benchmarking shall reproduce expert-shaped access patterns and report throughput and latency distributions needed to estimate flash cost per generated token.
+    mandatory: true
+    verified_by_tasks: [D04]
+    acceptance_gate: HARDWARE_CHARACTERIZED
+  - id: FR-005
+    type: functional
+    statement: CPU, DRAM and sustained thermal behavior shall be measured on the exact phone before selecting or tuning the compute backend.
+    mandatory: true
+    verified_by_tasks: [D05, D06]
+    acceptance_gate: HARDWARE_CHARACTERIZED
+  - id: FR-006
+    type: functional
+    statement: The compute backend shall be selected by same-device measurements across viable ARM/mobile candidates rather than by paper or desktop benchmark claims.
+    mandatory: true
+    verified_by_tasks: [B00, B01, B02, B03, B04]
+    acceptance_gate: BACKEND_SELECTED
+  - id: FR-007
+    type: correctness
+    statement: Router, MXFP4 expert path and attention semantics shall achieve numerical parity on a tiny gpt-oss-shaped fixture before full-model out-of-core work.
+    mandatory: true
+    verified_by_tasks: [C00, C01, C02, C03, C04]
+    acceptance_gate: NUMERICAL_PARITY
+  - id: FR-008
+    type: provenance
+    statement: The official OpenAI gpt-oss-20b checkpoint, model semantics and Harmony format shall be pinned and provenance/checksums recorded before final conversion or deployment.
+    mandatory: true
+    verified_by_tasks: [R00, R01, M00, P00, A01]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: FR-009
+    type: functional
+    statement: H40M/1 shall provide a deterministic mapping from logical model tensors to validated physical flash ranges, including dtype, quantization, shape, alignment, placement and source provenance.
+    mandatory: true
+    verified_by_tasks: [M01, M02]
+    acceptance_gate: STORAGE_RUNTIME_READY
+  - id: FR-010
+    type: functional
+    statement: Input embedding access shall support token-row lookup without requiring the full embedding matrix to be resident in RAM.
+    mandatory: true
+    verified_by_tasks: [M04, S06]
+    acceptance_gate: STORAGE_RUNTIME_READY
+  - id: FR-011
+    type: functional
+    statement: Dense/shared tensors, including attention and output projection, shall have an explicit measured placement/quantization strategy that fits the safe memory plan.
+    mandatory: true
+    verified_by_tasks: [M03, M05, M06, S01, O07]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: FR-012
+    type: functional
+    statement: Expert weights shall be loaded through explicit indexed storage providers and a byte-bounded cache rather than relying on uncontrolled whole-model mmap/page-cache thrashing as the final design.
+    mandatory: true
+    verified_by_tasks: [S00, S02, S03, S05, S06]
+    acceptance_gate: STORAGE_RUNTIME_READY
+  - id: FR-013
+    type: observability
+    statement: The runtime shall emit machine-readable router, cache, I/O, compute and prefetch events sufficient to calculate flash bytes per token and explain bottlenecks.
+    mandatory: true
+    verified_by_tasks: [S04, P02, O00, O01, O03]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: FR-014
+    type: functional
+    statement: The official model shall generate stable output beyond a one-token proof while respecting the measured memory budget.
+    mandatory: true
+    verified_by_tasks: [P00, P01, P02]
+    acceptance_gate: OFFICIAL_MODEL_PROOF
+  - id: FR-015
+    type: optimization
+    statement: Read/compute overlap, cache policy, reuse/windowing, prediction/prefetch, physical repacking, context/state, CPU affinity and dense bottlenecks shall each be evaluated with before/after evidence and correctness preserved.
+    mandatory: true
+    verified_by_tasks: [O00, O01, O02, O03, O04, O05, O06, O07]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: FR-016
+    type: service
+    statement: The phone shall expose a minimal inference service and the laptop shall provide Harmony/Responses orchestration without requiring the full protocol stack to reside on the phone.
+    mandatory: true
+    verified_by_tasks: [A00, A01]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: FR-017
+    type: service
+    statement: The laptop shall reach the device service over the physical USB-C path, with stock-Android ADB TCP forwarding accepted as the primary deployment transport.
+    mandatory: true
+    verified_by_tasks: [A02, A03, F01]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: NFR-001
+    type: safety
+    statement: The mandatory path shall remain non-destructive on stock Android; bootloader unlock, partition writes, erase, AVB/vbmeta changes and bypass tooling are forbidden unless explicit authorization and RECOVERY_READY are both present.
+    mandatory: true
+    verified_by_tasks: [R02, D00, OS01]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: NFR-002
+    type: reproducibility
+    statement: External code used for implementation or benchmark decisions shall be pinned to immutable commits and every task shall preserve commands, outputs, artifacts and source refs.
+    mandatory: true
+    verified_by_tasks: [R00, F02, F03]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: NFR-003
+    type: correctness
+    statement: Performance optimizations shall never substitute predicted experts for exact router-selected experts and shall pass regression tests before final acceptance.
+    mandatory: true
+    verified_by_tasks: [O03, F00]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: NFR-004
+    type: memory
+    statement: Caches and working buffers shall have explicit byte budgets and the final sustained service shall show no unbounded RSS, swap thrashing or OOM behavior.
+    mandatory: true
+    verified_by_tasks: [S01, S03, F01]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: NFR-005
+    type: performance
+    statement: Final performance shall be reported as measured proof/P0/P1/P2/stretch classes without inventing a pass threshold that is unsupported by the hardware.
+    mandatory: true
+    verified_by_tasks: [F01, F02]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: NFR-006
+    type: thermal
+    statement: Final headline throughput shall be based on sustained behavior, with at least a 30-minute test including CPU frequency and thermal telemetry where exposed by the device.
+    mandatory: true
+    verified_by_tasks: [D06, F01]
+    acceptance_gate: FINAL_DEPLOYMENT
+  - id: NFR-007
+    type: autonomy
+    statement: A coding agent shall be able to determine the next valid task, pass/block it with auditable evidence, and progress through the mandatory DAG without per-task human prompts.
+    mandatory: true
+    verified_by_tasks: [R00, F03]
+    acceptance_gate: FINAL_DEPLOYMENT

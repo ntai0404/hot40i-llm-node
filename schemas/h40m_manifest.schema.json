@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hot40i-llm-node.local/schemas/h40m_manifest.schema.json",
+  "title": "H40M/1 manifest",
+  "type": "object",
+  "required": ["format", "source", "files", "tensors"],
+  "properties": {
+    "format": {"const": "H40M/1"},
+    "source": {
+      "type": "object",
+      "required": ["model", "checkpoint_sha256"],
+      "properties": {
+        "model": {"type": "string", "minLength": 1},
+        "checkpoint_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+        "upstream_ref": {"type": ["string", "null"]},
+        "converter_commit": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "size", "sha256"],
+        "properties": {
+          "id": {"type": "integer", "minimum": 0},
+          "path": {"type": "string", "minLength": 1},
+          "size": {"type": "integer", "minimum": 0},
+          "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "tensors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "role",
+          "layer",
+          "expert_id",
+          "shape",
+          "dtype",
+          "quant_type",
+          "layout",
+          "alignment",
+          "file_id",
+          "offset",
+          "length",
+          "placement",
+          "sha256",
+          "source_tensor"
+        ],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1},
+          "layer": {"type": ["integer", "null"], "minimum": 0},
+          "expert_id": {"type": ["integer", "null"], "minimum": 0},
+          "shape": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "integer", "minimum": 1}
+          },
+          "dtype": {"type": "string", "minLength": 1},
+          "quant_type": {"type": ["string", "null"]},
+          "layout": {"type": ["string", "null"]},
+          "alignment": {"type": "integer", "minimum": 1},
+          "file_id": {"type": "integer", "minimum": 0},
+          "offset": {"type": "integer", "minimum": 0},
+          "length": {"type": "integer", "minimum": 0},
+          "placement": {"enum": ["resident", "cache", "stream", "token_lookup"]},
+          "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+          "source_tensor": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": true
+      }
+    },
+    "extensions": {"type": "object"}
+  },
+  "additionalProperties": false
+}

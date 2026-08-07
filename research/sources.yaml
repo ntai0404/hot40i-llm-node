@@ -1,0 +1,174 @@
+as_of: '2026-08-07'
+policy: Prefer official first-party source for claims about that project/model; papers are design evidence, not
+  guaranteed transfer to T606.
+sources:
+- id: openai-gpt-oss-model-card
+  tier: S
+  owner: OpenAI
+  url: https://deploymentsafety.openai.com/gpt-oss/paperbench
+  use:
+  - model parameter breakdown
+  - MXFP4 4.25-bit MoE quantization
+  - 24 layers/32 experts/top-4
+  - attention architecture
+  - checkpoint size
+- id: openai-gpt-oss-repo
+  tier: S
+  owner: OpenAI
+  url: https://github.com/openai/gpt-oss
+  use:
+  - reference implementation
+  - MXFP4 tensor representation
+  - model semantics
+- id: openai-harmony
+  tier: S
+  owner: OpenAI
+  url: https://github.com/openai/harmony
+  use:
+  - render/parse/token format
+  - gpt-oss conversation/tool channels
+- id: openai-codex
+  tier: S-workflow
+  owner: OpenAI
+  url: https://github.com/openai/codex
+  use:
+  - primary autonomous coding-agent workflow
+  - AGENTS.md conventions/client integration
+- id: apple-llm-in-flash
+  tier: S-research
+  owner: Apple
+  url: https://machinelearning.apple.com/research/efficient-large-language
+  use:
+  - flash cost model
+  - windowing/reuse
+  - larger contiguous reads/row-column bundling
+  do_not_assume:
+  - published ReLU/neuron-sparsity method directly applies to gpt-oss MoE
+- id: apple-mlx
+  tier: A-reference
+  owner: Apple
+  url: https://github.com/ml-explore/mlx
+  use:
+  - runtime/lazy/quant/tensor design reference
+  do_not_assume:
+  - MLX is an Android/T606 backend
+- id: apple-foundation-models-2025
+  tier: A-reference
+  owner: Apple
+  url: https://machinelearning.apple.com/research/apple-foundation-models-tech-report-2025
+  use:
+  - on-device memory/quantization design context
+  - KV-cache sharing and deployment-aware model design
+  do_not_assume:
+  - Apple-silicon results transfer to Unisoc T606
+- id: anthropic-claude-code
+  tier: S-workflow
+  owner: Anthropic
+  url: https://github.com/anthropics/claude-code
+  use:
+  - independent reviewer/agent workflow
+  - hooks/subagent lessons
+- id: mcp-spec
+  tier: S-workflow
+  owner: Model Context Protocol
+  url: https://github.com/modelcontextprotocol/modelcontextprotocol
+  use:
+  - tool boundary/protocol for optional device MCP server
+- id: powerinfer2
+  tier: A
+  owner: research
+  url: https://arxiv.org/abs/2406.06282
+  use:
+  - smartphone out-of-core
+  - cluster-level I/O-compute pipeline
+  - segmented cache
+- id: powerserve
+  tier: A-mobile
+  owner: PowerServe project
+  url: https://github.com/powerserve-project/PowerServe
+  use:
+  - Android mobile deployment/build patterns
+  - smartphone serving/runtime integration reference
+  do_not_assume:
+  - its supported-model or flagship-SoC performance applies to gpt-oss/T606
+- id: activeflow
+  tier: A
+  owner: research
+  url: https://arxiv.org/abs/2504.08378
+  use:
+  - active-weight DRAM-flash swapping
+  - cross-layer prediction/preload
+  - hot-weight cache
+- id: edgemoe
+  tier: A
+  owner: research
+  url: https://arxiv.org/abs/2308.14352
+  use:
+  - non-expert resident/expert external storage
+  - expert prediction/prefetch
+  - bitwidth adaptation
+- id: moe-infinity
+  tier: A
+  owner: research
+  url: https://github.com/EfficientMoE/MoE-Infinity
+  use:
+  - activation trace
+  - activation-aware expert cache/prefetch
+- id: smallthinker
+  tier: A
+  owner: research
+  url: https://arxiv.org/abs/2507.20984
+  use:
+  - pre-attention router
+  - deployment-aware sparse model design
+  - storage-latency hiding
+- id: llama-cpp
+  tier: A-backend
+  owner: ggml-org
+  url: https://github.com/ggml-org/llama.cpp
+  use:
+  - Android ARM CPU baseline
+  - ggml kernels
+  - gpt-oss MXFP4/GGUF reference
+- id: mnn
+  tier: A-backend
+  owner: Alibaba
+  url: https://github.com/alibaba/MNN
+  use:
+  - Android CPU/Vulkan backend candidate
+  - mobile LLM deployment reference
+- id: executorch
+  tier: A-backend
+  owner: PyTorch
+  url: https://github.com/pytorch/executorch
+  use:
+  - XNNPACK ARM64 backend candidate
+  - mobile runtime/operator integration reference
+- id: mlc-llm
+  tier: A-backend
+  owner: MLC
+  url: https://github.com/mlc-ai/mlc-llm
+  use:
+  - Android/Mali candidate
+  - mobile model serving/build reference
+- id: flexgen
+  tier: B-background
+  owner: research
+  url: https://proceedings.mlr.press/v202/sheng23a.html
+  use:
+  - dense out-of-core placement baseline
+  - CPU/GPU/disk scheduling comparison
+- id: zero-inference
+  tier: B-background
+  owner: Microsoft DeepSpeed
+  url: https://www.deepspeed.ai/2022/09/09/zero-inference.html
+  use:
+  - layer-streaming/NVMe inference background
+  - capacity-vs-bandwidth comparison
+- id: dejavu
+  tier: B-background
+  owner: research
+  url: https://proceedings.mlr.press/v202/liu23am.html
+  use:
+  - contextual sparsity/predictor background
+  - historical basis for selective activation work

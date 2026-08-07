@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hot40i-llm-node.local/schemas/expert_trace_event.schema.json",
+  "title": "Expert/runtime trace event",
+  "type": "object",
+  "required": ["schema_version", "ts_ns", "event"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "ts_ns": {"type": "integer", "minimum": 0},
+    "event": {
+      "enum": [
+        "token_begin",
+        "token_end",
+        "layer_begin",
+        "layer_end",
+        "route",
+        "cache_hit",
+        "cache_miss",
+        "read_begin",
+        "read_end",
+        "prefetch_begin",
+        "prefetch_end",
+        "evict",
+        "compute_begin",
+        "compute_end"
+      ]
+    },
+    "token": {"type": "integer", "minimum": 0},
+    "layer": {"type": "integer", "minimum": 0},
+    "expert": {"type": "integer", "minimum": 0},
+    "bytes": {"type": "integer", "minimum": 0},
+    "duration_ns": {"type": "integer", "minimum": 0},
+    "prefetch_useful": {"type": "boolean"},
+    "request_id": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}

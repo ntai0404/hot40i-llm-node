@@ -1,0 +1,62 @@
+upstreams:
+- name: openai-gpt-oss
+  url: https://github.com/openai/gpt-oss.git
+  role: canonical model architecture/reference/MXFP4
+  priority: S
+  preferred_ref: v0.0.9
+- name: openai-harmony
+  url: https://github.com/openai/harmony.git
+  role: canonical gpt-oss prompt/response format
+  priority: S
+  preferred_ref: main
+  package_pin: openai-harmony==0.0.8
+- name: openai-codex
+  url: https://github.com/openai/codex.git
+  role: primary coding-agent/client reference
+  priority: S-workflow
+  preferred_ref: rust-v0.144.4
+- name: apple-mlx
+  url: https://github.com/ml-explore/mlx.git
+  role: Apple runtime design reference only
+  priority: A-reference
+  preferred_ref: v0.32.0
+- name: powerinfer
+  url: https://github.com/SJTU-IPADS/PowerInfer.git
+  role: activation locality/out-of-core reference
+  priority: A
+  preferred_ref: main
+- name: powerserve
+  url: https://github.com/powerserve-project/PowerServe.git
+  role: Android/HarmonyOS mobile LLM serving and deployment reference
+  priority: A-mobile
+  preferred_ref: main
+- name: llama-cpp
+  url: https://github.com/ggml-org/llama.cpp.git
+  role: ARM/GGML/GGUF/gpt-oss baseline
+  priority: A
+  preferred_ref: b10173
+- name: mnn
+  url: https://github.com/alibaba/MNN.git
+  role: Android backend candidate
+  priority: B
+  preferred_ref: main
+- name: executorch
+  url: https://github.com/pytorch/executorch.git
+  role: XNNPACK/ARM backend candidate
+  priority: B
+  preferred_ref: main
+- name: mlc-llm
+  url: https://github.com/mlc-ai/mlc-llm.git
+  role: Android/Mali backend candidate
+  priority: B
+  preferred_ref: main
+- name: claude-code
+  url: https://github.com/anthropics/claude-code.git
+  role: independent agent/review workflow reference
+  priority: workflow
+  preferred_ref: v2.1.220
+- name: mcp-spec
+  url: https://github.com/modelcontextprotocol/modelcontextprotocol.git
+  role: tool protocol reference
+  priority: workflow
+  preferred_ref: '2025-11-25'

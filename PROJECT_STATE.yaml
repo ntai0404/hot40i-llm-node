@@ -1,0 +1,18 @@
+schema_version: 1
+project: hot40i-llm-node
+goal_gate: FINAL_DEPLOYMENT
+current_phase: bootstrap
+completed_tasks: []
+in_progress: null
+blocked_tasks: {}
+task_evidence: {}
+skipped_optional_tasks: []
+decisions:
+  destructive_device_authorized: false
+  os_optimization_activated: false
+  selected_compute_backend: null
+  safe_rss_budget_bytes: null
+  device_serial: null
+notes:
+- Initial handoff state. Existing scaffold code is not evidence that device/model
+  milestones passed.

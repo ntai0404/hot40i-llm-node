@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hot40i-llm-node.local/schemas/task_evidence.schema.json",
+  "title": "Task evidence",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "task_id",
+    "started_at",
+    "finished_at",
+    "status",
+    "commands",
+    "files_changed",
+    "verification",
+    "metrics",
+    "artifacts",
+    "limitations",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "started_at": {"type": "string"},
+    "finished_at": {"type": "string"},
+    "status": {"enum": ["pass", "blocked", "fail"]},
+    "git_commit": {"type": ["string", "null"]},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "ref", "note"],
+        "properties": {
+          "url": {"type": "string", "minLength": 1},
+          "ref": {"type": "string"},
+          "note": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["argv", "exit_code", "stdout_file", "stderr_file"],
+        "properties": {
+          "argv": {"type": "string", "minLength": 1},
+          "exit_code": {"type": "integer"},
+          "stdout_file": {"type": ["string", "null"]},
+          "stderr_file": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "files_changed": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "verification": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "passed", "detail"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "passed": {"type": "boolean"},
+          "detail": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "metrics": {"type": "object"},
+    "artifacts": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "notes": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "additionalProperties": false
+}
