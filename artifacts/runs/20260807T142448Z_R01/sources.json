@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "task_id": "R01",
+  "checked_at": "2026-08-07T14:35:00Z",
+  "summary": {
+    "material_doc_updates_required": false,
+    "contradictions": [],
+    "unknowns": [
+      "Exact gpt-oss-20b tensor names, tied/untied embedding details, scale tensor layout, and per-tensor byte ranges remain UNKNOWN until M00 inspects the pinned checkpoint.",
+      "Hot 40i RAM, storage, CPU, and thermal limits remain UNKNOWN until D00-D06 measure the physical device.",
+      "Published smartphone/backend throughput from PowerInfer-2, PowerServe, EdgeMoE, MoE-Infinity, ActiveFlow, and SmallThinker is not assumed to transfer to Unisoc T606 or gpt-oss-20b."
+    ]
+  },
+  "sources": [
+    {
+      "id": "openai-gpt-oss-model-card",
+      "url": "https://deploymentsafety.openai.com/gpt-oss/paperbench",
+      "authority": "S",
+      "checked_fact": "gpt-oss-20b is documented as an autoregressive MoE transformer with 24 layers, 20.91B total parameters, 3.61B active parameters, 19.12B MLP parameters, 0.64B attention parameters, 1.16B embed+unembed parameters, 12.8GiB checkpoint size, MXFP4 MoE quantization at 4.25 bits/parameter, 32 experts, top-4 selected experts, 2880 residual dimension, 64 query heads, 8 KV heads, and dense-layer context extension to 131072 tokens.",
+      "project_use": "Canonical architecture, parameter, quantization, router, tokenizer, and attention facts.",
+      "status": "consistent_with_docs"
+    },
+    {
+      "id": "openai-gpt-oss-repo",
+      "url": "https://github.com/openai/gpt-oss",
+      "locked_ref": "599476783c6f88508dab8577808b5ead5cbee8d2",
+      "authority": "S",
+      "checked_fact": "Official repository provides reference implementations and states gpt-oss models require Harmony formatting; repo notes PyTorch reference is educational and upcasts weights to BF16, while Triton/Metal paths are reference implementations.",
+      "project_use": "Canonical model semantics and MXFP4 implementation reference; not a memory/performance target for Hot 40i.",
+      "status": "consistent_with_docs"
+    },
+    {
+      "id": "openai-harmony",
+      "url": "https://github.com/openai/harmony",
+      "locked_ref": "abd677f7ac962629c808197caa1feb9e3e95d2b0",
+      "package_pin": "openai-harmony==0.0.8",
+      "authority": "S",
+      "checked_fact": "Official renderer/parser for the Harmony response format used by gpt-oss.",
+      "project_use": "Canonical laptop-side prompt rendering and completion parsing.",
+      "status": "consistent_with_docs"
+    },
+    {
+      "id": "apple-llm-in-flash",
+      "url": "https://machinelearning.apple.com/research/efficient-large-language",
+      "authority": "S-research",
+      "checked_fact": "Apple frames flash-aware inference around reducing transferred bytes and using larger contiguous reads, with windowing and row-column bundling for the studied sparsity pattern.",
+      "project_use": "Flash cost-model and layout/reuse ideas; not a gpt-oss MoE semantic authority.",
+      "status": "consistent_with_docs"
+    },
+    {
+      "id": "apple-mlx",
+      "url": "https://github.com/ml-explore/mlx",
+      "locked_ref": "7a1d4f5c12ac82f4b4d0a6e71538d89ca0605247",
+      "authority": "A-reference",
+      "checked_fact": "MLX is an Apple-silicon array framework with lazy computation, dynamic graphs, multi-device execution, and unified memory.",
+      "project_use": "Runtime design reference only; not an Android/T606 backend.",
+      "status": "consistent_with_docs"
+    },
+    {
+      "id": "powerinfer2",
+      "url": "https://arxiv.org/abs/2406.06282",
+      "authority": "A-research",
+      "checked_fact": "PowerInfer-2 uses neuron clusters, I/O-compute pipelining, and segmented caching to serve models exceeding smartphone memory.",
+      "project_use": "Scheduling/cache/pipeline inspiration; performance numbers are not assumed transferable.",
+      "status": "consistent_with_docs"
+    },
+    {
+      "id": "powerserve",
+      "url": "https://github.com/powerserve-project/PowerServe",
+      "locked_ref": "0ec6d643249c6f48724f2e2091755f904b637cd4",
+      "authority": "A-mobile",
+      "checked_fact": "PowerServe provides Android/HarmonyOS deployment mechanics, GGUF/QNN-oriented model preparation, service binaries, and mobile serving structure.",
+      "project_use": "Device build/serving reference; not a gpt-oss correctness or T606 performance source.",
+      "status": "consistent_with_docs"
+    },
+    {
+      "id": "activeflow",
+      "url": "https://arxiv.org/abs/2504.08378",
+      "authority": "A-research",
+      "checked_fact": "ActiveFlow proposes active-weight DRAM-flash swapping, cross-layer active-weight preloading, and budget allocation among hot cache, preloaded weights, and current compute.",
+      "project_use": "Prefetch and memory-allocation inspiration after exact baseline correctness.",
+      "status": "consistent_with_docs"
+    },
+    {
+      "id": "edgemoe",
+      "url": "https://arxiv.org/abs/2308.14352",
+      "authority": "A-research",
+      "checked_fact": "EdgeMoE keeps non-expert weights in memory, stores expert weights externally, and uses expert-wise bitwidth adaptation plus expert preloading.",
+      "project_use": "Expert placement/prefetch reference; approximation and re-quantization require project-specific correctness evidence.",
+      "status": "consistent_with_docs"
+    },
+    {
+      "id": "moe-infinity",
+      "url": "https://github.com/EfficientMoE/MoE-Infinity",
+      "authority": "A-research",
+      "checked_fact": "MoE-Infinity offloads expert weights to host memory/SSD, uses activation-aware caching, tracing, and prefetching, and includes FP4/MXFP4 expert paths in a GPU-oriented stack.",
+      "project_use": "Trace/cache/prefetch reference; GPU/server architecture is not copied as the phone runtime.",
+      "status": "consistent_with_docs"
+    },
+    {
+      "id": "smallthinker",
+      "url": "https://arxiv.org/abs/2507.20984",
+      "authority": "A-research",
+      "checked_fact": "SmallThinker is deployment-aware model/runtime co-design with fine-grained MoE, pre-attention routing to hide storage latency, and KV cache reduction.",
+      "project_use": "Future/comparator evidence that storage-latency hiding may need model co-design; does not change the primary gpt-oss target.",
+      "status": "consistent_with_docs"
+    }
+  ]
+}
