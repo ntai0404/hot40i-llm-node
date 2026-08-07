@@ -10,6 +10,7 @@ from rich.console import Console
 from rich.table import Table
 
 from .adb import AdbClient, AdbError, collect_manifest, save_json
+from .cpu_memory import run_cpu_memory_benchmark
 from .io_bench import run_storage_benchmark
 from .memory_budget import measure_memory_budget
 from .parsers import human_bytes, parse_meminfo
@@ -140,6 +141,31 @@ def storage_bench(
         out=out,
         repeats=repeats,
         file_size_mib=file_size_mib,
+    )
+    console.print(
+        f"wrote {out} with {document['metrics']['sample_count']} samples; "
+        f"samples={samples_jsonl}"
+    )
+
+
+@app.command("cpu-memory-bench")
+def cpu_memory_bench(
+    serial: str = typer.Option(..., "--serial"),
+    binary: Path = typer.Option(Path("build-android-direct/h40_cpu_memory_bench"), "--binary"),
+    samples_jsonl: Path = typer.Option(Path("artifacts/runs/cpu_memory_samples.jsonl"), "--samples-jsonl"),
+    out: Path = typer.Option(Path("benchmarks/stock/cpu_memory.json"), "--out"),
+    repeats: int = typer.Option(3, "--repeats"),
+    seconds: float = typer.Option(0.35, "--seconds"),
+    mem_bytes: int = typer.Option(32 * 1024 * 1024, "--mem-bytes"),
+) -> None:
+    document = run_cpu_memory_benchmark(
+        serial=serial,
+        local_binary=binary,
+        out=out,
+        samples_jsonl=samples_jsonl,
+        repeats=repeats,
+        seconds=seconds,
+        mem_bytes=mem_bytes,
     )
     console.print(
         f"wrote {out} with {document['metrics']['sample_count']} samples; "

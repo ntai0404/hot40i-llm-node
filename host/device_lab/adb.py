@@ -55,6 +55,7 @@ SAFE_PROBES: dict[str, str] = {
     "thermal_zones": "for z in /sys/class/thermal/thermal_zone*; do echo ==== $z; cat $z/type 2>/dev/null; cat $z/temp 2>/dev/null; done",
     "cpu_online": "cat /sys/devices/system/cpu/online 2>/dev/null || true",
     "cpu_freq": "for c in /sys/devices/system/cpu/cpu[0-9]*; do echo ==== $c; cat $c/cpufreq/scaling_cur_freq 2>/dev/null; done",
+    "cpu_topology": "for c in /sys/devices/system/cpu/cpu[0-9]*; do [ -e $c ] || continue; echo ==== $c; cat $c/topology/core_id 2>/dev/null; cat $c/topology/physical_package_id 2>/dev/null; cat $c/cpufreq/cpuinfo_max_freq 2>/dev/null; cat $c/cpufreq/scaling_cur_freq 2>/dev/null; cat $c/cpu_capacity 2>/dev/null; done",
     "block_devices": "for d in /sys/block/*; do echo ==== $d; cat $d/device/model 2>/dev/null; cat $d/queue/logical_block_size 2>/dev/null; done",
     "storage_sysfs": "for d in /sys/block/sd* /sys/block/mmcblk*; do [ -e $d ] || continue; echo ==== $d; cat $d/device/model 2>/dev/null; cat $d/device/name 2>/dev/null; cat $d/queue/logical_block_size 2>/dev/null; cat $d/queue/physical_block_size 2>/dev/null; cat $d/queue/read_ahead_kb 2>/dev/null; cat $d/queue/rotational 2>/dev/null; cat $d/size 2>/dev/null; done",
     "battery": "dumpsys battery",
