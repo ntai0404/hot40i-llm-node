@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "task_id": "B00",
+  "started_at": "2026-08-07T16:35:47.411927+00:00",
+  "finished_at": "2026-08-07T16:55:57.204448+00:00",
+  "status": "pass",
+  "git_commit": "4117637ce7560465963ef9211525bc016ba8c6fe",
+  "sources": [
+    {
+      "url": "https://github.com/ggml-org/llama.cpp",
+      "ref": "refs/tags/b10173 commit=e9fa0781f1c25fc4fe8c86be1edc6970661ad6f0",
+      "note": "Pinned llama.cpp source archive imported under third_party/llama.cpp for B00."
+    },
+    {
+      "url": "https://huggingface.co/ggml-org/models/resolve/main/tinyllamas/stories260K.gguf",
+      "ref": "sha256=270CBA1BD5109F42D03350F60406024560464DB173C0E387D91F0426D3BD256D size=1185376",
+      "note": "Small llama.cpp test GGUF fixture used for fixed prompt/decode baseline."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "curl.exe -L https://github.com/ggml-org/llama.cpp/archive/refs/tags/b10173.zip -o 'C:\\tmp\\llama-cpp-b10173.zip'",
+      "exit_code": 7,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\001.log"
+    },
+    {
+      "argv": "curl.exe -L https://github.com/ggml-org/llama.cpp/archive/refs/tags/b10173.zip -o 'C:\\tmp\\llama-cpp-b10173.zip'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -Command 'Expand-Archive -LiteralPath C:\\tmp\\llama-cpp-b10173.zip -DestinationPath third_party -Force; if (Test-Path third_party\\llama.cpp) { Remove-Item -LiteralPath third_party\\llama.cpp -Recurse -Force }; Rename-Item -LiteralPath third_party\\llama.cpp-b10173 -NewName llama.cpp'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\003.log"
+    },
+    {
+      "argv": "curl.exe -L https://huggingface.co/ggml-org/models/resolve/main/tinyllamas/stories260K.gguf -o 'C:\\tmp\\stories260K.gguf'",
+      "exit_code": 7,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\004.log"
+    },
+    {
+      "argv": "curl.exe -L https://huggingface.co/ggml-org/models/resolve/main/tinyllamas/stories260K.gguf -o 'C:\\tmp\\stories260K.gguf'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\005.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -Command 'Get-FileHash C:\\tmp\\stories260K.gguf -Algorithm SHA256; Get-Item C:\\tmp\\stories260K.gguf | Select-Object Length'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\006.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -ExecutionPolicy Bypass -File 'scripts\\build_llama_cpp_android.ps1'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\007.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -ExecutionPolicy Bypass -File 'scripts\\build_llama_cpp_android.ps1'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\008.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -ExecutionPolicy Bypass -File 'scripts\\build_llama_cpp_android.ps1'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\009.log"
+    },
+    {
+      "argv": "python 'scripts\\run_llama_cpp_android_baseline.py' --serial 112193741U000563 --run-dir 'artifacts\\runs\\20260807T163547Z_B00' --runs 3 --threads 4 --n-prompt 32 --n-gen 16 --out 'benchmarks\\runtimes\\llama_cpp.json'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\010.log"
+    },
+    {
+      "argv": "python 'scripts\\run_llama_cpp_android_baseline.py' --serial 112193741U000563 --run-dir 'artifacts\\runs\\20260807T163547Z_B00' --runs 3 --threads 4 --n-prompt 32 --n-gen 16 --out 'benchmarks\\runtimes\\llama_cpp.json'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\011.log"
+    },
+    {
+      "argv": "python 'scripts\\run_llama_cpp_android_baseline.py' --serial 112193741U000563 --run-dir 'artifacts\\runs\\20260807T163547Z_B00' --runs 3 --threads 4 --n-prompt 32 --n-gen 16 --out 'benchmarks\\runtimes\\llama_cpp.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\012.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\012.log"
+    },
+    {
+      "argv": "python -m json.tool 'benchmarks\\runtimes\\llama_cpp.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\013.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\013.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -ExecutionPolicy Bypass -File 'scripts\\build_llama_cpp_android.ps1'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\014.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\014.log"
+    },
+    {
+      "argv": "python 'scripts\\run_llama_cpp_android_baseline.py' --serial 112193741U000563 --run-dir 'artifacts\\runs\\20260807T163547Z_B00' --runs 3 --threads 4 --n-prompt 512 --n-gen 128 --out 'benchmarks\\runtimes\\llama_cpp.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\015.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\015.log"
+    },
+    {
+      "argv": "python -c 'import json, pathlib; d=json.loads(pathlib.Path('\"'\"'benchmarks/runtimes/llama_cpp.json'\"'\"').read_text()); assert d['\"'\"'metrics'\"'\"']['\"'\"'sample_count'\"'\"']==3; assert d['\"'\"'metrics'\"'\"']['\"'\"'exit_codes'\"'\"']==[0,0,0]; assert d['\"'\"'metrics'\"'\"']['\"'\"'prompt_tokens_per_second_median'\"'\"'] is not None; assert d['\"'\"'metrics'\"'\"']['\"'\"'decode_tokens_per_second_median'\"'\"'] is not None; assert all(s['\"'\"'rss_peak_kib'\"'\"'] for s in d['\"'\"'samples'\"'\"']); commits={r['\"'\"'build_commit'\"'\"'] for s in d['\"'\"'samples'\"'\"'] for r in s['\"'\"'llama_bench_rows'\"'\"']}; print('\"'\"'commits=%s rss_peak_kib_max=%s pp_median=%s tg_median=%s'\"'\"' % (sorted(commits), d['\"'\"'metrics'\"'\"']['\"'\"'rss_peak_kib_max'\"'\"'], d['\"'\"'metrics'\"'\"']['\"'\"'prompt_tokens_per_second_median'\"'\"'], d['\"'\"'metrics'\"'\"']['\"'\"'decode_tokens_per_second_median'\"'\"']))'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\016.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\016.log"
+    },
+    {
+      "argv": "python -m json.tool 'benchmarks\\runtimes\\llama_cpp.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\017.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\017.log"
+    },
+    {
+      "argv": "python 'scripts\\run_llama_cpp_android_baseline.py' --serial 112193741U000563 --run-dir 'artifacts\\runs\\20260807T163547Z_B00' --runs 3 --threads 4 --n-prompt 512 --n-gen 128 --out 'benchmarks\\runtimes\\llama_cpp.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\018.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\018.log"
+    },
+    {
+      "argv": "python -c 'import json, pathlib; d=json.loads(pathlib.Path('\"'\"'benchmarks/runtimes/llama_cpp.json'\"'\"').read_text()); assert d['\"'\"'schema_version'\"'\"']==1; assert d['\"'\"'metrics'\"'\"']['\"'\"'sample_count'\"'\"']==3; assert d['\"'\"'metrics'\"'\"']['\"'\"'exit_codes'\"'\"']==[0,0,0]; assert d['\"'\"'metrics'\"'\"']['\"'\"'prompt_tokens_per_second_median'\"'\"'] and d['\"'\"'metrics'\"'\"']['\"'\"'decode_tokens_per_second_median'\"'\"']; assert d['\"'\"'metrics'\"'\"']['\"'\"'rss_peak_kib_max'\"'\"']; commits={r['\"'\"'build_commit'\"'\"'] for s in d['\"'\"'samples'\"'\"'] for r in s['\"'\"'llama_bench_rows'\"'\"']}; assert commits=={'\"'\"'e9fa0781f1c25fc4fe8c86be1edc6970661ad6f0'\"'\"'}; assert d['\"'\"'binary_help'\"'\"']['\"'\"'exit_code'\"'\"']==0; print('\"'\"'valid runs=3 pinned_commit=e9fa0781f1c25fc4fe8c86be1edc6970661ad6f0 rss_peak_kib_max=%s pp_median=%s tg_median=%s'\"'\"' % (d['\"'\"'metrics'\"'\"']['\"'\"'rss_peak_kib_max'\"'\"'], d['\"'\"'metrics'\"'\"']['\"'\"'prompt_tokens_per_second_median'\"'\"'], d['\"'\"'metrics'\"'\"']['\"'\"'decode_tokens_per_second_median'\"'\"']))'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\019.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\019.log"
+    },
+    {
+      "argv": "pytest -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T163547Z_B00\\stdout\\020.log",
+      "stderr_file": "artifacts\\runs\\20260807T163547Z_B00\\stderr\\020.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260807T163547Z_B00/",
+    "benchmarks/runtimes/",
+    "scripts/build_llama_cpp_android.ps1",
+    "scripts/run_llama_cpp_android_baseline.py",
+    "third_party/llama.cpp/"
+  ],
+  "verification": [
+    {
+      "name": "Binary/version records pinned ref.",
+      "passed": true,
+      "detail": "llama-bench JSON rows report build_commit e9fa0781f1c25fc4fe8c86be1edc6970661ad6f0 and build_number 10173; binary --help exits 0."
+    },
+    {
+      "name": "At least 3 device runs.",
+      "passed": true,
+      "detail": "benchmarks/runtimes/llama_cpp.json has sample_count=3, exit_codes=[0,0,0], fixed n_prompt=512, n_gen=128, threads=4 on serial 112193741U000563."
+    }
+  ],
+  "metrics": {
+    "prompt_tokens_per_second_median": 8609.739317,
+    "decode_tokens_per_second_median": 2344.292633,
+    "rss_peak_kib_max": 10360
+  },
+  "artifacts": [
+    "benchmarks\\runtimes\\llama_cpp.json"
+  ],
+  "limitations": [
+    "B00 establishes the pinned llama.cpp Android runtime baseline with llama-bench and the tiny stories260K fixture; it does not measure gpt-oss production-size memory pressure or correctness."
+  ],
+  "notes": []
+}
