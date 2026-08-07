@@ -12,6 +12,7 @@ from rich.table import Table
 from .adb import AdbClient, AdbError, collect_manifest, save_json
 from .memory_budget import measure_memory_budget
 from .parsers import human_bytes, parse_meminfo
+from .storage_identity import identify_storage
 
 app = typer.Typer(no_args_is_help=True, help="Safe Hot 40i device laboratory")
 console = Console()
@@ -89,6 +90,16 @@ def memory_budget(
         manifest_path=manifest,
     )
     console.print(f"safe_rss_budget_bytes={budget}")
+
+
+@app.command("storage-identity")
+def storage_identity(
+    out: Path = typer.Option(Path("benchmarks/stock/storage_identity.json"), "--out"),
+    serial: str | None = typer.Option(None, "--serial"),
+    manifest: Path = typer.Option(Path("artifacts/device-manifest.json"), "--manifest"),
+) -> None:
+    storage_class = identify_storage(out=out, serial=serial, manifest_path=manifest)
+    console.print(f"storage_classification={storage_class}")
 
 
 @app.command("forward")

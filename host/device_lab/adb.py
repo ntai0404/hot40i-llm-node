@@ -56,6 +56,7 @@ SAFE_PROBES: dict[str, str] = {
     "cpu_online": "cat /sys/devices/system/cpu/online 2>/dev/null || true",
     "cpu_freq": "for c in /sys/devices/system/cpu/cpu[0-9]*; do echo ==== $c; cat $c/cpufreq/scaling_cur_freq 2>/dev/null; done",
     "block_devices": "for d in /sys/block/*; do echo ==== $d; cat $d/device/model 2>/dev/null; cat $d/queue/logical_block_size 2>/dev/null; done",
+    "storage_sysfs": "for d in /sys/block/sd* /sys/block/mmcblk*; do [ -e $d ] || continue; echo ==== $d; cat $d/device/model 2>/dev/null; cat $d/device/name 2>/dev/null; cat $d/queue/logical_block_size 2>/dev/null; cat $d/queue/physical_block_size 2>/dev/null; cat $d/queue/read_ahead_kb 2>/dev/null; cat $d/queue/rotational 2>/dev/null; cat $d/size 2>/dev/null; done",
 }
 
 # Repository wrappers reject destructive patterns. This does not pretend to sandbox

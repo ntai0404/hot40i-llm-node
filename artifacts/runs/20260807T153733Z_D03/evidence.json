@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "task_id": "D03",
+  "started_at": "2026-08-07T15:37:33.384081+00:00",
+  "finished_at": "2026-08-07T15:44:06.659114+00:00",
+  "status": "pass",
+  "git_commit": "66bad7dab9d94c2677435b6a734693ce30a0c81d",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "hot40 storage-identity --out benchmarks/stock/storage_identity.json --serial 112193741U000563 --manifest artifacts/device-manifest.json",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260807T153733Z_D03\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260807T153733Z_D03\\stderr\\001.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T153733Z_D03\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260807T153733Z_D03\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T153733Z_D03\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260807T153733Z_D03\\stderr\\003.log"
+    },
+    {
+      "argv": "hot40 storage-identity --out benchmarks/stock/storage_identity.json --serial 112193741U000563 --manifest artifacts/device-manifest.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T153733Z_D03\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260807T153733Z_D03\\stderr\\004.log"
+    },
+    {
+      "argv": "python 'scripts\\validate_artifact.py' 'schemas\\benchmark_result.schema.json' 'benchmarks\\stock\\storage_identity.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T153733Z_D03\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260807T153733Z_D03\\stderr\\005.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260807T153733Z_D03/",
+    "benchmarks/stock/storage_identity.json",
+    "host/device_lab/adb.py",
+    "host/device_lab/cli.py",
+    "host/device_lab/storage_identity.py"
+  ],
+  "verification": [
+    {
+      "name": "Cross-check at least two independent on-device evidence sources when available.",
+      "passed": true,
+      "detail": "Storage classification is UFS using ro.boot.boot_devices=soc/.../20200000.ufs, sysfs sd* block roots, and persist.storage.type=2; /data benchmark location is f2fs on /dev/block/dm-44."
+    }
+  ],
+  "metrics": {},
+  "artifacts": [
+    "benchmarks\\stock\\storage_identity.json"
+  ],
+  "limitations": [],
+  "notes": [
+    "Initial D03 probe saw device offline; canonical adb.exe kill-server/start-server recovered the transport, then storage identity completed."
+  ]
+}
