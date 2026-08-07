@@ -57,6 +57,7 @@ SAFE_PROBES: dict[str, str] = {
     "cpu_freq": "for c in /sys/devices/system/cpu/cpu[0-9]*; do echo ==== $c; cat $c/cpufreq/scaling_cur_freq 2>/dev/null; done",
     "block_devices": "for d in /sys/block/*; do echo ==== $d; cat $d/device/model 2>/dev/null; cat $d/queue/logical_block_size 2>/dev/null; done",
     "storage_sysfs": "for d in /sys/block/sd* /sys/block/mmcblk*; do [ -e $d ] || continue; echo ==== $d; cat $d/device/model 2>/dev/null; cat $d/device/name 2>/dev/null; cat $d/queue/logical_block_size 2>/dev/null; cat $d/queue/physical_block_size 2>/dev/null; cat $d/queue/read_ahead_kb 2>/dev/null; cat $d/queue/rotational 2>/dev/null; cat $d/size 2>/dev/null; done",
+    "battery": "dumpsys battery",
 }
 
 # Repository wrappers reject destructive patterns. This does not pretend to sandbox
@@ -146,6 +147,21 @@ class AdbClient:
         command = " ".join(shlex.quote(x) for x in argv)
         _reject_unsafe(command)
         return self._shell_exact(command, timeout=timeout)
+
+    def run_harmless_workload(self, duration_seconds: int, *, timeout: float | None = None) -> CommandResult:
+        if duration_seconds < 1 or duration_seconds > 3600:
+            raise AdbError("workload duration must be between 1 and 3600 seconds")
+        command = (
+            f"end=$((`date +%s`+{duration_seconds})); "
+            "while [ `date +%s` -lt $end ]; do "
+            "cat /proc/meminfo >/dev/null 2>/dev/null; "
+            "cat /system/build.prop >/dev/null 2>/dev/null; "
+            "for c in /sys/devices/system/cpu/cpu[0-9]*; do "
+            "cat $c/cpufreq/scaling_cur_freq >/dev/null 2>/dev/null; "
+            "done; "
+            "done"
+        )
+        return self._run(["shell", command], timeout=timeout or duration_seconds + 30, policy_checked=True)
 
 
 def collect_manifest(client: AdbClient) -> dict:

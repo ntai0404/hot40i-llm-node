@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "task_id": "D06",
+  "started_at": "2026-08-07T15:44:49.839653+00:00",
+  "finished_at": "2026-08-07T16:01:55.694851+00:00",
+  "status": "pass",
+  "git_commit": "3946935b2d4cff140023465cc7b62431bffb9cdc",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "pytest -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T154449Z_D06\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260807T154449Z_D06\\stderr\\001.log"
+    },
+    {
+      "argv": "hot40 thermal-baseline --serial 112193741U000563 --duration 900 --interval 5 --thermal-jsonl artifacts/runs/20260807T154449Z_D06/thermal.jsonl --out benchmarks/stock/thermal_baseline.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T154449Z_D06\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260807T154449Z_D06\\stderr\\002.log"
+    },
+    {
+      "argv": "python 'scripts\\validate_artifact.py' 'schemas\\benchmark_result.schema.json' 'benchmarks\\stock\\thermal_baseline.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T154449Z_D06\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260807T154449Z_D06\\stderr\\003.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260807T154449Z_D06/",
+    "benchmarks/stock/thermal_baseline.json",
+    "host/device_lab/adb.py",
+    "host/device_lab/cli.py",
+    "host/device_lab/thermal.py"
+  ],
+  "verification": [
+    {
+      "name": "Run 15-minute harmless sustained CPU/I/O workload and produce valid thermal JSONL.",
+      "passed": true,
+      "detail": "hot40 thermal-baseline ran for 901.3 monotonic seconds, workload exit code 0, wrote 160 JSONL samples with CPU frequency, MemAvailable, battery telemetry, and thermal zone paths; summary JSON validates."
+    }
+  ],
+  "metrics": {},
+  "artifacts": [
+    "benchmarks\\stock\\thermal_baseline.json",
+    "artifacts\\runs\\20260807T154449Z_D06\\thermal.jsonl"
+  ],
+  "limitations": [],
+  "notes": []
+}

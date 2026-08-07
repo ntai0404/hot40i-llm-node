@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "benchmark": "stock_thermal_baseline",
+  "device": {
+    "serial": "112193741U000563"
+  },
+  "started_at": "2026-08-07T15:46:06.968278+00:00",
+  "finished_at": "2026-08-07T16:01:08.892372+00:00",
+  "git_commit": "3946935b2d4cff140023465cc7b62431bffb9cdc",
+  "config": {
+    "duration_seconds": 900,
+    "interval_seconds": 5.0,
+    "workload": "read-only meminfo/build.prop/cpufreq loop via adb shell"
+  },
+  "metrics": {
+    "sample_count": 160,
+    "duration_observed_seconds": 901.2970000000205,
+    "cpu_freq_sample_count": 160,
+    "thermal_zone_count_max": 17,
+    "mem_available_min_bytes": 1186918400,
+    "workload_exit_code": 0
+  },
+  "samples": [
+    {
+      "thermal_jsonl": "artifacts\\runs\\20260807T154449Z_D06\\thermal.jsonl",
+      "first_monotonic_seconds": 0.01600000006146729,
+      "last_monotonic_seconds": 901.2970000000205
+    }
+  ],
+  "workload": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "limitations": [
+    "Thermal zone type/temp contents are not readable through the current non-root stock Android probe; zone paths and exit code are retained.",
+    "Process RSS for the shell workload is not attributable with the current safe wrapper; MemAvailable is sampled instead."
+  ]
+}

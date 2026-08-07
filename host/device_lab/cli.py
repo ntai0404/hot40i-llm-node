@@ -13,6 +13,7 @@ from .adb import AdbClient, AdbError, collect_manifest, save_json
 from .memory_budget import measure_memory_budget
 from .parsers import human_bytes, parse_meminfo
 from .storage_identity import identify_storage
+from .thermal import collect_thermal_baseline
 
 app = typer.Typer(no_args_is_help=True, help="Safe Hot 40i device laboratory")
 console = Console()
@@ -100,6 +101,24 @@ def storage_identity(
 ) -> None:
     storage_class = identify_storage(out=out, serial=serial, manifest_path=manifest)
     console.print(f"storage_classification={storage_class}")
+
+
+@app.command("thermal-baseline")
+def thermal_baseline(
+    serial: str = typer.Option(..., "--serial"),
+    duration: int = typer.Option(900, "--duration"),
+    interval: float = typer.Option(5.0, "--interval"),
+    thermal_jsonl: Path = typer.Option(Path("artifacts/runs/thermal.jsonl"), "--thermal-jsonl"),
+    out: Path = typer.Option(Path("benchmarks/stock/thermal_baseline.json"), "--out"),
+) -> None:
+    collect_thermal_baseline(
+        serial=serial,
+        duration_seconds=duration,
+        interval_seconds=interval,
+        thermal_jsonl=thermal_jsonl,
+        summary_out=out,
+    )
+    console.print(f"wrote {out} and {thermal_jsonl}")
 
 
 @app.command("forward")
