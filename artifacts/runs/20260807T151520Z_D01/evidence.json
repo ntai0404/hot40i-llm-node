@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "task_id": "D01",
+  "started_at": "2026-08-07T15:15:20.155801+00:00",
+  "finished_at": "2026-08-07T15:19:30.211350+00:00",
+  "status": "pass",
+  "git_commit": "aa5265bf2c480fe4d832e2569c9a04929b08c030",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "hot40 probe --out artifacts/device-manifest.json --serial 112193741U000563",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T151520Z_D01\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260807T151520Z_D01\\stderr\\001.log"
+    },
+    {
+      "argv": "hot40 probe --out artifacts/device-manifest.json --raw-dir artifacts/runs/20260807T151520Z_D01/raw --serial 112193741U000563",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T151520Z_D01\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260807T151520Z_D01\\stderr\\002.log"
+    },
+    {
+      "argv": "pytest -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T151520Z_D01\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260807T151520Z_D01\\stderr\\003.log"
+    },
+    {
+      "argv": "python 'scripts\\validate_artifact.py' 'schemas\\device_manifest.schema.json' 'artifacts\\device-manifest.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T151520Z_D01\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260807T151520Z_D01\\stderr\\004.log"
+    },
+    {
+      "argv": "pytest -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T151520Z_D01\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260807T151520Z_D01\\stderr\\005.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/device-manifest.json",
+    "artifacts/runs/20260807T151520Z_D01/",
+    "host/device_lab/adb.py",
+    "host/device_lab/cli.py",
+    "host/device_lab/parsers.py",
+    "schemas/device_manifest.schema.json"
+  ],
+  "verification": [
+    {
+      "name": "hot40 probe --out artifacts/device-manifest.json",
+      "passed": true,
+      "detail": "hot40 probe exited 0 for serial 112193741U000563; rerun included --raw-dir to retain raw probe streams and wrote artifacts/device-manifest.json."
+    },
+    {
+      "name": "python scripts/validate_artifact.py schemas/device_manifest.schema.json artifacts/device-manifest.json",
+      "passed": true,
+      "detail": "Schema validation command exited 0 and printed VALID after summary schema update."
+    }
+  ],
+  "metrics": {},
+  "artifacts": [
+    "artifacts\\device-manifest.json",
+    "artifacts\\runs\\20260807T151520Z_D01\\raw"
+  ],
+  "limitations": [
+    "Stock Android denied cat /proc/partitions; storage evidence is retained via /dev/block/by-name, /sys/block, mounts, df, and normalized summary."
+  ],
+  "notes": []
+}

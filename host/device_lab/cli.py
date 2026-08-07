@@ -43,6 +43,7 @@ def devices() -> None:
 @app.command()
 def probe(
     out: Path = typer.Option(Path("artifacts/device-manifest.json"), "--out"),
+    raw_dir: Path | None = typer.Option(None, "--raw-dir"),
     serial: str | None = typer.Option(None, "--serial"),
 ) -> None:
     """Collect a read-only hardware/software inventory from Android."""
@@ -50,6 +51,11 @@ def probe(
         client = AdbClient(serial=serial)
         manifest = collect_manifest(client)
         save_json(manifest, out)
+        if raw_dir is not None:
+            raw_dir.mkdir(parents=True, exist_ok=True)
+            for name, result in manifest["probes"].items():
+                (raw_dir / f"{name}.stdout.txt").write_text(str(result["stdout"]), encoding="utf-8")
+                (raw_dir / f"{name}.stderr.txt").write_text(str(result["stderr"]), encoding="utf-8")
     except AdbError as exc:
         console.print(f"[red]error:[/red] {exc}")
         raise typer.Exit(code=1) from exc

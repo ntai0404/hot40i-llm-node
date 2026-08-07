@@ -9,6 +9,16 @@ import subprocess
 from pathlib import Path
 from typing import Iterable
 
+from .parsers import (
+    count_thermal_zones,
+    parse_cpuinfo_hardware,
+    parse_cpuinfo_processor_count,
+    parse_data_filesystem,
+    parse_getprop,
+    parse_meminfo,
+    parse_storage_roots,
+)
+
 
 class AdbError(RuntimeError):
     pass
@@ -143,11 +153,40 @@ def collect_manifest(client: AdbClient) -> dict:
     for name, command in SAFE_PROBES.items():
         result = client.probe(name)
         probes[name] = {"command": command, "returncode": result.returncode, "stdout": result.stdout, "stderr": result.stderr}
+    props = parse_getprop(str(probes["getprop"]["stdout"]))
+    meminfo = parse_meminfo(str(probes["meminfo"]["stdout"]))
+    cpuinfo = str(probes["cpuinfo"]["stdout"])
+    summary = {
+        "product": props.get("ro.product.name"),
+        "model": props.get("ro.product.model"),
+        "device": props.get("ro.product.device"),
+        "manufacturer": props.get("ro.product.manufacturer"),
+        "brand": props.get("ro.product.brand"),
+        "android_release": props.get("ro.build.version.release"),
+        "sdk": props.get("ro.build.version.sdk"),
+        "build_fingerprint": props.get("ro.build.fingerprint"),
+        "hardware": props.get("ro.boot.hardware") or parse_cpuinfo_hardware(cpuinfo),
+        "board_platform": props.get("ro.board.platform"),
+        "soc": props.get("ro.boot.auto.efuse") or props.get("ro.boot.auto.chipid"),
+        "boot_devices": props.get("ro.boot.boot_devices"),
+        "ddrsize": props.get("ro.boot.ddrsize"),
+        "slot_suffix": props.get("ro.boot.slot_suffix"),
+        "dynamic_partitions": props.get("ro.boot.dynamic_partitions"),
+        "verified_boot_state": props.get("ro.boot.verifiedbootstate"),
+        "mem_total_bytes": meminfo.get("MemTotal"),
+        "mem_available_bytes": meminfo.get("MemAvailable"),
+        "cpu_online": str(probes["cpu_online"]["stdout"]).strip() or None,
+        "processor_count": parse_cpuinfo_processor_count(cpuinfo),
+        "storage_roots": parse_storage_roots(str(probes["block_by_name"]["stdout"])),
+        "data_filesystem": parse_data_filesystem(str(probes["mounts"]["stdout"])),
+        "thermal_zone_count": count_thermal_zones(str(probes["thermal_zones"]["stdout"])),
+    }
     return {
         "schema_version": 1,
         "captured_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         "adb_devices": devices,
         "serial": client.serial,
+        "summary": summary,
         "probes": probes,
     }
 

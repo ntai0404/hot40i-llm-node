@@ -1,0 +1,16 @@
+==== /sys/devices/system/cpu/cpu0
+1612000
+==== /sys/devices/system/cpu/cpu1
+1612000
+==== /sys/devices/system/cpu/cpu2
+1612000
+==== /sys/devices/system/cpu/cpu3
+1612000
+==== /sys/devices/system/cpu/cpu4
+1612000
+==== /sys/devices/system/cpu/cpu5
+1612000
+==== /sys/devices/system/cpu/cpu6
+1612000
+==== /sys/devices/system/cpu/cpu7
+1536000
