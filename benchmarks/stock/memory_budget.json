@@ -33,60 +33,98 @@
       "thermal_zone_count": 17
     }
   },
-  "started_at": "2026-08-07T15:34:31.481991+00:00",
-  "finished_at": "2026-08-07T15:34:41.687080+00:00",
-  "git_commit": "0622c2ac1dd2a10d1d39b9d52ba9126ff77ad99d",
+  "started_at": "2026-08-07T16:05:32.736097+00:00",
+  "finished_at": "2026-08-07T16:05:43.551330+00:00",
+  "git_commit": "8048cf6b3807419d286ab95fe289a577ac650c0c",
   "config": {
     "samples": 3,
     "interval_seconds": 5.0,
     "budget_rule": "min(MemAvailable_samples) / 2 capped at 768MiB",
-    "native_allocator_probe": "not_run_ndk_toolchain_unavailable"
+    "native_allocator_probe": "not_run_ndk_toolchain_unavailable",
+    "bounded_pressure_probe": "128MiB /data/local/tmp file write/read/remove"
   },
   "metrics": {
-    "mem_available_min_bytes": 1300897792,
-    "mem_available_median_bytes": 1301250048,
-    "safe_rss_budget_bytes": 650448896,
-    "headroom_bytes": 650448896,
+    "mem_available_min_bytes": 1292161024,
+    "mem_available_median_bytes": 1293971456,
+    "safe_rss_budget_bytes": 646080512,
+    "headroom_bytes": 646080512,
     "swap_total_bytes": 2165141504,
-    "swap_free_bytes": 830025728
+    "swap_free_bytes": 563523584,
+    "pressure_probe_exit_code": 0,
+    "pressure_after_mem_available_bytes": 1307488256
   },
   "samples": [
     {
       "label": "settled_idle_1",
-      "captured_at": "2026-08-07T15:34:31.573112+00:00",
+      "captured_at": "2026-08-07T16:05:32.793791+00:00",
       "mem_total_bytes": 3936628736,
-      "mem_available_bytes": 1303293952,
-      "mem_free_bytes": 110469120,
-      "cached_bytes": 1475969024,
+      "mem_available_bytes": 1293971456,
+      "mem_free_bytes": 48906240,
+      "cached_bytes": 1561804800,
       "swap_total_bytes": 2165141504,
-      "swap_free_bytes": 828977152,
-      "raw": "MemTotal:        3844364 kB\nMemFree:          107880 kB\nMemAvailable:    1272748 kB\nBuffers:            1836 kB\nCached:          1441376 kB\nSwapCached:        25500 kB\nActive:          1081812 kB\nInactive:        1045960 kB\nActive(anon):     603336 kB\nInactive(anon):   394808 kB\nActive(file):     478476 kB\nInactive(file):   651152 kB\nUnevictable:      308944 kB\nMlocked:          308944 kB\nSwapTotal:       2114396 kB\nSwapFree:         809548 kB\nDirty:               368 kB\nWriteback:             0 kB\nAnonPages:        989508 kB\nMapped:          1057272 kB\nShmem:             10588 kB\nKReclaimable:     134608 kB\nSlab:             382068 kB\nSReclaimable:     105736 kB\nSUnreclaim:       276332 kB\nKernelStack:       62928 kB\nShadowCallStack:   15732 kB\nPageTables:       104736 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   207185224 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      139788 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:           49816 kB\nIonTotalHeap:     109992 kB\nIonTotalPool:      34276 kB\nHighAtomicFree:      648 kB\n"
+      "swap_free_bytes": 563523584,
+      "raw": "MemTotal:        3844364 kB\nMemFree:           47760 kB\nMemAvailable:    1263644 kB\nBuffers:            1152 kB\nCached:          1525200 kB\nSwapCached:        24968 kB\nActive:           953136 kB\nInactive:        1165672 kB\nActive(anon):     457852 kB\nInactive(anon):   450272 kB\nActive(file):     495284 kB\nInactive(file):   715400 kB\nUnevictable:      308976 kB\nMlocked:          308976 kB\nSwapTotal:       2114396 kB\nSwapFree:         550316 kB\nDirty:               756 kB\nWriteback:             0 kB\nAnonPages:        897964 kB\nMapped:          1268528 kB\nShmem:              9680 kB\nKReclaimable:     104568 kB\nSlab:             381036 kB\nSReclaimable:     104568 kB\nSUnreclaim:       276468 kB\nKernelStack:       65968 kB\nShadowCallStack:   16500 kB\nPageTables:       108444 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   213059524 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      143980 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:            7664 kB\nIonTotalHeap:     112180 kB\nIonTotalPool:       5404 kB\nHighAtomicFree:      648 kB\n"
     },
     {
       "label": "settled_idle_2",
-      "captured_at": "2026-08-07T15:34:36.623157+00:00",
+      "captured_at": "2026-08-07T16:05:37.850119+00:00",
       "mem_total_bytes": 3936628736,
-      "mem_available_bytes": 1301250048,
-      "mem_free_bytes": 108355584,
-      "cached_bytes": 1475997696,
+      "mem_available_bytes": 1294032896,
+      "mem_free_bytes": 48926720,
+      "cached_bytes": 1561829376,
       "swap_total_bytes": 2165141504,
-      "swap_free_bytes": 830025728,
-      "raw": "MemTotal:        3844364 kB\nMemFree:          105816 kB\nMemAvailable:    1270752 kB\nBuffers:            1836 kB\nCached:          1441404 kB\nSwapCached:        25500 kB\nActive:          1082364 kB\nInactive:        1046944 kB\nActive(anon):     603868 kB\nInactive(anon):   395760 kB\nActive(file):     478496 kB\nInactive(file):   651184 kB\nUnevictable:      308944 kB\nMlocked:          308944 kB\nSwapTotal:       2114396 kB\nSwapFree:         810572 kB\nDirty:               348 kB\nWriteback:             0 kB\nAnonPages:        991040 kB\nMapped:          1057272 kB\nShmem:             10588 kB\nKReclaimable:     134624 kB\nSlab:             382020 kB\nSReclaimable:     105752 kB\nSUnreclaim:       276268 kB\nKernelStack:       62880 kB\nShadowCallStack:   15720 kB\nPageTables:       104700 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   207184368 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      139748 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:           49816 kB\nIonTotalHeap:     109992 kB\nIonTotalPool:      34276 kB\nHighAtomicFree:      648 kB\n"
+      "swap_free_bytes": 563523584,
+      "raw": "MemTotal:        3844364 kB\nMemFree:           47780 kB\nMemAvailable:    1263704 kB\nBuffers:            1152 kB\nCached:          1525224 kB\nSwapCached:        24968 kB\nActive:           953872 kB\nInactive:        1165716 kB\nActive(anon):     458512 kB\nInactive(anon):   450352 kB\nActive(file):     495360 kB\nInactive(file):   715364 kB\nUnevictable:      308976 kB\nMlocked:          308976 kB\nSwapTotal:       2114396 kB\nSwapFree:         550316 kB\nDirty:               764 kB\nWriteback:             0 kB\nAnonPages:        898760 kB\nMapped:          1268528 kB\nShmem:              9680 kB\nKReclaimable:     104568 kB\nSlab:             381004 kB\nSReclaimable:     104568 kB\nSUnreclaim:       276436 kB\nKernelStack:       65968 kB\nShadowCallStack:   16500 kB\nPageTables:       108444 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   213058348 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      143968 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:            7212 kB\nIonTotalHeap:     112180 kB\nIonTotalPool:       5404 kB\nHighAtomicFree:      648 kB\n"
     },
     {
       "label": "settled_idle_3",
-      "captured_at": "2026-08-07T15:34:41.673813+00:00",
+      "captured_at": "2026-08-07T16:05:42.900441+00:00",
       "mem_total_bytes": 3936628736,
-      "mem_available_bytes": 1300897792,
-      "mem_free_bytes": 107982848,
-      "cached_bytes": 1476001792,
+      "mem_available_bytes": 1292161024,
+      "mem_free_bytes": 46288896,
+      "cached_bytes": 1561890816,
       "swap_total_bytes": 2165141504,
-      "swap_free_bytes": 830025728,
-      "raw": "MemTotal:        3844364 kB\nMemFree:          105452 kB\nMemAvailable:    1270408 kB\nBuffers:            1836 kB\nCached:          1441408 kB\nSwapCached:        25500 kB\nActive:          1082804 kB\nInactive:        1046952 kB\nActive(anon):     604308 kB\nInactive(anon):   395764 kB\nActive(file):     478496 kB\nInactive(file):   651188 kB\nUnevictable:      308944 kB\nMlocked:          308944 kB\nSwapTotal:       2114396 kB\nSwapFree:         810572 kB\nDirty:               344 kB\nWriteback:             0 kB\nAnonPages:        991604 kB\nMapped:          1057272 kB\nShmem:             10588 kB\nKReclaimable:     134640 kB\nSlab:             382132 kB\nSReclaimable:     105768 kB\nSUnreclaim:       276364 kB\nKernelStack:       62880 kB\nShadowCallStack:   15720 kB\nPageTables:       104700 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   207183552 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      139748 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:           49816 kB\nIonTotalHeap:     109992 kB\nIonTotalPool:      34276 kB\nHighAtomicFree:      648 kB\n"
+      "swap_free_bytes": 563523584,
+      "raw": "MemTotal:        3844364 kB\nMemFree:           45204 kB\nMemAvailable:    1261876 kB\nBuffers:            1152 kB\nCached:          1525284 kB\nSwapCached:        24968 kB\nActive:           954916 kB\nInactive:        1165740 kB\nActive(anon):     459524 kB\nInactive(anon):   450348 kB\nActive(file):     495392 kB\nInactive(file):   715392 kB\nUnevictable:      308976 kB\nMlocked:          308976 kB\nSwapTotal:       2114396 kB\nSwapFree:         550316 kB\nDirty:               840 kB\nWriteback:             0 kB\nAnonPages:        899768 kB\nMapped:          1268556 kB\nShmem:              9680 kB\nKReclaimable:     105256 kB\nSlab:             381692 kB\nSReclaimable:     105256 kB\nSUnreclaim:       276436 kB\nKernelStack:       66000 kB\nShadowCallStack:   16500 kB\nPageTables:       108432 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   213057948 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      143984 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:            5884 kB\nIonTotalHeap:     112180 kB\nIonTotalPool:       5404 kB\nHighAtomicFree:      648 kB\n"
+    },
+    {
+      "label": "cache_pressure_before",
+      "captured_at": "2026-08-07T16:05:42.953582+00:00",
+      "mem_total_bytes": 3936628736,
+      "mem_available_bytes": 1292263424,
+      "mem_free_bytes": 46391296,
+      "cached_bytes": 1561890816,
+      "swap_total_bytes": 2165141504,
+      "swap_free_bytes": 563523584,
+      "raw": "MemTotal:        3844364 kB\nMemFree:           45304 kB\nMemAvailable:    1261976 kB\nBuffers:            1152 kB\nCached:          1525284 kB\nSwapCached:        24968 kB\nActive:           954908 kB\nInactive:        1165740 kB\nActive(anon):     459516 kB\nInactive(anon):   450348 kB\nActive(file):     495392 kB\nInactive(file):   715392 kB\nUnevictable:      308976 kB\nMlocked:          308976 kB\nSwapTotal:       2114396 kB\nSwapFree:         550316 kB\nDirty:               840 kB\nWriteback:             0 kB\nAnonPages:        899676 kB\nMapped:          1268556 kB\nShmem:              9680 kB\nKReclaimable:     105256 kB\nSlab:             381756 kB\nSReclaimable:     105256 kB\nSUnreclaim:       276500 kB\nKernelStack:       66000 kB\nShadowCallStack:   16500 kB\nPageTables:       108432 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   213058084 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      143984 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:            5800 kB\nIonTotalHeap:     112180 kB\nIonTotalPool:       5404 kB\nHighAtomicFree:      648 kB\n"
+    },
+    {
+      "label": "cache_pressure_after",
+      "captured_at": "2026-08-07T16:05:43.551330+00:00",
+      "mem_total_bytes": 3936628736,
+      "mem_available_bytes": 1307488256,
+      "mem_free_bytes": 197689344,
+      "cached_bytes": 1426862080,
+      "swap_total_bytes": 2165141504,
+      "swap_free_bytes": 562139136,
+      "raw": "MemTotal:        3844364 kB\nMemFree:          193056 kB\nMemAvailable:    1276844 kB\nBuffers:             984 kB\nCached:          1393420 kB\nSwapCached:        24844 kB\nActive:           952908 kB\nInactive:        1034272 kB\nActive(anon):     453288 kB\nInactive(anon):   455212 kB\nActive(file):     499620 kB\nInactive(file):   579060 kB\nUnevictable:      308976 kB\nMlocked:          308976 kB\nSwapTotal:       2114396 kB\nSwapFree:         548964 kB\nDirty:               916 kB\nWriteback:             0 kB\nAnonPages:        898464 kB\nMapped:          1207404 kB\nShmem:              9656 kB\nKReclaimable:     104476 kB\nSlab:             381000 kB\nSReclaimable:     104476 kB\nSUnreclaim:       276524 kB\nKernelStack:       66016 kB\nShadowCallStack:   16500 kB\nPageTables:       108432 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     4036576 kB\nCommitted_AS:   213057984 kB\nVmallocTotal:   262930368 kB\nVmallocUsed:      143232 kB\nVmallocChunk:          0 kB\nPercpu:            10528 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         315392 kB\nCmaFree:            7872 kB\nIonTotalHeap:     112180 kB\nIonTotalPool:       5404 kB\nHighAtomicFree:      648 kB\n"
     }
   ],
+  "pressure_probe": {
+    "argv": [
+      "C:\\mobile-remote-tools\\platform-tools\\adb.EXE",
+      "-s",
+      "112193741U000563",
+      "shell",
+      "rm -f /data/local/tmp/h40_d02_cache_pressure.bin; dd if=/dev/zero of=/data/local/tmp/h40_d02_cache_pressure.bin bs=1M count=128 conv=fsync >/dev/null 2>&1; cat /data/local/tmp/h40_d02_cache_pressure.bin >/dev/null 2>&1; rm -f /data/local/tmp/h40_d02_cache_pressure.bin"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "",
+    "size_mib": 128
+  },
   "limitations": [
-    "Native bounded allocation pressure probe was not run because no Android NDK/aarch64 toolchain is installed on the host.",
+    "Native process RSS allocation pressure probe was not run because no Android NDK/aarch64 toolchain is installed on the host; the bounded pressure probe exercises storage/page-cache pressure only.",
     "Cold-reboot and screen-off variants were not used for this first budget to avoid losing an active authorized ADB session mid-DAG."
   ]
 }

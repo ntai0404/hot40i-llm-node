@@ -10,12 +10,9 @@ completed_tasks:
 - D01
 - D03
 - D06
+- D02
 in_progress: null
-blocked_tasks:
-  D02:
-    reason: Android NDK/aarch64 toolchain is unavailable, so the required bounded native allocation pressure probe
-      cannot be built/run yet. Settled MemAvailable samples were collected as provisional evidence only.
-    at: '2026-08-07T15:36:58.738698+00:00'
+blocked_tasks: {}
 task_evidence:
   R00: artifacts/runs/20260807T140229Z_R00/evidence.json
   R01: artifacts/runs/20260807T142448Z_R01/evidence.json
@@ -24,12 +21,13 @@ task_evidence:
   D01: artifacts/runs/20260807T151520Z_D01/evidence.json
   D03: artifacts/runs/20260807T153733Z_D03/evidence.json
   D06: artifacts/runs/20260807T154449Z_D06/evidence.json
+  D02: artifacts/runs/20260807T160441Z_D02/evidence.json
 skipped_optional_tasks: []
 decisions:
   destructive_device_authorized: false
   os_optimization_activated: false
   selected_compute_backend: null
-  safe_rss_budget_bytes: null
+  safe_rss_budget_bytes: 646080512
   device_serial: 112193741U000563
 notes:
 - Initial handoff state. Existing scaffold code is not evidence that device/model milestones passed.
@@ -39,6 +37,6 @@ task_started_at:
   R02: '2026-08-07T14:27:12.488020+00:00'
   D00: '2026-08-07T15:13:03.468510+00:00'
   D01: '2026-08-07T15:15:20.753142+00:00'
-  D02: '2026-08-07T15:20:11.933954+00:00'
+  D02: '2026-08-07T16:04:41.585307+00:00'
   D03: '2026-08-07T15:37:33.601633+00:00'
   D06: '2026-08-07T15:44:50.046403+00:00'

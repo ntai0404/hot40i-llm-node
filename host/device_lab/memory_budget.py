@@ -73,6 +73,12 @@ def measure_memory_budget(
         if index + 1 < samples_count:
             time.sleep(interval_seconds)
 
+    pressure_before = _sample(client, "cache_pressure_before")
+    pressure_result = client.run_bounded_cache_pressure(
+        "/data/local/tmp/h40_d02_cache_pressure.bin", 128
+    )
+    pressure_after = _sample(client, "cache_pressure_after")
+
     available = [item["mem_available_bytes"] for item in samples if item["mem_available_bytes"] is not None]
     if len(available) < 3:
         raise SystemExit("expected at least three MemAvailable samples")
@@ -81,10 +87,6 @@ def measure_memory_budget(
     median_available = int(statistics.median(available))
     safe_rss_budget = min(min_available // 2, 768 * 1024 * 1024)
     headroom = min_available - safe_rss_budget
-
-    state = _load_state()
-    state.setdefault("decisions", {})["safe_rss_budget_bytes"] = int(safe_rss_budget)
-    _save_state(state)
 
     result = {
         "schema_version": 1,
@@ -101,6 +103,7 @@ def measure_memory_budget(
             "interval_seconds": interval_seconds,
             "budget_rule": "min(MemAvailable_samples) / 2 capped at 768MiB",
             "native_allocator_probe": "not_run_ndk_toolchain_unavailable",
+            "bounded_pressure_probe": "128MiB /data/local/tmp file write/read/remove",
         },
         "metrics": {
             "mem_available_min_bytes": int(min_available),
@@ -109,13 +112,28 @@ def measure_memory_budget(
             "headroom_bytes": int(headroom),
             "swap_total_bytes": samples[-1].get("swap_total_bytes"),
             "swap_free_bytes": samples[-1].get("swap_free_bytes"),
+            "pressure_probe_exit_code": pressure_result.returncode,
+            "pressure_after_mem_available_bytes": pressure_after.get("mem_available_bytes"),
         },
-        "samples": samples,
+        "samples": [*samples, pressure_before, pressure_after],
+        "pressure_probe": {
+            "argv": pressure_result.argv,
+            "exit_code": pressure_result.returncode,
+            "stdout": pressure_result.stdout,
+            "stderr": pressure_result.stderr,
+            "size_mib": 128,
+        },
         "limitations": [
-            "Native bounded allocation pressure probe was not run because no Android NDK/aarch64 toolchain is installed on the host.",
+            "Native process RSS allocation pressure probe was not run because no Android NDK/aarch64 toolchain is installed on the host; the bounded pressure probe exercises storage/page-cache pressure only.",
             "Cold-reboot and screen-off variants were not used for this first budget to avoid losing an active authorized ADB session mid-DAG.",
         ],
     }
+    if pressure_result.returncode != 0:
+        raise SystemExit("bounded pressure probe failed; refusing to record safe_rss_budget_bytes")
+
+    state = _load_state()
+    state.setdefault("decisions", {})["safe_rss_budget_bytes"] = int(safe_rss_budget)
+    _save_state(state)
     output = out if out.is_absolute() else ROOT / out
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

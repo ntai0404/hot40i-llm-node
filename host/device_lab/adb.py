@@ -163,6 +163,20 @@ class AdbClient:
         )
         return self._run(["shell", command], timeout=timeout or duration_seconds + 30, policy_checked=True)
 
+    def run_bounded_cache_pressure(self, remote_path: str, size_mib: int, *, timeout: float = 180) -> CommandResult:
+        if not remote_path.startswith("/data/local/tmp/"):
+            raise UnsafeDeviceCommand("cache pressure file must be under /data/local/tmp")
+        if size_mib < 1 or size_mib > 512:
+            raise AdbError("cache pressure size must be between 1 and 512 MiB")
+        quoted = shlex.quote(remote_path)
+        command = (
+            f"rm -f {quoted}; "
+            f"dd if=/dev/zero of={quoted} bs=1M count={size_mib} conv=fsync >/dev/null 2>&1; "
+            f"cat {quoted} >/dev/null 2>&1; "
+            f"rm -f {quoted}"
+        )
+        return self._run(["shell", command], timeout=timeout, policy_checked=True)
+
 
 def collect_manifest(client: AdbClient) -> dict:
     devices = client.devices().check().stdout

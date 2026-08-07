@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "task_id": "D02",
+  "started_at": "2026-08-07T16:04:41.751616+00:00",
+  "finished_at": "2026-08-07T16:06:39.762978+00:00",
+  "status": "pass",
+  "git_commit": "8048cf6b3807419d286ab95fe289a577ac650c0c",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "pytest -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160441Z_D02\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260807T160441Z_D02\\stderr\\001.log"
+    },
+    {
+      "argv": "hot40 memory-budget --out benchmarks/stock/memory_budget.json --samples 3 --interval 5 --serial 112193741U000563 --manifest artifacts/device-manifest.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160441Z_D02\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260807T160441Z_D02\\stderr\\002.log"
+    },
+    {
+      "argv": "python 'scripts\\validate_artifact.py' 'schemas\\benchmark_result.schema.json' 'benchmarks\\stock\\memory_budget.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T160441Z_D02\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260807T160441Z_D02\\stderr\\003.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260807T160441Z_D02/",
+    "benchmarks/stock/memory_budget.json",
+    "host/device_lab/adb.py",
+    "host/device_lab/memory_budget.py"
+  ],
+  "verification": [
+    {
+      "name": "At least three repeated settled measurements.",
+      "passed": true,
+      "detail": "benchmarks/stock/memory_budget.json contains three settled_idle MemAvailable samples plus before/after bounded pressure samples; min MemAvailable 1292161024 bytes."
+    },
+    {
+      "name": "Validate benchmark JSON.",
+      "passed": true,
+      "detail": "scripts/validate_artifact.py validated benchmarks/stock/memory_budget.json against schemas/benchmark_result.schema.json and printed VALID."
+    }
+  ],
+  "metrics": {},
+  "artifacts": [
+    "benchmarks\\stock\\memory_budget.json"
+  ],
+  "limitations": [
+    "Native process RSS allocation probe remains unavailable without Android NDK/aarch64 toolchain; D02 uses conservative MemAvailable sampling plus a bounded 128MiB /data/local/tmp storage/page-cache pressure probe and sets a 646080512-byte budget with equal headroom."
+  ],
+  "notes": []
+}
