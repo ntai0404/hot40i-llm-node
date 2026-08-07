@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "D00",
+  "captured_at": "2026-08-07T15:14:08.035421+00:00",
+  "status": "pass",
+  "serial": "112193741U000563",
+  "device": {
+    "serial": "112193741U000563",
+    "state": "device",
+    "product": "X6528-OP",
+    "model": "Infinix_X6528",
+    "device": "Infinix-X6528",
+    "transport_id": "1"
+  },
+  "adb_devices_first": "List of devices attached\n112193741U000563       device product:X6528-OP model:Infinix_X6528 device:Infinix-X6528 transport_id:1\n\n",
+  "adb_devices_second": "List of devices attached\n112193741U000563       device product:X6528-OP model:Infinix_X6528 device:Infinix-X6528 transport_id:1\n\n",
+  "push": {
+    "remote": "/data/local/tmp/h40_d00_nonce_c32f1b1e.txt",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "C:\\My-Project\\hot40i-llm-node\\artifacts\\runs\\20260807T151256Z_D00\\nonce.txt: 1 file pushed, 0 skipped. 0.0 MB/s (34 bytes in 0.018s)\n"
+  },
+  "pull": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "/data/local/tmp/h40_d00_nonce_c32f1b1e.txt: 1 file pulled, 0 skipped. 0.0 MB/s (34 bytes in 0.002s)\n",
+    "nonce_match": true
+  },
+  "forward": {
+    "host_port": 18080,
+    "device_port": 8080,
+    "exit_code": 0,
+    "verified": true,
+    "forward_list": "112193741U000563 tcp:18080 tcp:8080\n\n"
+  }
+}

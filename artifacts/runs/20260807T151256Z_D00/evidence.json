@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "task_id": "D00",
+  "started_at": "2026-08-07T15:12:56.651007+00:00",
+  "finished_at": "2026-08-07T15:14:47.175753+00:00",
+  "status": "pass",
+  "git_commit": "e935c4cadd2958b7bc84d3bf544f7d4be11b52a3",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "hot40 devices",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T151256Z_D00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260807T151256Z_D00\\stderr\\001.log"
+    },
+    {
+      "argv": "powershell -NoProfile -Command 'adb devices -l | Tee-Object -FilePath artifacts\\runs\\20260807T151256Z_D00\\adb_devices.txt'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T151256Z_D00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260807T151256Z_D00\\stderr\\002.log"
+    },
+    {
+      "argv": "python 'scripts\\check_d00_transport.py' --run-dir 'artifacts\\runs\\20260807T151256Z_D00'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260807T151256Z_D00\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260807T151256Z_D00\\stderr\\003.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260807T151256Z_D00/",
+    "scripts/check_d00_transport.py"
+  ],
+  "verification": [
+    {
+      "name": "hot40 devices",
+      "passed": true,
+      "detail": "Command exited 0 and reported exactly one authorized device: 112193741U000563 product X6528-OP model Infinix_X6528."
+    },
+    {
+      "name": "Repository-defined connectivity test/harness must exit 0.",
+      "passed": true,
+      "detail": "scripts/check_d00_transport.py exited 0, verified push/pull nonce under /data/local/tmp, configured adb forward tcp:18080 to tcp:8080, and wrote transport.json."
+    }
+  ],
+  "metrics": {},
+  "artifacts": [
+    "artifacts\\runs\\20260807T151256Z_D00\\adb_devices.txt",
+    "artifacts\\runs\\20260807T151256Z_D00\\transport.json"
+  ],
+  "limitations": [],
+  "notes": []
+}
