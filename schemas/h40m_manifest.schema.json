@@ -26,7 +26,8 @@
           "id": {"type": "integer", "minimum": 0},
           "path": {"type": "string", "minLength": 1},
           "size": {"type": "integer", "minimum": 0},
-          "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}
+          "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+          "checksum_kind": {"type": ["string", "null"]}
         },
         "additionalProperties": false
       }

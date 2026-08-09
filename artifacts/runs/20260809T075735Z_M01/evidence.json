@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "task_id": "M01",
+  "started_at": "2026-08-09T07:57:35.154894+00:00",
+  "finished_at": "2026-08-09T08:02:30.523683+00:00",
+  "status": "pass",
+  "git_commit": "e4debef962ac508ce015e0fd5dedf0cf01a7b401",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python tools/model/h40m_manifest.py convert --inventory artifacts/model/gpt_oss_20b_inventory.json --out artifacts/model/h40m/manifest.json --alignment 4096",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T075735Z_M01\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T075735Z_M01\\stderr\\001.log"
+    },
+    {
+      "argv": "python tools/model/h40m_manifest.py convert --inventory artifacts/model/gpt_oss_20b_inventory.json --out artifacts/model/h40m/manifest.json --alignment 4096",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T075735Z_M01\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T075735Z_M01\\stderr\\002.log"
+    },
+    {
+      "argv": "python tools/model/h40m_manifest.py validate artifacts/model/h40m/manifest.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T075735Z_M01\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T075735Z_M01\\stderr\\003.log"
+    },
+    {
+      "argv": "python tools/model/h40m_manifest.py convert --inventory artifacts/model/gpt_oss_20b_inventory.json --out artifacts/runs/20260809T075735Z_M01/manifest.second.json --alignment 4096",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T075735Z_M01\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T075735Z_M01\\stderr\\004.log"
+    },
+    {
+      "argv": "python -c 'from pathlib import Path; import hashlib; a=Path('\"'\"'artifacts/model/h40m/manifest.json'\"'\"').read_bytes(); b=Path('\"'\"'artifacts/runs/20260809T075735Z_M01/manifest.second.json'\"'\"').read_bytes(); print(hashlib.sha256(a).hexdigest()); assert a==b'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T075735Z_M01\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T075735Z_M01\\stderr\\005.log"
+    },
+    {
+      "argv": "python -m pytest tests/python/test_h40m_manifest.py",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T075735Z_M01\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T075735Z_M01\\stderr\\006.log"
+    },
+    {
+      "argv": "python -m pytest tests/python/test_h40m_manifest.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T075735Z_M01\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T075735Z_M01\\stderr\\007.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/model/h40m/",
+    "artifacts/runs/20260809T075735Z_M01/",
+    "docs/07_H40M_FORMAT.md",
+    "schemas/h40m_manifest.schema.json",
+    "tests/python/test_h40m_manifest.py",
+    "tools/model/h40m_manifest.py"
+  ],
+  "verification": [
+    {
+      "name": "Round-trip sample tensors and checksum.",
+      "passed": true,
+      "detail": "tests/python/test_h40m_manifest.py creates a sample inventory, converts it twice, validates schema, checks aligned offsets/placements/quant_type, and confirms byte-identical output with stable checksum fields."
+    },
+    {
+      "name": "Converter repeated run produces same logical manifest.",
+      "passed": true,
+      "detail": "Main manifest and artifacts/runs/20260809T075735Z_M01/manifest.second.json are byte-identical; sha256=3c69385733c1ae6860323dfb7b81fa70ad15dae7cd9c8d6574b192c6c2d82af9."
+    }
+  ],
+  "metrics": {
+    "tensor_count": 459,
+    "h40m_file_size": 13761781760,
+    "manifest_sha256": "3c69385733c1ae6860323dfb7b81fa70ad15dae7cd9c8d6574b192c6c2d82af9"
+  },
+  "artifacts": [
+    "artifacts\\model\\h40m\\manifest.json",
+    "tools\\model\\h40m_manifest.py",
+    "schemas\\h40m_manifest.schema.json",
+    "docs\\07_H40M_FORMAT.md",
+    "tests\\python\\test_h40m_manifest.py"
+  ],
+  "limitations": [
+    "M01 manifest assigns deterministic virtual H40M ranges and source-range checksum identifiers; M02 must materialize payload files and replace/supplement tensor checksums with content hashes."
+  ],
+  "notes": []
+}

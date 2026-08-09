@@ -13,6 +13,10 @@ Each tensor entry records at minimum:
 - placement: `resident`, `cache`, `stream`, or `token_lookup`;
 - content checksum and source-tensor provenance.
 
+## M01 manifest stage
+
+M01 creates a deterministic H40M/1 manifest from the official checkpoint inventory before payload bytes are repacked. Tensor ranges are assigned in a virtual `h40m/model.h40m` arena with fixed alignment and source-shard provenance. Until M02 materializes bytes, tensor `sha256` values use `checksum_kind: source_range_id_sha256`, a deterministic hash of tensor identity, source shard/checksum and planned H40M range. M02 must replace or supplement those with real content checksums when it writes payload files.
+
 ## Design rules
 - Converter output is deterministic for the same pinned source checkpoint/config.
 - Expert payload is stored in one/few large arenas, not thousands of tiny files.
