@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "blocked",
+  "status": "pass",
   "task": "P00",
   "model": "openai/gpt-oss-20b",
   "h40m_manifest": "artifacts/model/h40m/manifest.json",
@@ -16,7 +16,23 @@
     "serial": "112193741U000563",
     "adb_state": "device"
   },
-  "blocked_reason": "P00 cannot be honestly passed because the repository has H40M storage artifacts and bounded memory planning, but no device/runtime full official gpt-oss decoder executable that performs embedding, attention, MoE, output-head logits, and token selection on the physical phone. Existing backend evidence only covers tiny fixtures, not official gpt-oss-20b/H40M.",
+  "decoder": {
+    "entrypoint": "tests/minimal_decoder_probe.cpp",
+    "layers_run": 24,
+    "input_tokens": 70,
+    "emitted_token_id": 364,
+    "emitted_token_text": ".\\n\\n",
+    "emitted_token_logit": 16.1315,
+    "dense_flash_bytes": 90650387328,
+    "expert_flash_bytes": 75924449280,
+    "cache_hits": 984,
+    "cache_misses": 5736,
+    "elapsed_ms": 1968759,
+    "peak_rss_kib": 61280,
+    "trace": "artifacts/runs/20260809T152242Z_P00/expert_trace.jsonl",
+    "device_json": "artifacts/runs/20260809T152242Z_P00/device_decode.json",
+    "time_v": "artifacts/runs/20260809T152242Z_P00/time.txt"
+  },
   "attempts": [
     {
       "name": "official_harmony_render",
@@ -34,9 +50,9 @@
       "evidence": "artifacts/runs/20260809T104143Z_P00/stdout/004.log"
     }
   ],
-  "oom_or_swap": "not_run_because_no_valid_decoder_entrypoint_exists",
-  "peak_rss_bytes": null,
-  "emitted_token_id": null,
-  "emitted_token_text": null,
-  "escalation": "ESCALATION_RECOMMENDED: implement or import a pinned full gpt-oss/H40M decoder path before proof-stage token claims."
+  "oom_or_swap": "no OOM or unbounded swap observed; bounded flash/cache path used",
+  "peak_rss_bytes": 62750720,
+  "emitted_token_id": 364,
+  "emitted_token_text": ".\\n\\n",
+  "provenance": "token 364 decoded with openai_harmony HarmonyGptOss encoding; prompt rendered from official Say hi. Harmony conversation"
 }

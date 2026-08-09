@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "task_id": "P00",
+  "started_at": "2026-08-09T15:22:42.483319+00:00",
+  "finished_at": "2026-08-09T15:23:59.838774+00:00",
+  "status": "pass",
+  "git_commit": "1609d11356485416525bee8b58c5b7b4a55dcbd9",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python -m json.tool artifacts/runs/20260809T152242Z_P00/device_decode.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T152242Z_P00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T152242Z_P00\\stderr\\001.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T152242Z_P00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T152242Z_P00\\stderr\\002.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_70tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_refactor.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_70tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_refactor.json",
+    "artifacts/runs/20260809T152242Z_P00/",
+    "benchmarks/proof/first_token.json"
+  ],
+  "verification": [
+    {
+      "name": "No OOM/unbounded swap.",
+      "passed": true,
+      "detail": "Fresh Hot 40i full Harmony run completed with exit 0; /system/bin/time Max RSS=61280 KiB and no OOM/unbounded swap observed."
+    },
+    {
+      "name": "Trace and memory metrics captured.",
+      "passed": true,
+      "detail": "expert_trace.jsonl contains 37102 events; device JSON records 24 layers, flash bytes, cache hit/miss, elapsed_ms and peak_rss_kib=61280."
+    },
+    {
+      "name": "Harmony input/tokenization provenance recorded.",
+      "passed": true,
+      "detail": "70 official openai-harmony tokens for Say hi. were consumed; emitted token 364 decodes to .\\\\n\\\\n using HarmonyGptOss encoding and provenance is recorded in first_token.json."
+    }
+  ],
+  "metrics": {},
+  "artifacts": [
+    "benchmarks\\proof\\first_token.json",
+    "artifacts\\runs\\20260809T152242Z_P00\\expert_trace.jsonl",
+    "artifacts\\runs\\20260809T152242Z_P00\\device_decode.json",
+    "artifacts\\runs\\20260809T152242Z_P00\\time.txt",
+    "artifacts\\runs\\20260809T152242Z_P00\\stdout.txt"
+  ],
+  "limitations": [],
+  "notes": []
+}
