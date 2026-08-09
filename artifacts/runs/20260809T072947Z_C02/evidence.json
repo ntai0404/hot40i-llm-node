@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "task_id": "C02",
+  "started_at": "2026-08-09T07:29:47.151717+00:00",
+  "finished_at": "2026-08-09T07:36:32.829206+00:00",
+  "status": "pass",
+  "git_commit": "d52724611bd423d528dd724be5538759de28055c",
+  "sources": [
+    {
+      "url": "https://github.com/openai/gpt-oss",
+      "ref": "599476783c6f88508dab8577808b5ead5cbee8d2",
+      "note": "Official gpt-oss MXFP4 authority; README states tensor.blocks pack two fp4 values per uint8 and tensor.scales store block scales along the last dimension; gpt_oss/triton/moe.py uses downcast_to_mxfp(..., axis=1)."
+    },
+    {
+      "url": "https://github.com/ggml-org/llama.cpp",
+      "ref": "e9fa0781f1c25fc4fe8c86be1edc6970661ad6f0",
+      "note": "Selected-backend MXFP4 CPU reference: block_mxfp4 is one E8M0 scale byte plus sixteen packed E2M1 bytes for 32 values; dequant uses the kvalues_fp4 table and E8M0-half scale."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -Wall -Wextra -Wpedantic -O2 -I device/runtime/include tests/mxfp4_test.cpp device/runtime/src/mxfp4.cpp -o artifacts/runs/20260809T072947Z_C02/mxfp4_test_host.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T072947Z_C02\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T072947Z_C02\\stderr\\001.log"
+    },
+    {
+      "argv": "artifacts/runs/20260809T072947Z_C02/mxfp4_test_host.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T072947Z_C02\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T072947Z_C02\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android28-clang++.cmd' -std=c++20 -Wall -Wextra -Wpedantic -O2 -static-libstdc++ -I device/runtime/include tests/mxfp4_test.cpp device/runtime/src/mxfp4.cpp -o artifacts/runs/20260809T072947Z_C02/mxfp4_test_android",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T072947Z_C02\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T072947Z_C02\\stderr\\003.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T072947Z_C02\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T072947Z_C02\\stderr\\004.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 push artifacts/runs/20260809T072947Z_C02/mxfp4_test_android /data/local/tmp/c02_mxfp4_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T072947Z_C02\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T072947Z_C02\\stderr\\005.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell chmod 755 /data/local/tmp/c02_mxfp4_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T072947Z_C02\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T072947Z_C02\\stderr\\006.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell /data/local/tmp/c02_mxfp4_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T072947Z_C02\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T072947Z_C02\\stderr\\007.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T072947Z_C02/",
+    "device/runtime/include/h40/mxfp4.hpp",
+    "device/runtime/src/mxfp4.cpp",
+    "tests/mxfp4_test.cpp"
+  ],
+  "verification": [
+    {
+      "name": "Golden low-bit operator tests pass on host and device.",
+      "passed": true,
+      "detail": "Host mxfp4_test_host.exe and Android /data/local/tmp/c02_mxfp4_test exited 0; tests cover E8M0 scale decode, E2M1 packed nibble layout, direct packed-block matvec, and invalid shape rejection with tolerance 1e-6."
+    }
+  ],
+  "metrics": {
+    "mxfp4_block_values": 32,
+    "mxfp4_block_packed_bytes": 17,
+    "numerical_tolerance": 1e-06
+  },
+  "artifacts": [
+    "tests\\mxfp4_test.cpp",
+    "artifacts\\runs\\20260809T072947Z_C02\\mxfp4_test_host.exe",
+    "artifacts\\runs\\20260809T072947Z_C02\\mxfp4_test_android"
+  ],
+  "limitations": [],
+  "notes": [
+    "Implemented backend-independent MXFP4 row dequant and direct packed-block matvec for expert linear projection tests; full MoE scheduling remains in later correctness/runtime tasks."
+  ]
+}
