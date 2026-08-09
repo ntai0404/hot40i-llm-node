@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "mode": "single_token_full_24_layer_h40m_decode",
+  "layers_run": 24,
+  "emitted_token_id": 11,
+  "emitted_token_text": null,
+  "emitted_token_logit": 11.814,
+  "dense_flash_bytes": 2437387008,
+  "expert_flash_bytes": 1270702080,
+  "cache_hits": 0,
+  "cache_misses": 96,
+  "elapsed_ms": 36782
+}

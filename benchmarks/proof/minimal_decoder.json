@@ -1,53 +1,67 @@
 {
   "schema_version": 1,
-  "status": "blocked",
+  "status": "in_progress",
   "task": "P00D",
   "goal": "Minimal official H40M decoder path for P00 first-token generation",
   "implemented_this_task": [
     "Official gpt-oss split-scale H40M MXFP4 expert matvec primitive",
-    "Official gpt-oss expert activation formula: gate * sigmoid(gate * 1.702), (up + 1) * glu, gate max 7, up clamp [-7, 7]",
-    "Host and Android ARM64 tests for split-scale MXFP4 expert compute",
     "Compact H40M tensor catalog generated from official safetensors headers",
-    "BF16 tensor vector, row, full matvec, and row-range matvec reader for streamed dense/router/lm_head chunks"
+    "BF16 tensor vector, row, full matvec, and row-range matvec reader for streamed dense/router/lm_head chunks",
+    "GPT-OSS attention primitive with q/k/v/o bias, GQA, attention sinks, half-split RoPE, sliding/full causal support, and q_dim separate from hidden_dim",
+    "Full 24-layer single-token H40M decoder probe using official embedding, attention projections, MoE expert arena/cache, final norm, streamed lm_head argmax, and deterministic token selection"
   ],
   "component_inventory": {
-    "embedding_lookup": "official BF16 embedding row can be read from safetensors through H40M tensor catalog",
-    "rms_norm": "existing primitive",
-    "rope_attention": "partial_existing_tiny/full attention primitive; missing official alternating sliding/full attention mask integration for H40M runner",
-    "router_topk": "existing primitive",
-    "expert_compute": "implemented_split_scale_h40m_mxfp4_primitive_this_task",
-    "expert_loader_cache_trace": "existing S02/S03/S04/S05 path",
-    "full_stack_decode": "missing",
-    "final_norm": "BF16 final norm vector can be read; RMSNorm primitive exists but not wired to full stack",
-    "lm_head_projection": "official lm_head row-range BF16 matvec chunks can be streamed; full argmax runner not wired",
-    "deterministic_token_selection": "missing because logits are not produced"
+    "embedding_lookup": "official BF16 embedding row read from H40M source safetensors through tensor catalog",
+    "rms_norm": "wired for input/post/final norm",
+    "rope_attention": "attention primitive implemented and numerically verified; Android probe currently exercises position-0 single-token path where RoPE is identity and mask degenerates to one visible token",
+    "router_topk": "wired through existing MoE scheduler with router bias",
+    "expert_compute": "wired through H40M expert arena, bounded ExpertCache, and MXFP4 split-scale primitive",
+    "expert_loader_cache_trace": "expert cache hit/miss and bytes recorded in runner metrics",
+    "full_stack_decode": "single-token full 24-layer path passes on host and Android; multi-token Harmony prompt loop remains to complete P00D",
+    "final_norm": "wired to streamed lm_head argmax",
+    "lm_head_projection": "full vocabulary streamed in 256-row chunks without materializing full logits",
+    "deterministic_token_selection": "running argmax with lower token-id tie-break"
   },
-  "architecture_attempts": [
-    {
-      "name": "custom_h40m_native_decoder",
-      "status": "blocked",
-      "progress": "Expert MXFP4 split-scale compute, H40M tensor catalog, BF16 embedding/router/lm_head chunk readers now exist and pass host tests; expert primitive also passes device test.",
-      "blocker": "No complete H40M-native decoder executable yet wires official attention masks/RoPE, all 24 blocks, final norm, streamed lm_head argmax and token decode under S06 memory plan."
+  "host_single_token": {
+    "input_token_id": 12194,
+    "layers_run": 24,
+    "emitted_token_id": 11,
+    "emitted_token_text": null,
+    "emitted_token_logit": 11.8141,
+    "dense_flash_bytes": 2437387008,
+    "expert_flash_bytes": 1270702080,
+    "cache_hits": 0,
+    "cache_misses": 96,
+    "elapsed_ms": 74570,
+    "artifact": "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host.json"
+  },
+  "android_single_token": {
+    "device": "112193741U000563",
+    "input_token_id": 12194,
+    "layers_run": 24,
+    "emitted_token_id": 11,
+    "emitted_token_text": null,
+    "emitted_token_logit": 11.814,
+    "dense_flash_bytes": 2437387008,
+    "expert_flash_bytes": 1270702080,
+    "cache_hits": 0,
+    "cache_misses": 96,
+    "elapsed_ms": 36782,
+    "time_v": {
+      "real_seconds": 36.802106,
+      "user_seconds": 27.567495,
+      "system_seconds": 5.087109,
+      "max_rss_kib": 55808,
+      "file_system_inputs": 7331952,
+      "file_system_outputs": 192
     },
-    {
-      "name": "upstream_transformers_reference_decoder",
-      "status": "blocked",
-      "progress": "Local transformers 4.57.6 includes gpt_oss semantics; local config/index for official shards generated.",
-      "blocker": "Transformers MXFP4 path requires GPU or dequantizes the 20B model to BF16, which is not a bounded Android/H40M device decoder path."
-    }
-  ],
-  "host_tests": {
-    "gptoss_expert_test": "pass",
-    "h40m_tensor_catalog_test": "pass"
+    "artifact": "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device.json",
+    "trace": "artifacts/runs/20260809T132026Z_P00D/decoder_trace.jsonl",
+    "trace_events": 697
   },
-  "device_tests": {
-    "adb_serial": "112193741U000563",
-    "gptoss_expert_test_android": "pass"
-  },
-  "first_token": {
-    "emitted": false,
-    "token_id": null,
-    "text": null
-  },
-  "blocker": "ESCALATION_RECOMMENDED: continue implementing the full H40M-native decoder executable; do not unblock P00 until official logits/token are produced on device."
+  "remaining_for_p00d_pass": [
+    "Extend decoder probe from single token to full official Harmony prompt token sequence",
+    "Generate decoder_trace.jsonl with per-layer attention/MoE/final-head events",
+    "Record decoded token text/provenance from official tokenizer or Harmony-compatible host decode"
+  ]
 }

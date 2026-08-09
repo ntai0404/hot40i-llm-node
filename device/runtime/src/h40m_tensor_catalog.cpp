@@ -46,6 +46,10 @@ std::vector<std::string> split_tab(const std::string& line) {
     return parts;
 }
 
+void strip_trailing_cr(std::string& line) {
+    if (!line.empty() && line.back() == '\r') line.pop_back();
+}
+
 }  // namespace
 
 H40mTensorCatalog H40mTensorCatalog::load_tsv(const std::filesystem::path& path) {
@@ -53,12 +57,14 @@ H40mTensorCatalog H40mTensorCatalog::load_tsv(const std::filesystem::path& path)
     if (!in) throw std::runtime_error("failed to open H40M tensor catalog");
     std::string line;
     std::getline(in, line);
+    strip_trailing_cr(line);
     if (line != "name\tfile\toffset\tlength\tdtype\tshape") {
         throw std::runtime_error("unexpected H40M tensor catalog header");
     }
 
     H40mTensorCatalog catalog;
     while (std::getline(in, line)) {
+        strip_trailing_cr(line);
         if (line.empty()) continue;
         const auto parts = split_tab(line);
         if (parts.size() != 6) throw std::runtime_error("malformed H40M tensor catalog row");

@@ -37,7 +37,7 @@ completed_tasks:
 - S04
 - S05
 - S06
-in_progress: null
+in_progress: P00D
 blocked_tasks:
   P00:
     reason: 'P00 cannot be honestly passed because no device/runtime full official gpt-oss/H40M decoder executable
@@ -45,12 +45,6 @@ blocked_tasks:
       Evidence: artifacts/runs/20260809T104143Z_P00/evidence.json. ESCALATION_RECOMMENDED: implement/import pinned
       full gpt-oss/H40M decoder path before proof-stage token claims.'
     at: '2026-08-09T10:44:25.939893+00:00'
-  P00D:
-    reason: 'P00D continued implementation: H40M tensor catalog and BF16 streamed embedding/router/lm_head row-range
-      readers now pass host tests; split-scale MXFP4 expert primitive passes host and Android. Still blocked before
-      first token: official attention/RoPE masks, 24-layer loop, final norm wiring, full-vocab streamed argmax,
-      and Android first-token runner remain missing. Evidence: artifacts/runs/20260809T130922Z_P00D/evidence.json.'
-    at: '2026-08-09T13:12:32.892576+00:00'
 task_evidence:
   R00: artifacts/runs/20260807T140229Z_R00/evidence.json
   R01: artifacts/runs/20260807T142448Z_R01/evidence.json
@@ -131,4 +125,4 @@ task_started_at:
   S05: '2026-08-09T09:52:24.364016+00:00'
   S06: '2026-08-09T10:24:16.699500+00:00'
   P00: '2026-08-09T10:36:31.979519+00:00'
-  P00D: '2026-08-09T13:02:41.332167+00:00'
+  P00D: '2026-08-09T13:16:46.412847+00:00'
