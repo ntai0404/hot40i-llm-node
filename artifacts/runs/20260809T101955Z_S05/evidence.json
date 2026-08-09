@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "task_id": "S05",
+  "started_at": "2026-08-09T10:19:55.049036+00:00",
+  "finished_at": "2026-08-09T10:22:25.614927+00:00",
+  "status": "pass",
+  "git_commit": "2258d9fb32db608c83044153105c6df7ae12a84b",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\tiny_parity_test.cpp' 'device\\runtime\\src\\attention.cpp' 'device\\runtime\\src\\router.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' 'device\\runtime\\src\\model_index.cpp' -o 'artifacts\\runs\\20260809T101955Z_S05\\tiny_streaming_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T101955Z_S05\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T101955Z_S05\\stderr\\001.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260809T101955Z_S05\\tiny_streaming_test.exe' 'benchmarks\\custom\\tiny_streaming.json' 'artifacts\\runs\\20260809T101955Z_S05\\tiny_streaming_trace.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T101955Z_S05\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T101955Z_S05\\stderr\\002.log"
+    },
+    {
+      "argv": "python -m json.tool 'benchmarks\\custom\\tiny_streaming.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T101955Z_S05\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T101955Z_S05\\stderr\\003.log"
+    },
+    {
+      "argv": "python 'tools\\trace\\analyze_experts.py' 'artifacts\\runs\\20260809T101955Z_S05\\tiny_streaming_trace.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T101955Z_S05\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T101955Z_S05\\stderr\\004.log"
+    },
+    {
+      "argv": "python -c 'import json, pathlib, jsonschema; schema=json.loads(pathlib.Path('\"'\"'schemas/expert_trace_event.schema.json'\"'\"').read_text(encoding='\"'\"'utf-8'\"'\"')); count=0\nfor line in pathlib.Path('\"'\"'artifacts/runs/20260809T101955Z_S05/tiny_streaming_trace.jsonl'\"'\"').read_text(encoding='\"'\"'utf-8'\"'\"').splitlines():\n    if line.strip(): jsonschema.validate(json.loads(line), schema); count += 1\nprint(f'\"'\"'validated_events={count}'\"'\"')'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T101955Z_S05\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T101955Z_S05\\stderr\\005.log"
+    },
+    {
+      "argv": "'C:\\Program Files\\CMake\\bin\\cmake.exe' --build build --config Release -j 4",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T101955Z_S05\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T101955Z_S05\\stderr\\006.log"
+    },
+    {
+      "argv": "'C:\\Program Files\\CMake\\bin\\ctest.exe' --test-dir build --output-on-failure",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T101955Z_S05\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T101955Z_S05\\stderr\\007.log"
+    },
+    {
+      "argv": "python -c 'import json, pathlib; rows=[json.loads(x) for x in pathlib.Path('\"'\"'artifacts/runs/20260809T101955Z_S05/tiny_streaming_trace.jsonl'\"'\"').read_text(encoding='\"'\"'utf-8'\"'\"').splitlines() if x.strip()]; assert not any(str(r['\"'\"'event'\"'\"']).startswith('\"'\"'prefetch'\"'\"') for r in rows); assert sum(1 for r in rows if r['\"'\"'event'\"'\"']=='\"'\"'read_end'\"'\"') == 3; assert sum(1 for r in rows if r['\"'\"'event'\"'\"']=='\"'\"'compute_end'\"'\"') == 6; print('\"'\"'prefetch_events=0 read_end=3 compute_end=6'\"'\"')'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T101955Z_S05\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260809T101955Z_S05\\stderr\\008.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T101955Z_S05/",
+    "benchmarks/custom/tiny_streaming.json",
+    "device/runtime/include/h40/expert_cache.hpp",
+    "device/runtime/include/h40/expert_loader.hpp",
+    "device/runtime/include/h40/moe_scheduler.hpp",
+    "device/runtime/src/expert_cache.cpp",
+    "tests/tiny_parity_test.cpp"
+  ],
+  "verification": [
+    {
+      "name": "Tiny fixture full output still matches C04 golden with streaming enabled.",
+      "passed": true,
+      "detail": "tiny_streaming_test executes router -> no-allocation top-k scratch -> ExpertCache -> indexed ExpertLoader -> FlashTensorProvider miss loads -> compute callback -> weighted combine -> unified trace. Streaming MoE matches resident MoE, final logits max_abs_diff=1.19209e-07 <= 1e-5, cache hits=3, misses=3, provider flash bytes=3456, no prefetch events."
+    }
+  ],
+  "metrics": {
+    "max_abs_logit_diff": 1.19209e-07,
+    "cache_hits": 3,
+    "cache_misses": 3,
+    "flash_bytes_total": 3456,
+    "peak_cache_used_bytes": 3456
+  },
+  "artifacts": [
+    "benchmarks\\custom\\tiny_streaming.json",
+    "artifacts\\runs\\20260809T101955Z_S05\\tiny_streaming_trace.jsonl",
+    "artifacts\\runs\\20260809T101955Z_S05\\tiny_streaming_test.exe",
+    "device\\runtime\\include\\h40\\moe_scheduler.hpp",
+    "tests\\tiny_parity_test.cpp"
+  ],
+  "limitations": [],
+  "notes": []
+}

@@ -12,12 +12,19 @@
 
 namespace h40 {
 
+class ExpertLoader;
+
 struct CacheStats {
     std::uint64_t hits{};
     std::uint64_t misses{};
     std::uint64_t evictions{};
     std::uint64_t bytes_loaded{};
     std::uint64_t peak_used_bytes{};
+};
+
+struct CacheLoadResult {
+    std::span<const std::byte> bytes;
+    bool hit{};
 };
 
 enum class CachePolicy {
@@ -36,8 +43,13 @@ public:
         ExpertKey key,
         const TensorSlice& slice,
         TensorProvider& provider);
+    [[nodiscard]] CacheLoadResult get_or_load(
+        ExpertKey key,
+        const ExpertLoader& loader,
+        bool verify_checksum);
 
     [[nodiscard]] CacheStats stats() const noexcept { return stats_; }
+    [[nodiscard]] bool contains(ExpertKey key) const noexcept;
     [[nodiscard]] std::size_t used_bytes() const noexcept { return used_bytes_; }
     [[nodiscard]] std::size_t budget_bytes() const noexcept { return budget_bytes_; }
     [[nodiscard]] std::size_t slot_bytes() const noexcept { return slot_bytes_; }

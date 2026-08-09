@@ -144,6 +144,7 @@ inline bool sha256_hex_equals(std::span<const std::byte> data, const std::array<
 class ExpertLoader {
 public:
     ExpertLoader(const ModelIndex& index, TensorProvider& provider) : index_(index), provider_(provider) {}
+    [[nodiscard]] const ModelIndex& index() const noexcept { return index_; }
 
     [[nodiscard]] ExpertLoadResult load(ExpertKey key, std::span<std::byte> destination, bool verify_checksum) const {
         const auto record = index_.find_record(key);

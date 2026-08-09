@@ -1,12 +1,19 @@
 #include "h40/attention.hpp"
+#include "h40/expert_cache.hpp"
+#include "h40/expert_loader.hpp"
+#include "h40/flash_tensor_provider.hpp"
+#include "h40/moe_scheduler.hpp"
 #include "h40/router.hpp"
+#include "h40/trace.hpp"
 
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <sstream>
 #include <span>
 #include <string>
 #include <vector>
@@ -212,6 +219,119 @@ std::span<const float> expert_down(std::size_t id) {
     }
 }
 
+constexpr std::size_t kPackedExpertFloats =
+    kModelDim * kExpertHidden + kModelDim * kExpertHidden + kExpertHidden * kModelDim;
+constexpr std::size_t kPackedExpertBytes = kPackedExpertFloats * sizeof(float);
+
+void write_float_span(std::ofstream& out, std::span<const float> values) {
+    out.write(reinterpret_cast<const char*>(values.data()), static_cast<std::streamsize>(values.size_bytes()));
+}
+
+std::filesystem::path write_tiny_expert_arena(h40::ModelIndex& index) {
+    const auto path = std::filesystem::temp_directory_path() / "h40_tiny_streaming_experts.bin";
+    std::ofstream out(path, std::ios::binary | std::ios::trunc);
+    assert(out);
+    for (std::size_t expert = 0; expert < kExperts; ++expert) {
+        const auto offset = expert * kPackedExpertBytes;
+        index.put({0, static_cast<std::uint32_t>(expert)}, {offset, kPackedExpertBytes});
+        write_float_span(out, expert_gate(expert));
+        write_float_span(out, expert_up(expert));
+        write_float_span(out, expert_down(expert));
+    }
+    return path;
+}
+
+void compute_packed_expert(
+    std::span<const float> row,
+    std::span<const std::byte> packed,
+    std::span<float> out) {
+    assert(packed.size() == kPackedExpertBytes);
+    assert(out.size() == kModelDim);
+    const auto* floats = reinterpret_cast<const float*>(packed.data());
+    const auto* gate_w = floats;
+    const auto* up_w = gate_w + kModelDim * kExpertHidden;
+    const auto* down_w = up_w + kModelDim * kExpertHidden;
+    float hidden[kExpertHidden]{};
+    for (std::size_t col = 0; col < kExpertHidden; ++col) {
+        float gate = 0.0F;
+        float up = 0.0F;
+        for (std::size_t i = 0; i < kModelDim; ++i) {
+            gate += row[i] * gate_w[i * kExpertHidden + col];
+            up += row[i] * up_w[i * kExpertHidden + col];
+        }
+        hidden[col] = silu(clamp(gate, kSwigluLimit)) * clamp(up, kSwigluLimit);
+    }
+    for (std::size_t col = 0; col < kModelDim; ++col) {
+        float value = 0.0F;
+        for (std::size_t i = 0; i < kExpertHidden; ++i) {
+            value += hidden[i] * down_w[i * kModelDim + col];
+        }
+        out[col] = value;
+    }
+}
+
+struct StreamingMetrics {
+    std::uint64_t hits{};
+    std::uint64_t misses{};
+    std::uint64_t evictions{};
+    std::uint64_t bytes_loaded{};
+    std::uint64_t peak_used_bytes{};
+    std::uint64_t provider_operations{};
+    std::uint64_t provider_bytes{};
+};
+
+std::string g_last_streaming_trace;
+StreamingMetrics g_last_streaming_metrics;
+
+std::vector<float> run_streaming_moe(
+    std::span<const float> ffn_norm,
+    std::span<const float> router_logits,
+    std::ostream& trace_out,
+    StreamingMetrics& metrics) {
+    h40::ModelIndex index;
+    const auto arena_path = write_tiny_expert_arena(index);
+    std::vector<float> output(kInput.size(), 0.0F);
+    {
+        h40::FlashTensorProvider provider(arena_path);
+        h40::ExpertLoader loader(index, provider);
+        h40::ExpertCache cache(kPackedExpertBytes * 3, kPackedExpertBytes);
+        h40::JsonlTraceWriter trace(trace_out);
+        std::uint32_t selected_ids[kTopK]{};
+        float selected_weights[kTopK]{};
+        float expert_output[kModelDim]{};
+        h40::run_moe_layer_streaming(
+            {0, kSeqLen, kExperts, kTopK, kModelDim},
+            router_logits,
+            cache,
+            loader,
+            output,
+            {selected_ids, selected_weights, expert_output},
+            [&](std::size_t token, std::uint32_t, std::span<const std::byte> bytes, std::span<float> out) {
+                compute_packed_expert(
+                    ffn_norm.subspan(token * kModelDim, kModelDim),
+                    bytes,
+                    out);
+            },
+            &trace,
+            false);
+        const auto cache_stats = cache.stats();
+        const auto provider_stats = provider.stats();
+        metrics = {
+            cache_stats.hits,
+            cache_stats.misses,
+            cache_stats.evictions,
+            cache_stats.bytes_loaded,
+            cache_stats.peak_used_bytes,
+            provider_stats.operations,
+            provider_stats.bytes,
+        };
+        assert(cache.used_bytes() <= cache.budget_bytes());
+        assert(cache_stats.peak_used_bytes <= cache.budget_bytes());
+    }
+    std::filesystem::remove(arena_path);
+    return output;
+}
+
 std::vector<float> run_tiny_network() {
     std::vector<float> attn_norm(kInput.size());
     for (std::size_t pos = 0; pos < kSeqLen; ++pos) {
@@ -274,6 +394,19 @@ std::vector<float> run_tiny_network() {
     }
     assert_close(moe, kExpectedMoe, 1.0e-5F);
 
+    std::ostringstream trace_buffer;
+    StreamingMetrics streaming_metrics;
+    const auto streaming_moe = run_streaming_moe(ffn_norm, router_logits, trace_buffer, streaming_metrics);
+    g_last_streaming_trace = trace_buffer.str();
+    g_last_streaming_metrics = streaming_metrics;
+    assert_close(streaming_moe, moe, 1.0e-5F);
+    assert(streaming_metrics.misses == 3);
+    assert(streaming_metrics.hits == 3);
+    assert(streaming_metrics.evictions == 0);
+    assert(streaming_metrics.bytes_loaded == 3 * kPackedExpertBytes);
+    assert(streaming_metrics.provider_operations == 3);
+    assert(streaming_metrics.provider_bytes == 3 * kPackedExpertBytes);
+
     std::vector<float> layer(kInput.size());
     for (std::size_t i = 0; i < layer.size(); ++i) {
         layer[i] = post_attention[i] + moe[i];
@@ -307,6 +440,14 @@ void write_report(const std::string& path, std::span<const float> logits) {
     out << "  \"seq_len\": " << kSeqLen << ",\n";
     out << "  \"model_dim\": " << kModelDim << ",\n";
     out << "  \"max_abs_logit_diff\": " << max_abs_diff(logits, kExpectedLogits) << ",\n";
+    out << "  \"streaming_moe_matches_resident\": true,\n";
+    out << "  \"cache_hits\": " << g_last_streaming_metrics.hits << ",\n";
+    out << "  \"cache_misses\": " << g_last_streaming_metrics.misses << ",\n";
+    out << "  \"cache_evictions\": " << g_last_streaming_metrics.evictions << ",\n";
+    out << "  \"expert_bytes_per_miss\": " << kPackedExpertBytes << ",\n";
+    out << "  \"provider_operations\": " << g_last_streaming_metrics.provider_operations << ",\n";
+    out << "  \"provider_bytes\": " << g_last_streaming_metrics.provider_bytes << ",\n";
+    out << "  \"peak_cache_used_bytes\": " << g_last_streaming_metrics.peak_used_bytes << ",\n";
     out << "  \"tolerance\": 1e-5\n";
     out << "}\n";
 }
@@ -317,6 +458,12 @@ int main(int argc, char** argv) {
     const auto logits = run_tiny_network();
     if (argc > 1) {
         write_report(argv[1], logits);
+    }
+    if (argc > 2) {
+        const std::filesystem::path trace_path(argv[2]);
+        std::filesystem::create_directories(trace_path.parent_path());
+        std::ofstream trace_out(trace_path);
+        trace_out << g_last_streaming_trace;
     }
     return 0;
 }

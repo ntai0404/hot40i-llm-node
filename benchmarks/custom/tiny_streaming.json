@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "fixture": "tiny_gpt_oss_shape_v1",
+  "seq_len": 3,
+  "model_dim": 8,
+  "max_abs_logit_diff": 1.19209e-07,
+  "streaming_moe_matches_resident": true,
+  "cache_hits": 3,
+  "cache_misses": 3,
+  "cache_evictions": 0,
+  "expert_bytes_per_miss": 1152,
+  "provider_operations": 3,
+  "provider_bytes": 3456,
+  "peak_cache_used_bytes": 3456,
+  "tolerance": 1e-5
+}
