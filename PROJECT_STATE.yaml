@@ -17,6 +17,7 @@ completed_tasks:
 - B01
 - B02
 - B03
+- B04
 in_progress: null
 blocked_tasks: {}
 task_evidence:
@@ -34,11 +35,12 @@ task_evidence:
   B01: artifacts/runs/20260807T165722Z_B01/evidence.json
   B02: artifacts/runs/20260807T172453Z_B02/evidence.json
   B03: artifacts/runs/20260809T070959Z_B03/evidence.json
+  B04: artifacts/runs/20260809T071612Z_B04/evidence.json
 skipped_optional_tasks: []
 decisions:
   destructive_device_authorized: false
   os_optimization_activated: false
-  selected_compute_backend: null
+  selected_compute_backend: llama.cpp
   safe_rss_budget_bytes: 646080512
   device_serial: 112193741U000563
 notes:
@@ -58,3 +60,4 @@ task_started_at:
   B01: '2026-08-07T16:57:22.800152+00:00'
   B02: '2026-08-07T17:24:49.930499+00:00'
   B03: '2026-08-09T07:09:55.552486+00:00'
+  B04: '2026-08-09T07:16:07.901512+00:00'

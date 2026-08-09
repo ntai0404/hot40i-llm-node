@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-09T07:17:23.683976+00:00",
+  "inputs": [
+    "benchmarks/runtimes/llama_cpp.json",
+    "benchmarks/runtimes/mnn.json",
+    "benchmarks/runtimes/executorch.json",
+    "benchmarks/runtimes/mlc.json"
+  ],
+  "selected_compute_backend": "llama.cpp",
+  "fallback_order": [
+    "ExecuTorch/XNNPACK",
+    "MNN",
+    "MLC/Mali"
+  ],
+  "selection_rationale": [
+    "llama.cpp is the only measured backend with a runnable LLM/GGUF fixture on the Hot 40i.",
+    "llama.cpp produced three successful device runs with median prompt 8609.739317 tok/s, median decode 2344.292633 tok/s, and max RSS 10360 KiB on the tiny GGUF fixture.",
+    "ExecuTorch/XNNPACK is runnable but only on a tiny linear operator fixture; using it as the primary backend would require a new model export/runtime integration path.",
+    "MNN and MLC/Mali were not runnable for equivalent LLM inference in this workspace because their model/toolchain paths are blocked."
+  ],
+  "rows": [
+    {
+      "backend": "llama.cpp",
+      "status": "pass",
+      "runnable": true,
+      "fixture": "tinyllamas/stories260K.gguf",
+      "llm_or_operator": "LLM/GGUF",
+      "prompt_tokens_per_second_median": 8609.739317,
+      "decode_tokens_per_second_median": 2344.292633,
+      "rss_peak_kib_max": 10360,
+      "android_build_complexity": "moderate",
+      "gpt_oss_mxfp4_adaptation_cost": "lowest",
+      "kernel_coverage": "broad GGML/GGUF CPU kernels plus gpt-oss-oriented upstream support",
+      "evidence": "benchmarks/runtimes/llama_cpp.json"
+    },
+    {
+      "backend": "ExecuTorch/XNNPACK",
+      "status": "pass",
+      "runnable": true,
+      "fixture": "ExecuTorch examples.xnnpack linear toy model, fp32, XNNPACK delegated",
+      "llm_or_operator": "operator fixture",
+      "duration_ms_median_per_1000": 2.186502,
+      "single_execution_ms_median": 0.002186502,
+      "rss_peak_kib_max": 4196,
+      "android_build_complexity": "high",
+      "gpt_oss_mxfp4_adaptation_cost": "high",
+      "kernel_coverage": "strong FP32 mobile operator kernels; no direct GGUF/gpt-oss runtime path measured",
+      "evidence": "benchmarks/runtimes/executorch.json"
+    },
+    {
+      "backend": "MNN",
+      "status": "blocked",
+      "runnable": false,
+      "fixture": "C:\\tmp\\stories260K.gguf",
+      "llm_or_operator": "blocked LLM conversion",
+      "rss_peak_kib_max": null,
+      "android_build_complexity": "moderate",
+      "gpt_oss_mxfp4_adaptation_cost": "high",
+      "kernel_coverage": "mobile inference kernels available, but GGUF conversion blocked by required template model files",
+      "evidence": "benchmarks/runtimes/mnn.json",
+      "blocker": "mnn_gguf_conversion_requires_existing_template_model"
+    },
+    {
+      "backend": "MLC/Mali",
+      "status": "rejected",
+      "runnable": false,
+      "fixture": "native Vulkan/OpenCL support probe",
+      "llm_or_operator": "support probe only",
+      "rss_peak_kib_max": null,
+      "android_build_complexity": "very high",
+      "gpt_oss_mxfp4_adaptation_cost": "high",
+      "kernel_coverage": "Mali Vulkan/OpenCL hardware present; MLC Android build blocked by missing TVM/toolchain package",
+      "evidence": "benchmarks/runtimes/mlc.json",
+      "vulkan_device_count": 1,
+      "opencl_device_count": 1
+    }
+  ],
+  "scores": {
+    "llama.cpp": {
+      "kernel_coverage": 5,
+      "speed": 5,
+      "rss": 4,
+      "android_build_complexity": 4,
+      "gpt_oss_mxfp4_adaptation_cost": 5,
+      "total": 23
+    },
+    "ExecuTorch/XNNPACK": {
+      "kernel_coverage": 3,
+      "speed": 3,
+      "rss": 4,
+      "android_build_complexity": 2,
+      "gpt_oss_mxfp4_adaptation_cost": 2,
+      "total": 14
+    },
+    "MNN": {
+      "kernel_coverage": 2,
+      "speed": 0,
+      "rss": 0,
+      "android_build_complexity": 2,
+      "gpt_oss_mxfp4_adaptation_cost": 1,
+      "total": 5
+    },
+    "MLC/Mali": {
+      "kernel_coverage": 2,
+      "speed": 0,
+      "rss": 0,
+      "android_build_complexity": 1,
+      "gpt_oss_mxfp4_adaptation_cost": 1,
+      "total": 4
+    }
+  }
+}

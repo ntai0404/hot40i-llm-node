@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "task_id": "B04",
+  "started_at": "2026-08-09T07:16:12.383662+00:00",
+  "finished_at": "2026-08-09T07:18:44.739177+00:00",
+  "status": "pass",
+  "git_commit": "1210190d0ff74b36f740735db41b96ab25e96a8e",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python 'artifacts\\runs\\20260809T071612Z_B04\\generate_comparison.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T071612Z_B04\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T071612Z_B04\\stderr\\001.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T071612Z_B04/evidence.json",
+    "artifacts/runs/20260809T071612Z_B04/generate_comparison.py",
+    "benchmarks/runtimes/comparison.json",
+    "docs/decisions/ADR_001_COMPUTE_BACKEND.md"
+  ],
+  "verification": [
+    {
+      "name": "Comparison script/table is generated from benchmark artifacts rather than hand-entered headline numbers.",
+      "passed": true,
+      "detail": "artifacts/runs/20260809T071612Z_B04/generate_comparison.py read llama_cpp.json, mnn.json, executorch.json and mlc.json, generated benchmarks/runtimes/comparison.json and docs/decisions/ADR_001_COMPUTE_BACKEND.md, and PROJECT_STATE.yaml selected_compute_backend is llama.cpp."
+    }
+  ],
+  "metrics": {
+    "selected_backend": "llama.cpp",
+    "llama_cpp_score": 23
+  },
+  "artifacts": [
+    "benchmarks\\runtimes\\comparison.json",
+    "docs\\decisions\\ADR_001_COMPUTE_BACKEND.md",
+    "artifacts\\runs\\20260809T071612Z_B04\\generate_comparison.py"
+  ],
+  "limitations": [],
+  "notes": []
+}
