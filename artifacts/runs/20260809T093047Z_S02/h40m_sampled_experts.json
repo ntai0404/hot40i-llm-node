@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "source_layout": "artifacts\\model\\h40m\\expert_arena.layout.json",
+  "source_arena": "artifacts\\model\\h40m\\expert_arena.bin",
+  "sample_file": "artifacts\\runs\\20260809T093047Z_S02\\h40m_sampled_experts.bin",
+  "record_count": 3,
+  "bytes": 39709440,
+  "records": [
+    {
+      "layer": 0,
+      "expert_id": 0,
+      "original_offset": 0,
+      "sample_offset": 0,
+      "length": 13236480,
+      "sha256": "475786ab29448022b8e39a2d357c2919c3f7587d17c730c53a0764c4c5f808b4"
+    },
+    {
+      "layer": 8,
+      "expert_id": 1,
+      "original_offset": 3503292416,
+      "sample_offset": 13236480,
+      "length": 13236480,
+      "sha256": "b1d6eb31644b5bc20de8052a8ea2acc8401817097c698265714e4eac49aea157"
+    },
+    {
+      "layer": 23,
+      "expert_id": 31,
+      "original_offset": 10455351296,
+      "sample_offset": 26472960,
+      "length": 13236480,
+      "sha256": "3aff730fd60fb49abeb519e52e52c66d4d37f34cb2a35c8c37190d69648524ec"
+    }
+  ]
+}
