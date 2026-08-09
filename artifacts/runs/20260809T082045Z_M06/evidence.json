@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "task_id": "M06",
+  "started_at": "2026-08-09T08:20:45.110363+00:00",
+  "finished_at": "2026-08-09T08:23:26.161463+00:00",
+  "status": "pass",
+  "git_commit": "0d45baafdbde7f1a418aac696214015be25f43e8",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python 'tools\\model\\generate_memory_plan.py'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T082045Z_M06\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T082045Z_M06\\stderr\\001.log"
+    },
+    {
+      "argv": "python 'tools\\model\\generate_memory_plan.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082045Z_M06\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T082045Z_M06\\stderr\\002.log"
+    },
+    {
+      "argv": "python -m json.tool 'artifacts\\model\\memory_plan.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082045Z_M06\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T082045Z_M06\\stderr\\003.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/model/memory_plan.json",
+    "artifacts/runs/20260809T082045Z_M06/",
+    "docs/decisions/ADR_003_MEMORY_PLACEMENT.md",
+    "tools/model/generate_memory_plan.py"
+  ],
+  "verification": [
+    {
+      "name": "Memory plan total <= safe_rss_budget with explicit headroom.",
+      "passed": true,
+      "detail": "Generated memory plan totals 331,306,112 bytes <= 646,080,512-byte D02 safe RSS budget, leaving 314,774,400 bytes of explicit headroom; all full attention matrices are layer_stream_q8 or resident_small, not all resident."
+    }
+  ],
+  "metrics": {
+    "headroom_bytes": 314774400,
+    "total_planned_rss_bytes": 331306112,
+    "minimum_top4_expert_cache_bytes": 52945920,
+    "safe_rss_budget_bytes": 646080512,
+    "max_attention_layer_q8_stream_buffer_bytes": 26542080
+  },
+  "artifacts": [
+    "artifacts\\model\\memory_plan.json",
+    "docs\\decisions\\ADR_003_MEMORY_PLACEMENT.md"
+  ],
+  "limitations": [],
+  "notes": []
+}
