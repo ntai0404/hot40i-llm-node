@@ -1,0 +1,42 @@
+{
+  "device_constraints": {
+    "best_int8_gops": 38.1622,
+    "random_8m_mib_per_second": 1151.15,
+    "safe_rss_budget_bytes": 646080512
+  },
+  "lm_head": {
+    "bf16_bytes": 1158266880,
+    "q8_bytes": 579133440,
+    "q8_logit_max_abs_diff": 0.004736611763816179,
+    "routing_match": true,
+    "shape": [
+      201088,
+      2880
+    ]
+  },
+  "schema_version": 1,
+  "selected": "chunked_streamed_q8_head",
+  "status": "pass",
+  "strategies": [
+    {
+      "accepted": false,
+      "estimated_compute_ms": 15.175577927897239,
+      "estimated_flash_bytes_per_token": 0,
+      "name": "resident_q8_head",
+      "reason": "q8 head alone leaves insufficient RSS headroom for runtime state/cache",
+      "resident_bytes": 579133440,
+      "rss_headroom_bytes": 66947072
+    },
+    {
+      "accepted": true,
+      "chunk_bytes": 11796480,
+      "chunk_vocab": 4096,
+      "estimated_compute_ms": 15.175577927897239,
+      "estimated_flash_bytes_per_token": 579133440,
+      "estimated_flash_ms_per_token": 479.7851604916822,
+      "name": "chunked_streamed_q8_head",
+      "reason": "keeps resident head memory bounded while preserving exact full-vocabulary projection",
+      "resident_bytes": 11796480
+    }
+  ]
+}

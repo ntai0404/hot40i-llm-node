@@ -27,6 +27,7 @@ completed_tasks:
 - M01
 - M03
 - M04
+- M05
 in_progress: null
 blocked_tasks:
   M02:
@@ -58,6 +59,7 @@ task_evidence:
   M01: artifacts/runs/20260809T075735Z_M01/evidence.json
   M03: artifacts/runs/20260809T080448Z_M03/evidence.json
   M04: artifacts/runs/20260809T080838Z_M04/evidence.json
+  M05: artifacts/runs/20260809T081536Z_M05/evidence.json
 skipped_optional_tasks: []
 decisions:
   destructive_device_authorized: false
@@ -93,3 +95,4 @@ task_started_at:
   M02: '2026-08-09T08:03:19.063824+00:00'
   M03: '2026-08-09T08:04:40.797221+00:00'
   M04: '2026-08-09T08:08:27.817419+00:00'
+  M05: '2026-08-09T08:15:26.015774+00:00'

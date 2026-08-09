@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "task_id": "M05",
+  "started_at": "2026-08-09T08:15:36.582095+00:00",
+  "finished_at": "2026-08-09T08:18:18.963343+00:00",
+  "status": "pass",
+  "git_commit": "8acdf1bdfad0b9baeacd6edf4f748d39599bd962",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python artifacts/runs/20260809T081536Z_M05/generate_output_head_decision.py",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T081536Z_M05\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T081536Z_M05\\stderr\\001.log"
+    },
+    {
+      "argv": "python artifacts/runs/20260809T081536Z_M05/generate_output_head_decision.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T081536Z_M05\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T081536Z_M05\\stderr\\002.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T081536Z_M05/",
+    "benchmarks/model/output_head.json",
+    "docs/decisions/ADR_002_OUTPUT_HEAD.md"
+  ],
+  "verification": [
+    {
+      "name": "Same hidden input must produce logits within accepted tolerance.",
+      "passed": true,
+      "detail": "Q8 output-head-only fixture run produced max_abs_logit_diff=0.004736611763816179 <= 0.01; selected chunked_streamed_q8_head uses 11,796,480-byte chunks and estimates 579,133,440 flash bytes/token."
+    }
+  ],
+  "metrics": {
+    "lm_head_q8_bytes": 579133440,
+    "chunk_bytes": 11796480,
+    "estimated_flash_ms_per_token": 479.7851604916822,
+    "estimated_compute_ms": 15.175577927897239,
+    "q8_logit_max_abs_diff": 0.004736611763816179
+  },
+  "artifacts": [
+    "benchmarks\\model\\output_head.json",
+    "docs\\decisions\\ADR_002_OUTPUT_HEAD.md",
+    "artifacts\\runs\\20260809T081536Z_M05\\generate_output_head_decision.py"
+  ],
+  "limitations": [],
+  "notes": []
+}
