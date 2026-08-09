@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "task_id": "C00",
+  "started_at": "2026-08-09T07:19:27.536894+00:00",
+  "finished_at": "2026-08-09T07:23:49.751525+00:00",
+  "status": "pass",
+  "git_commit": "dc83b4b09aadb29079296df1be16f6ac6d0de398",
+  "sources": [
+    {
+      "url": "https://github.com/openai/gpt-oss.git",
+      "ref": "599476783c6f88508dab8577808b5ead5cbee8d2",
+      "note": "Pinned official gpt-oss reference repository from R00; C00 fixture is shaped by repository model contract docs."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "python 'tools\\model\\generate_tiny_gpt_oss_fixture.py' --out-dir 'tests\\fixtures\\tiny_gpt_oss'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T071927Z_C00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T071927Z_C00\\stderr\\001.log"
+    },
+    {
+      "argv": "python -m pytest 'tests\\python\\test_tiny_gpt_oss_fixture.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T071927Z_C00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T071927Z_C00\\stderr\\002.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T071927Z_C00/",
+    "tests/fixtures/",
+    "tests/python/test_tiny_gpt_oss_fixture.py",
+    "tools/model/generate_tiny_gpt_oss_fixture.py"
+  ],
+  "verification": [
+    {
+      "name": "Laptop reference reproduces identical outputs across two runs.",
+      "passed": true,
+      "detail": "python -m pytest tests/python/test_tiny_gpt_oss_fixture.py passed; test builds fixture twice in-process, asserts equality, and checks router IDs/scores, expert outputs, attention outputs, layer output and logits."
+    }
+  ],
+  "metrics": {
+    "fixture_sha256": "7e6e7acd8259ebfa9ef97de90debc563cc654f9fd0f38cfd9e418ad0e7d93415"
+  },
+  "artifacts": [
+    "tests\\fixtures\\tiny_gpt_oss\\fixture.json",
+    "tests\\fixtures\\tiny_gpt_oss\\README.md",
+    "tools\\model\\generate_tiny_gpt_oss_fixture.py"
+  ],
+  "limitations": [],
+  "notes": []
+}
