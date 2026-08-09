@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "task_id": "P00",
+  "started_at": "2026-08-09T10:41:43.162221+00:00",
+  "finished_at": "2026-08-09T10:43:52.043574+00:00",
+  "status": "blocked",
+  "git_commit": "e89cf223b88068a3d8838ae978b12798d92bf104",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T104143Z_P00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T104143Z_P00\\stderr\\001.log"
+    },
+    {
+      "argv": "python -c 'from openai_harmony import *; import importlib.metadata as md, json; enc=load_harmony_encoding(HarmonyEncodingName.HARMONY_GPT_OSS); conv=Conversation(messages=[Message(author=Author(role=Role.SYSTEM), content=[SystemContent(conversation_start_date='\"'\"'2026-08-09'\"'\"')]), Message(author=Author(role=Role.USER), content=[TextContent(text='\"'\"'Say hi.'\"'\"')])]); toks=enc.render_conversation_for_completion(conv, Role.ASSISTANT); print(json.dumps({'\"'\"'package'\"'\"':'\"'\"'openai-harmony'\"'\"','\"'\"'version'\"'\"':md.version('\"'\"'openai-harmony'\"'\"'),'\"'\"'encoding'\"'\"':enc.name,'\"'\"'prompt'\"'\"':'\"'\"'Say hi.'\"'\"','\"'\"'token_count'\"'\"':len(toks),'\"'\"'first_tokens'\"'\"':toks[:24],'\"'\"'render_prefix'\"'\"':enc.decode(toks)[:220]}, ensure_ascii=False))'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T104143Z_P00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T104143Z_P00\\stderr\\002.log"
+    },
+    {
+      "argv": "python -c 'import json, pathlib; manifest=json.load(open('\"'\"'artifacts/model/h40m/manifest.json'\"'\"')); plan=json.load(open('\"'\"'artifacts/model/memory_plan.json'\"'\"')); runtime_files=[str(p) for p in pathlib.Path('\"'\"'device/runtime'\"'\"').rglob('\"'\"'*'\"'\"') if p.suffix in ('\"'\"'.hpp'\"'\"','\"'\"'.cpp'\"'\"')]; text='\"'\"'\\n'\"'\"'.join(pathlib.Path(p).read_text(encoding='\"'\"'utf-8'\"'\"', errors='\"'\"'ignore'\"'\"') for p in runtime_files); missing=[]; checks={'\"'\"'full_decoder_entrypoint'\"'\"':'\"'\"'decode'\"'\"' in text and '\"'\"'lm_head'\"'\"' in text, '\"'\"'h40m_manifest_present'\"'\"':manifest['\"'\"'source'\"'\"']['\"'\"'model'\"'\"']=='\"'\"'openai/gpt-oss-20b'\"'\"', '\"'\"'expert_arena_present'\"'\"':pathlib.Path('\"'\"'artifacts/model/h40m/expert_arena.bin'\"'\"').exists(), '\"'\"'bounded_memory_plan_present'\"'\"':plan['\"'\"'status'\"'\"']=='\"'\"'pass'\"'\"'}; print(json.dumps({'\"'\"'runtime_files'\"'\"':runtime_files,'\"'\"'checks'\"'\"':checks,'\"'\"'conclusion'\"'\"':'\"'\"'custom runtime has H40M storage artifacts and bounded memory plan, but no full official gpt-oss decoder executable/output-head token selection path exists in device/runtime'\"'\"'}, indent=2))'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T104143Z_P00\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T104143Z_P00\\stderr\\003.log"
+    },
+    {
+      "argv": "python -c 'import json, pathlib; benches={p.as_posix():json.load(open(p, encoding='\"'\"'utf-8'\"'\"')) for p in pathlib.Path('\"'\"'benchmarks/runtimes'\"'\"').glob('\"'\"'*.json'\"'\"')}; summary={};\nfor p,d in benches.items():\n summary[p]={'\"'\"'status'\"'\"':d.get('\"'\"'status'\"'\"') or d.get('\"'\"'benchmark'\"'\"'), '\"'\"'model_source'\"'\"':d.get('\"'\"'config'\"'\"',{}).get('\"'\"'model_source'\"'\"'), '\"'\"'limitations'\"'\"':d.get('\"'\"'limitations'\"'\"') or d.get('\"'\"'notes'\"'\"') or []}\nprint(json.dumps({'\"'\"'backend_artifacts'\"'\"':summary,'\"'\"'conclusion'\"'\"':'\"'\"'existing Android backend evidence does not contain an official gpt-oss-20b/GGUF or H40M one-token runner; llama.cpp evidence explicitly uses tiny stories260K fixture'\"'\"'}, indent=2))'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T104143Z_P00\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T104143Z_P00\\stderr\\004.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T104143Z_P00/",
+    "benchmarks/proof/"
+  ],
+  "verification": [],
+  "metrics": {
+    "harmony_prompt_tokens": 70
+  },
+  "artifacts": [
+    "artifacts\\runs\\20260809T104143Z_P00\\expert_trace.jsonl",
+    "benchmarks\\proof\\first_token.json"
+  ],
+  "limitations": [
+    "BLOCKER: P00 cannot be honestly passed because no device/runtime full official gpt-oss/H40M decoder executable exists; existing backend artifacts are tiny fixtures and do not emit an official gpt-oss-20b token."
+  ],
+  "notes": [
+    "ESCALATION_RECOMMENDED: implement or import a pinned full gpt-oss/H40M decoder path before any proof-stage token claim; Harmony rendering itself succeeded with openai-harmony==0.0.8 and HarmonyGptOss."
+  ]
+}

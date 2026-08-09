@@ -1,0 +1,1 @@
+{"schema_version":1,"event":"blocked","task":"P00","reason":"no full official gpt-oss/H40M decoder executable exists in device/runtime or existing Android backend artifacts; token generation was not run to avoid a false pass","harmony_prompt_rendered":true,"device_serial":"112193741U000563"}

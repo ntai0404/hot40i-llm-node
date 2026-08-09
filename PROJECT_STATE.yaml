@@ -38,7 +38,13 @@ completed_tasks:
 - S05
 - S06
 in_progress: null
-blocked_tasks: {}
+blocked_tasks:
+  P00:
+    reason: 'P00 cannot be honestly passed because no device/runtime full official gpt-oss/H40M decoder executable
+      exists; existing Android backend artifacts are tiny fixtures and do not emit an official gpt-oss-20b token.
+      Evidence: artifacts/runs/20260809T104143Z_P00/evidence.json. ESCALATION_RECOMMENDED: implement/import pinned
+      full gpt-oss/H40M decoder path before proof-stage token claims.'
+    at: '2026-08-09T10:44:25.939893+00:00'
 task_evidence:
   R00: artifacts/runs/20260807T140229Z_R00/evidence.json
   R01: artifacts/runs/20260807T142448Z_R01/evidence.json
@@ -118,3 +124,4 @@ task_started_at:
   S04: '2026-08-09T09:44:48.629930+00:00'
   S05: '2026-08-09T09:52:24.364016+00:00'
   S06: '2026-08-09T10:24:16.699500+00:00'
+  P00: '2026-08-09T10:36:31.979519+00:00'

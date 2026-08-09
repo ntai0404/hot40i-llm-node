@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "status": "blocked",
+  "task": "P00",
+  "model": "openai/gpt-oss-20b",
+  "h40m_manifest": "artifacts/model/h40m/manifest.json",
+  "h40m_expert_arena": "artifacts/model/h40m/expert_arena.bin",
+  "harmony": {
+    "package": "openai-harmony",
+    "version": "0.0.8",
+    "encoding": "HarmonyGptOss",
+    "prompt": "Say hi.",
+    "rendered_prompt_tokens": 70
+  },
+  "device": {
+    "serial": "112193741U000563",
+    "adb_state": "device"
+  },
+  "blocked_reason": "P00 cannot be honestly passed because the repository has H40M storage artifacts and bounded memory planning, but no device/runtime full official gpt-oss decoder executable that performs embedding, attention, MoE, output-head logits, and token selection on the physical phone. Existing backend evidence only covers tiny fixtures, not official gpt-oss-20b/H40M.",
+  "attempts": [
+    {
+      "name": "official_harmony_render",
+      "status": "pass",
+      "evidence": "artifacts/runs/20260809T104143Z_P00/stdout/002.log"
+    },
+    {
+      "name": "custom_bounded_runtime_decode_path",
+      "status": "blocked",
+      "evidence": "artifacts/runs/20260809T104143Z_P00/stdout/003.log"
+    },
+    {
+      "name": "existing_backend_reference_path",
+      "status": "blocked",
+      "evidence": "artifacts/runs/20260809T104143Z_P00/stdout/004.log"
+    }
+  ],
+  "oom_or_swap": "not_run_because_no_valid_decoder_entrypoint_exists",
+  "peak_rss_bytes": null,
+  "emitted_token_id": null,
+  "emitted_token_text": null,
+  "escalation": "ESCALATION_RECOMMENDED: implement or import a pinned full gpt-oss/H40M decoder path before proof-stage token claims."
+}
