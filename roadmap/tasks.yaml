@@ -1058,12 +1058,51 @@ tasks:
   - Record failure verbatim in evidence.
   - Fix only within task scope; retry verification.
   - If externally blocked, mark blocked and continue independent ready tasks.
+- id: P00D
+  title: Implement minimal official H40M decoder
+  phase: proof
+  priority: 59
+  depends_on:
+  - S06
+  - M02
+  - R01
+  optional: false
+  goal: Add the missing bounded decoder executable path required for P00 to emit a first official gpt-oss-20b token.
+  allowed_paths:
+  - device/runtime/**
+  - host/**
+  - tests/**
+  - benchmarks/**
+  - artifacts/**
+  implementation:
+  - Build only the minimal official gpt-oss/H40M first-token decode path needed by P00.
+  - Reuse pinned upstream/reference semantics for Harmony, tensor mapping, normalization, RoPE/attention, router/top-k,
+    MXFP4 expert compute, final norm and output projection where available.
+  - Keep all model storage access flash-aware and bounded by the S06 memory plan; do not load the full checkpoint into RAM.
+  - Bring up embedding, one block, full stack, output logits and deterministic token selection with numerical reference
+    comparisons where feasible.
+  verification:
+  - Decoder component inventory recorded.
+  - Host numerical reference checks pass.
+  - Android first-token decoder binary emits a token with bounded memory.
+  required_artifacts:
+  - benchmarks/proof/minimal_decoder.json
+  - artifacts/runs/<run>/decoder_trace.jsonl
+  - artifacts/runs/<run>/evidence.json
+  pass_criteria:
+  - Minimal decoder executable can consume official Harmony tokens and H40M artifacts to emit one official token on device.
+  - Peak RSS and flash/cache metrics are recorded and remain within the configured safe budget.
+  failure_policy:
+  - Record failure verbatim in evidence.
+  - Preserve reproducers for semantics/MXFP4 mismatches.
+  - If externally blocked, mark blocked and continue independent ready tasks.
 - id: P00
   title: Generate first official gpt-oss-20b token
   phase: proof
   priority: 60
   depends_on:
   - S06
+  - P00D
   - M02
   - R01
   optional: false
