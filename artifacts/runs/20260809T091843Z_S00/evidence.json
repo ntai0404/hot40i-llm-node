@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "task_id": "S00",
+  "started_at": "2026-08-09T09:18:43.140831+00:00",
+  "finished_at": "2026-08-09T09:23:45.741841+00:00",
+  "status": "pass",
+  "git_commit": "1c47a429ee0ea698d6ed7e69ae4009a13e5ede09",
+  "sources": [
+    {
+      "url": "https://developer.android.com/ndk/downloads",
+      "ref": "android-ndk-r27d local C:\\tmp\\android-ndk-r27d; D04 verified archive sha1=56607cbccd3642d4a1991f6bb3114a00f884f426",
+      "note": "Used local Android NDK r27d ARM64 clang to build h40_flash_provider_probe for stock Android /data/local/tmp execution."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "'C:\\Program Files\\CMake\\bin\\cmake.exe' --build build --config Release -j 4",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\001.log"
+    },
+    {
+      "argv": "'C:\\Program Files\\CMake\\bin\\ctest.exe' --test-dir build --output-on-failure",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android26-clang++.cmd' -std=c++20 -O3 -DNDEBUG -static-libstdc++ -I 'device\\runtime\\include' 'tests\\flash_provider_probe.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' -o 'build-android-direct\\h40_flash_provider_probe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\003.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\004.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' push 'build-android-direct\\h40_flash_provider_probe' /data/local/tmp/h40_flash_provider_probe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\005.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' shell chmod 755 /data/local/tmp/h40_flash_provider_probe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\006.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -Command '& '\"'\"'C:\\mobile-remote-tools\\platform-tools\\adb.exe'\"'\"' shell /data/local/tmp/h40_flash_provider_probe --file /data/local/tmp/h40_flash_provider_fixture.bin --make-fixture | Tee-Object -FilePath '\"'\"'benchmarks\\custom\\flash_provider.json'\"'\"''",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\007.log"
+    },
+    {
+      "argv": "python -m json.tool 'benchmarks\\custom\\flash_provider.json'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\008.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -Command ' = & '\"'\"'C:\\mobile-remote-tools\\platform-tools\\adb.exe'\"'\"' shell /data/local/tmp/h40_flash_provider_probe --file /data/local/tmp/h40_flash_provider_fixture.bin --make-fixture;  | Set-Content -Path '\"'\"'benchmarks\\custom\\flash_provider.json'\"'\"' -Encoding UTF8; '",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\009.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -Command '$json = & '\"'\"'C:\\mobile-remote-tools\\platform-tools\\adb.exe'\"'\"' shell /data/local/tmp/h40_flash_provider_probe --file /data/local/tmp/h40_flash_provider_fixture.bin --make-fixture; $json | Set-Content -Path '\"'\"'benchmarks\\custom\\flash_provider.json'\"'\"' -Encoding UTF8; $json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\010.log"
+    },
+    {
+      "argv": "python -m json.tool 'benchmarks\\custom\\flash_provider.json'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\011.log"
+    },
+    {
+      "argv": "'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -Command '$json = & '\"'\"'C:\\mobile-remote-tools\\platform-tools\\adb.exe'\"'\"' shell /data/local/tmp/h40_flash_provider_probe --file /data/local/tmp/h40_flash_provider_fixture.bin --make-fixture; [System.IO.File]::WriteAllText('\"'\"'benchmarks\\custom\\flash_provider.json'\"'\"', ($json -join [Environment]::NewLine), (New-Object System.Text.UTF8Encoding($false))); $json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\012.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\012.log"
+    },
+    {
+      "argv": "python -m json.tool 'benchmarks\\custom\\flash_provider.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\013.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\013.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\flash_tensor_provider_test.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' -o 'artifacts\\runs\\20260809T091843Z_S00\\flash_tensor_provider_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\014.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\014.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260809T091843Z_S00\\flash_tensor_provider_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T091843Z_S00\\stdout\\015.log",
+      "stderr_file": "artifacts\\runs\\20260809T091843Z_S00\\stderr\\015.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T091843Z_S00/",
+    "benchmarks/custom/flash_provider.json",
+    "device/runtime/include/h40/flash_tensor_provider.hpp",
+    "device/runtime/src/flash_tensor_provider.cpp",
+    "tests/flash_provider_probe.cpp",
+    "tests/flash_tensor_provider_test.cpp"
+  ],
+  "verification": [
+    {
+      "name": "Unit boundary/error tests.",
+      "passed": true,
+      "detail": "CTest passed runtime_smoke and flash_tensor_provider. The provider test covers exact reads at start/middle/tail, mismatched output length, EOF/range rejection, and success-only stats/trace updates."
+    },
+    {
+      "name": "Android read tests against checksum-known ranges.",
+      "passed": true,
+      "detail": "Canonical ADB saw 112193741U000563 in device state. ARM64 h40_flash_provider_probe created an 8 MiB deterministic fixture on /data/local/tmp, read 5 offset/length ranges totaling 471,040 bytes through FlashTensorProvider, matched every FNV-1a checksum, and reported provider_operations=5, provider_bytes=471040, trace_count=5."
+    }
+  ],
+  "metrics": {
+    "android_probe_mib_per_second": 78.5717,
+    "android_provider_operations": 5,
+    "android_provider_bytes": 471040,
+    "android_trace_count": 5
+  },
+  "artifacts": [
+    "benchmarks\\custom\\flash_provider.json",
+    "tests\\flash_tensor_provider_test.cpp",
+    "tests\\flash_provider_probe.cpp",
+    "artifacts\\runs\\20260809T091843Z_S00\\flash_tensor_provider_test.exe"
+  ],
+  "limitations": [
+    "Android probe reads are stock Android userspace file reads from /data/local/tmp and may include page-cache effects; the S00 claim is provider exactness, range validation, and stats integrity on device rather than raw block-device flash latency."
+  ],
+  "notes": [
+    "Initial PowerShell Tee-Object/UTF8 writes produced UTF-16/BOM JSON artifacts; failures are preserved in command logs 007 and 009, and command 010 rewrote benchmarks/custom/flash_provider.json as UTF-8 without BOM before validation."
+  ]
+}

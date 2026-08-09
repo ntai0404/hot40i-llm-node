@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "fixture_bytes": 8388608,
+  "range_count": 5,
+  "bytes_read": 471040,
+  "seconds": 0.00571731,
+  "mib_per_second": 78.5717,
+  "provider_operations": 5,
+  "provider_bytes": 471040,
+  "provider_nanoseconds": 304423,
+  "trace_count": 5,
+  "hashes_match": true
+}
