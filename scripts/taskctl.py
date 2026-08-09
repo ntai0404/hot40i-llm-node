@@ -102,6 +102,17 @@ def _required_artifact_matches(spec: str, evidence_path: Path) -> tuple[list[Pat
     return ([path] if path.exists() else []), resolved
 
 
+def _artifact_registered_for_spec(
+    evidence_artifacts: set[str], required_rels: set[str], resolved_spec: str, evidence_rel: str
+) -> bool:
+    if evidence_rel in required_rels or not evidence_artifacts.isdisjoint(required_rels):
+        return True
+    if any(char in resolved_spec for char in "*?[]"):
+        normalized_spec = _normalize_repo_path(resolved_spec)
+        return any(fnmatch.fnmatchcase(artifact, normalized_spec) for artifact in evidence_artifacts)
+    return False
+
+
 def validate_task_evidence(
     evidence_path: Path,
     task: dict[str, Any],
@@ -151,7 +162,9 @@ def validate_task_evidence(
             _normalize_repo_path(str(required.relative_to(ROOT)))
             for required in required_matches
         }
-        if evidence_rel not in required_rels and evidence_artifacts.isdisjoint(required_rels):
+        if not _artifact_registered_for_spec(
+            evidence_artifacts, required_rels, resolved_spec, evidence_rel
+        ):
             raise SystemExit(
                 "required task artifact is not registered in evidence.artifacts: "
                 + resolved_spec
