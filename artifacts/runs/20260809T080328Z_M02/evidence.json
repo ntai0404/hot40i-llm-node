@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "M02",
+  "started_at": "2026-08-09T08:03:28.531667+00:00",
+  "finished_at": "2026-08-09T08:03:53.075063+00:00",
+  "status": "blocked",
+  "git_commit": "acfd5159bf1c43392224092cc82f7b1f67725ff3",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python -c 'from pathlib import Path; import json; inv=json.load(open('\"'\"'artifacts/model/gpt_oss_20b_inventory.json'\"'\"')); full=[p for p in Path('\"'\"'artifacts/model'\"'\"').rglob('\"'\"'*.safetensors'\"'\"')]; print('\"'\"'expert_bytes'\"'\"', inv['\"'\"'totals_by_role'\"'\"']['\"'\"'expert'\"'\"']); print('\"'\"'full_safetensors_present'\"'\"', [str(p) for p in full]); assert not full'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080328Z_M02\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T080328Z_M02\\stderr\\001.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T080328Z_M02/"
+  ],
+  "verification": [],
+  "metrics": {},
+  "artifacts": [],
+  "limitations": [
+    "M02 cannot preserve exact MXFP4 payload bytes or compare source checksums because full safetensors payload shards are not present; M00 acquired official headers/metadata only."
+  ],
+  "notes": []
+}

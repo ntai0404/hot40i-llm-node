@@ -26,7 +26,11 @@ completed_tasks:
 - M00
 - M01
 in_progress: null
-blocked_tasks: {}
+blocked_tasks:
+  M02:
+    reason: Full official safetensors payload shards are not present locally; exact expert repack requires source
+      bytes for 10,165,616,640 expert bytes and checksum comparison.
+    at: '2026-08-09T08:03:59.086291+00:00'
 task_evidence:
   R00: artifacts/runs/20260807T140229Z_R00/evidence.json
   R01: artifacts/runs/20260807T142448Z_R01/evidence.json
@@ -82,3 +86,4 @@ task_started_at:
   C04: '2026-08-09T07:43:59.704577+00:00'
   M00: '2026-08-09T07:48:32.657735+00:00'
   M01: '2026-08-09T07:57:20.702350+00:00'
+  M02: '2026-08-09T08:03:19.063824+00:00'
