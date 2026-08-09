@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "task_id": "C04",
+  "started_at": "2026-08-09T07:44:05.624576+00:00",
+  "finished_at": "2026-08-09T07:47:54.817754+00:00",
+  "status": "pass",
+  "git_commit": "2bc0437b123df62eacbeac638a435b6ee915b6a2",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python artifacts/runs/20260809T074405Z_C04/generate_tiny_parity_test.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074405Z_C04\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T074405Z_C04\\stderr\\001.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -Wall -Wextra -Wpedantic -O2 -I device/runtime/include tests/tiny_parity_test.cpp device/runtime/src/attention.cpp device/runtime/src/router.cpp -o artifacts/runs/20260809T074405Z_C04/tiny_parity_host.exe",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T074405Z_C04\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T074405Z_C04\\stderr\\002.log"
+    },
+    {
+      "argv": "python artifacts/runs/20260809T074405Z_C04/generate_tiny_parity_test.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074405Z_C04\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T074405Z_C04\\stderr\\003.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -Wall -Wextra -Wpedantic -O2 -I device/runtime/include tests/tiny_parity_test.cpp device/runtime/src/attention.cpp device/runtime/src/router.cpp -o artifacts/runs/20260809T074405Z_C04/tiny_parity_host.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074405Z_C04\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T074405Z_C04\\stderr\\004.log"
+    },
+    {
+      "argv": "artifacts/runs/20260809T074405Z_C04/tiny_parity_host.exe benchmarks/correctness/tiny_parity.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074405Z_C04\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T074405Z_C04\\stderr\\005.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android28-clang++.cmd' -std=c++20 -Wall -Wextra -Wpedantic -O2 -static-libstdc++ -I device/runtime/include tests/tiny_parity_test.cpp device/runtime/src/attention.cpp device/runtime/src/router.cpp -o artifacts/runs/20260809T074405Z_C04/tiny_parity_android",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074405Z_C04\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T074405Z_C04\\stderr\\006.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074405Z_C04\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T074405Z_C04\\stderr\\007.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 push artifacts/runs/20260809T074405Z_C04/tiny_parity_android /data/local/tmp/c04_tiny_parity",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074405Z_C04\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260809T074405Z_C04\\stderr\\008.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell chmod 755 /data/local/tmp/c04_tiny_parity",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074405Z_C04\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260809T074405Z_C04\\stderr\\009.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell /data/local/tmp/c04_tiny_parity",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074405Z_C04\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260809T074405Z_C04\\stderr\\010.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T074405Z_C04/",
+    "benchmarks/correctness/",
+    "tests/tiny_parity_test.cpp"
+  ],
+  "verification": [
+    {
+      "name": "Host and device parity tests pass.",
+      "passed": true,
+      "detail": "Host tiny_parity_host.exe generated benchmarks/correctness/tiny_parity.json with max_abs_logit_diff=1.19209e-07 <= 1e-5; Android /data/local/tmp/c04_tiny_parity exited 0 with the same assertions for routing, intermediates, MoE output, final norm, and logits."
+    }
+  ],
+  "metrics": {
+    "max_abs_logit_diff": 1.19209e-07,
+    "numerical_tolerance": 1e-05
+  },
+  "artifacts": [
+    "benchmarks\\correctness\\tiny_parity.json",
+    "tests\\tiny_parity_test.cpp",
+    "artifacts\\runs\\20260809T074405Z_C04\\generate_tiny_parity_test.py",
+    "artifacts\\runs\\20260809T074405Z_C04\\tiny_parity_host.exe",
+    "artifacts\\runs\\20260809T074405Z_C04\\tiny_parity_android"
+  ],
+  "limitations": [],
+  "notes": []
+}
