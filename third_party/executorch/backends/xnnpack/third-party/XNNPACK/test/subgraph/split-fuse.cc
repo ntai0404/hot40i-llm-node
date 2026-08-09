@@ -1,0 +1,243 @@
+// Copyright 2025 Google LLC
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+
+#include <cassert>
+#include <chrono>
+#include <cstddef>
+#include <cstdint>
+#include <vector>
+
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include "include/xnnpack.h"
+#include "src/xnnpack/buffer.h"
+#include "src/xnnpack/datatype.h"
+#include "src/xnnpack/math.h"
+#include "test/replicable_random_device.h"
+#include "test/subgraph/subgraph-tester.h"
+
+namespace xnnpack {
+
+template <typename T>
+void FuseAndSplit() {
+  ReplicableRandomDevice rng;
+
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+
+  for (auto _ : FuzzTest(std::chrono::milliseconds(1000))) {
+    xnn_quantization_params quantization =
+        random_quantization(xnn_datatype_of<T>(), rng);
+
+    const auto input_shape = random_shape(rng);
+    Tensor<T> input(input_shape, XnnExtraBytes);
+    DatatypeGenerator<T> generator(quantization);
+    input.generate([&]() { return generator(rng); });
+
+    for (size_t left = 0; left < input_shape.size(); left++) {
+      for (size_t right = left + 1; right < input_shape.size(); right++) {
+        std::vector<size_t> splits(&input_shape[left], &input_shape[right] + 1);
+        size_t split_dims_size = 1;
+        for (size_t dim : splits) {
+          split_dims_size *= dim;
+        }
+
+        //
+        // Fuse dimensions `[left, right]` of the input.
+        //
+
+        // Define the fusion subgraph.
+        Tensor<T> fused({input.size()});
+        SubgraphTester fuse_subgraph(2);
+        fuse_subgraph
+            .AddInputTensor(input.shape(), input.data(), quantization,
+                            /*external_id=*/0)
+            .AddOutputTensor(fused.shape(), fused.data(), quantization,
+                             /*external_id=*/1)
+            .AddFuseDims(left, splits.size(), /*input_id=*/0, /*output_id=*/1);
+        ASSERT_EQ(xnn_status_success, fuse_subgraph.CreateRuntime());
+
+        // Reshape the thing.
+        fuse_subgraph.ReshapeRuntime();
+        auto fused_shape = fuse_subgraph.GetExternalTensorShape(1);
+
+        // Check that the fused shape is correct.
+        size_t fused_size = 1;
+        for (size_t dim : fused_shape) {
+          fused_size *= dim;
+        }
+        ASSERT_EQ(input.size(), fused_size);
+        for (size_t k = 0; k < left; k++) {
+          ASSERT_EQ(input_shape[k], fused_shape[k]);
+        }
+        ASSERT_EQ(split_dims_size, fused_shape[left]);
+        for (size_t k = right + 1; k < input_shape.size(); k++) {
+          ASSERT_EQ(input_shape[k], fused_shape[k - right + left]);
+        }
+
+        // Randomize the input and run the fusion subgraph.
+        input.generate([&]() { return generator(rng); });
+        fuse_subgraph.SetupRuntime().InvokeRuntime();
+
+        // Verify results.
+        ASSERT_THAT(fused, testing::ElementsAreArray(input));
+
+        //
+        // Split the `left` axis back into the original dimensions.
+        //
+
+        // Maybe set one of the splits to zero.
+        const size_t idx = rng() % input_shape.size();
+        if (idx < splits.size()) {
+          splits[idx] = 0;
+        }
+
+        // Define the split subgraph.
+        Tensor<T> split({input.size()});
+        SubgraphTester split_subgraph(2);
+        split_subgraph
+            .AddInputTensor(fused_shape, fused.data(), quantization,
+                            /*external_id=*/0)
+            .AddOutputTensor(split.shape(), split.data(), quantization,
+                             /*external_id=*/1)
+            .AddSplitDim(left, splits, /*input_id=*/0, /*output_id=*/1);
+        ASSERT_EQ(xnn_status_success, split_subgraph.CreateRuntime());
+
+        // Reshape the thing.
+        split_subgraph.ReshapeRuntime();
+        auto split_shape = split_subgraph.GetExternalTensorShape(1);
+
+        // Check that the split shape is correct.
+        ASSERT_EQ(input_shape, split_shape);
+
+        // Run the split subgraph.
+        split_subgraph.SetupRuntime().InvokeRuntime();
+
+        // Verify results.
+        ASSERT_THAT(split, testing::ElementsAreArray(input));
+
+        //
+        // Fuse and Split the input back into the original dimensions in
+        // consecutive ops..
+        //
+
+        // Define the fuse_and_split subgraph.
+        Tensor<T> output({input.size()});
+        SubgraphTester fuse_and_split_subgraph(3);
+        fuse_and_split_subgraph
+            .AddInputTensor(input_shape, input.data(), quantization,
+                            /*external_id=*/0)
+            .AddOutputTensor(fused.shape(), fused.data(), quantization,
+                             /*external_id=*/1)
+            .AddOutputTensor(output.shape(), output.data(), quantization,
+                             /*external_id=*/2)
+            .AddFuseDims(left, splits.size(), /*input_id=*/0, /*output_id=*/1)
+            .AddSplitDim(left, splits, /*input_id=*/1, /*output_id=*/2);
+        ASSERT_EQ(xnn_status_success, fuse_and_split_subgraph.CreateRuntime());
+
+        // Reshape the thing.
+        fuse_and_split_subgraph.ReshapeRuntime();
+        auto output_shape = fuse_and_split_subgraph.GetExternalTensorShape(2);
+
+        // Check that the output shape is correct.
+        ASSERT_EQ(input_shape, output_shape);
+
+        // Randomize the input and run the fuse and split subgraph.
+        input.generate([&]() { return generator(rng); });
+        fuse_and_split_subgraph.SetupRuntime().InvokeRuntime();
+
+        // Verify results.
+        ASSERT_THAT(output, testing::ElementsAreArray(input));
+      }
+    }
+  }
+}
+
+#ifndef XNNPACK_USE_YNNPACK
+// A large fuse/split axis makes `axis + count` wrap past SIZE_MAX, so the
+// `> XNN_MAX_TENSOR_DIMS` range check used to pass. For fuse_dims the oversized
+// count then writes past the end of a XNN_MAX_TENSOR_DIMS stack array, and the
+// wrapped axis is stored as the fuse start dimension. The define must reject it.
+TEST(FuseDims, large_axis_rejected) {
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr));
+
+  xnn_subgraph_t subgraph = nullptr;
+  ASSERT_EQ(xnn_status_success, xnn_create_subgraph(2, 0, &subgraph));
+
+  const size_t dims[] = {2, 3};
+  uint32_t input_id = XNN_INVALID_VALUE_ID;
+  ASSERT_EQ(xnn_status_success,
+            xnn_define_tensor_value(subgraph, xnn_datatype_fp32, 2, dims,
+                                    nullptr, 0, XNN_VALUE_FLAG_EXTERNAL_INPUT,
+                                    &input_id));
+  uint32_t output_id = XNN_INVALID_VALUE_ID;
+  ASSERT_EQ(xnn_status_success,
+            xnn_define_tensor_value(subgraph, xnn_datatype_fp32, 2, dims,
+                                    nullptr, 1, XNN_VALUE_FLAG_EXTERNAL_OUTPUT,
+                                    &output_id));
+
+  EXPECT_NE(xnn_status_success,
+            xnn_define_fuse_dims(subgraph, /*first_dim=*/SIZE_MAX,
+                                 /*num_dims=*/2, input_id, output_id,
+                                 /*flags=*/0));
+
+  xnn_delete_subgraph(subgraph);
+}
+
+TEST(SplitDim, large_axis_rejected) {
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr));
+
+  xnn_subgraph_t subgraph = nullptr;
+  ASSERT_EQ(xnn_status_success, xnn_create_subgraph(2, 0, &subgraph));
+
+  const size_t dims[] = {2, 3};
+  uint32_t input_id = XNN_INVALID_VALUE_ID;
+  ASSERT_EQ(xnn_status_success,
+            xnn_define_tensor_value(subgraph, xnn_datatype_fp32, 2, dims,
+                                    nullptr, 0, XNN_VALUE_FLAG_EXTERNAL_INPUT,
+                                    &input_id));
+  uint32_t output_id = XNN_INVALID_VALUE_ID;
+  ASSERT_EQ(xnn_status_success,
+            xnn_define_tensor_value(subgraph, xnn_datatype_fp32, 2, dims,
+                                    nullptr, 1, XNN_VALUE_FLAG_EXTERNAL_OUTPUT,
+                                    &output_id));
+
+  const size_t splits[] = {2, 3};
+  EXPECT_NE(xnn_status_success,
+            xnn_define_split_dim(subgraph, /*axis=*/SIZE_MAX, /*num_splits=*/2,
+                                 splits, input_id, output_id, /*flags=*/0));
+
+  xnn_delete_subgraph(subgraph);
+}
+
+// A split axis at or beyond the input rank has no dimension to split. Before
+// it was rejected the reshape read input_shape->dim[axis] from past the live
+// rank and emitted an output element count that no longer matched the input,
+// which the copy kernel then overran.
+TEST(SplitDims, RejectsAxisOutOfRange) {
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+
+  const std::vector<size_t> input_shape = {4, 4};
+  Tensor<float> input(input_shape, XnnExtraBytes);
+  Tensor<float> output({4, 4});
+
+  SubgraphTester subgraph(2);
+  subgraph.AddInputTensor(input_shape, input.data(), /*external_id=*/0)
+      .AddOutputTensor(output.shape(), output.data(), /*external_id=*/1)
+      .AddSplitDim(/*axis=*/3, /*splits=*/{2, 2}, /*input_id=*/0,
+                   /*output_id=*/1);
+  ASSERT_EQ(xnn_status_success, subgraph.CreateRuntime());
+
+  subgraph.ReshapeExternalTensor(input_shape, input.data(), 0).ReshapeRuntime();
+  EXPECT_EQ(subgraph.Status(), xnn_status_invalid_parameter);
+}
+#endif  // XNNPACK_USE_YNNPACK
+
+TEST(FuseAndSplitQS8, test) { FuseAndSplit<quantized<int8_t>>(); }
+TEST(FuseAndSplitQU8, test) { FuseAndSplit<quantized<uint8_t>>(); }
+TEST(FuseAndSplitBF16, test) { FuseAndSplit<xnn_bfloat16>(); }
+TEST(FuseAndSplitF16, test) { FuseAndSplit<xnn_float16>(); }
+TEST(FuseAndSplitF32, test) { FuseAndSplit<float>(); }
+
+}  // namespace xnnpack

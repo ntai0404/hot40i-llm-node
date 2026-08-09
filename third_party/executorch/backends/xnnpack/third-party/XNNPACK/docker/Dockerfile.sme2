@@ -1,0 +1,98 @@
+FROM ubuntu:24.04 AS qemu-builder
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    sudo \
+    build-essential \
+    python3 \
+    python3-pip \
+    python3-venv \
+    ninja-build \
+    clang \
+    libglib2.0-dev \
+    libpixman-1-dev \
+    flex \
+    bison \
+    git
+
+WORKDIR /src
+RUN git init qemu && \
+    cd qemu && \
+    git remote add origin https://gitlab.com/qemu-project/qemu.git && \
+    git fetch --depth 1 origin b21adc910a4d223de8189378262a92bb7682b839 && \
+    git checkout FETCH_HEAD
+
+WORKDIR /src/qemu
+# Patch QEMU to enable SCTLR_EL1.EnFPM by default in user-mode.
+# This prevents SIGILL crashes when EL0 (user-mode) accesses the FPMR register.
+# This is a fix for an omission in QEMU's upstream user-mode emulation.
+RUN git apply <<'EOF'
+diff --git a/target/arm/cpu.c b/target/arm/cpu.c
+index 419e0b3..7314525 100644
+--- a/target/arm/cpu.c
++++ b/target/arm/cpu.c
+@@ -425,6 +425,9 @@ static void arm_cpu_reset_hold(Object *obj, ResetType type)
+         if (cpu_isar_feature(aa64_gcs, cpu)) {
+             env->cp15.gcscr_el[0] = GCSCRE0_NTR;
+         }
++        if (cpu_isar_feature(aa64_fpmr, cpu)) {
++            env->cp15.sctlr_el[1] |= SCTLR_EnFPM;
++        }
+ #else
+         /* Reset into the highest available EL */
+         if (arm_feature(env, ARM_FEATURE_EL3)) {
+EOF
+RUN ./configure \
+    --cc=clang \
+    --cxx=clang++ \
+    --host-cc=clang \
+    --target-list=aarch64-linux-user \
+    --static \
+    --disable-tools \
+    --disable-system \
+    --disable-docs
+RUN make -j$(nproc)
+
+FROM ubuntu:24.04
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    sudo \
+    software-properties-common \
+    build-essential \
+    vim \
+    git \
+    cmake \
+    ninja-build \
+    python3 \
+    python3-pip \
+    wget \
+    gnupg \
+    zip \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh 20 && \
+    rm llvm.sh
+
+RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-20 100 && \
+    update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-20 100
+
+RUN wget -nv https://github.com/bazelbuild/bazelisk/releases/download/v1.19.0/bazelisk-linux-arm64 -O /usr/local/bin/bazel && \
+    chmod +x /usr/local/bin/bazel
+
+COPY --from=qemu-builder /src/qemu/build/qemu-aarch64 /usr/local/bin/qemu-aarch64
+
+ARG USERNAME=xnnpack
+ARG USER_UID=1001
+ARG USER_GID=$USER_UID
+RUN groupadd --gid $USER_GID $USERNAME && \
+    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
+
+RUN echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME
+RUN chmod 0440 /etc/sudoers.d/$USERNAME
+
+USER $USERNAME
+WORKDIR /home/$USERNAME

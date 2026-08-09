@@ -1,0 +1,60 @@
+{
+  "run_index": 1,
+  "exit_code": 0,
+  "rss_peak_kib": 0,
+  "duration_ms": 2.056536,
+  "stdout_file": "artifacts\\runs\\20260807T172453Z_B02\\executorch_run_1.stdout.log",
+  "stderr_file": "artifacts\\runs\\20260807T172453Z_B02\\executorch_run_1.stderr.log",
+  "stdout_excerpt": {
+    "line_count": 0,
+    "head": [],
+    "tail": []
+  },
+  "stderr_excerpt": {
+    "line_count": 1014,
+    "head": [
+      "I 00:00:00.003139 executorch:cpuinfo_utils.cpp:71] Reading file /sys/devices/soc0/image_version",
+      "I 00:00:00.003347 executorch:cpuinfo_utils.cpp:87] Failed to open midr file /sys/devices/soc0/image_version",
+      "I 00:00:00.003363 executorch:cpuinfo_utils.cpp:167] Number of efficient cores 6",
+      "I 00:00:00.003368 executorch:executor_runner.cpp:341] Resetting threadpool with num threads = 2",
+      "I 00:00:00.003375 executorch:cpuinfo_utils.cpp:71] Reading file /sys/devices/soc0/image_version",
+      "I 00:00:00.003389 executorch:cpuinfo_utils.cpp:87] Failed to open midr file /sys/devices/soc0/image_version",
+      "I 00:00:00.003394 executorch:cpuinfo_utils.cpp:167] Number of efficient cores 6",
+      "I 00:00:00.003599 executorch:threadpool.cpp:66] Resetting threadpool to 2 threads.",
+      "I 00:00:00.003730 executorch:executor_runner.cpp:476] Model file /data/local/tmp/b02_executorch/linear_xnnpack_fp32.pte is loaded.",
+      "I 00:00:00.003740 executorch:executor_runner.cpp:486] Using method forward",
+      "I 00:00:00.003747 executorch:executor_runner.cpp:560] Setting up CPU planned buffer 0, size 160.",
+      "I 00:00:00.004038 executorch:executor_runner.cpp:629] Model loaded in 0.382923 ms.",
+      "I 00:00:00.004119 executorch:executor_runner.cpp:785] Iteration 1 of 1000: 0.037962 ms",
+      "I 00:00:00.004131 executorch:executor_runner.cpp:785] Iteration 2 of 1000: 0.002923 ms",
+      "I 00:00:00.004140 executorch:executor_runner.cpp:785] Iteration 3 of 1000: 0.002577 ms",
+      "I 00:00:00.004148 executorch:executor_runner.cpp:785] Iteration 4 of 1000: 0.002192 ms",
+      "I 00:00:00.004156 executorch:executor_runner.cpp:785] Iteration 5 of 1000: 0.002231 ms",
+      "I 00:00:00.004163 executorch:executor_runner.cpp:785] Iteration 6 of 1000: 0.002038 ms",
+      "I 00:00:00.004170 executorch:executor_runner.cpp:785] Iteration 7 of 1000: 0.002077 ms",
+      "I 00:00:00.004178 executorch:executor_runner.cpp:785] Iteration 8 of 1000: 0.002038 ms"
+    ],
+    "tail": [
+      "I 00:00:00.011176 executorch:executor_runner.cpp:785] Iteration 983 of 1000: 0.001731 ms",
+      "I 00:00:00.011182 executorch:executor_runner.cpp:785] Iteration 984 of 1000: 0.001846 ms",
+      "I 00:00:00.011189 executorch:executor_runner.cpp:785] Iteration 985 of 1000: 0.001730 ms",
+      "I 00:00:00.011196 executorch:executor_runner.cpp:785] Iteration 986 of 1000: 0.001731 ms",
+      "I 00:00:00.011202 executorch:executor_runner.cpp:785] Iteration 987 of 1000: 0.001769 ms",
+      "I 00:00:00.011209 executorch:executor_runner.cpp:785] Iteration 988 of 1000: 0.001730 ms",
+      "I 00:00:00.011216 executorch:executor_runner.cpp:785] Iteration 989 of 1000: 0.001731 ms",
+      "I 00:00:00.011222 executorch:executor_runner.cpp:785] Iteration 990 of 1000: 0.001731 ms",
+      "I 00:00:00.011229 executorch:executor_runner.cpp:785] Iteration 991 of 1000: 0.001769 ms",
+      "I 00:00:00.011236 executorch:executor_runner.cpp:785] Iteration 992 of 1000: 0.001808 ms",
+      "I 00:00:00.011242 executorch:executor_runner.cpp:785] Iteration 993 of 1000: 0.001808 ms",
+      "I 00:00:00.011249 executorch:executor_runner.cpp:785] Iteration 994 of 1000: 0.001807 ms",
+      "I 00:00:00.011256 executorch:executor_runner.cpp:785] Iteration 995 of 1000: 0.001692 ms",
+      "I 00:00:00.011262 executorch:executor_runner.cpp:785] Iteration 996 of 1000: 0.001769 ms",
+      "I 00:00:00.011269 executorch:executor_runner.cpp:785] Iteration 997 of 1000: 0.001808 ms",
+      "I 00:00:00.011276 executorch:executor_runner.cpp:785] Iteration 998 of 1000: 0.001731 ms",
+      "I 00:00:00.011282 executorch:executor_runner.cpp:785] Iteration 999 of 1000: 0.001731 ms",
+      "I 00:00:00.011289 executorch:executor_runner.cpp:785] Iteration 1000 of 1000: 0.002115 ms",
+      "I 00:00:00.011294 executorch:executor_runner.cpp:794] Model executed successfully 1000 time(s) in 2.056536 ms.",
+      "I 00:00:00.011305 executorch:executor_runner.cpp:798] 1 outputs: "
+    ]
+  }
+}

@@ -111,6 +111,34 @@ upstreams:
   verification_status: RESOLVED
   matched_ref: refs/heads/main
   resolved_at: '2026-08-07T14:09:56.178219+00:00'
+  submodules:
+  - path: backends/xnnpack/third-party/FP16
+    url: https://github.com/Maratyszcza/FP16.git
+    resolved_commit: 4dfe081cf6bcd15db339cf2680b9281b8451eeb3
+  - path: backends/xnnpack/third-party/FXdiv
+    url: https://github.com/Maratyszcza/FXdiv.git
+    resolved_commit: b408327ac2a15ec3e43352421954f5b1967701d1
+  - path: backends/xnnpack/third-party/XNNPACK
+    url: https://github.com/google/XNNPACK.git
+    resolved_commit: 92a7ad501b9516f9fecae119e0146dd1f58e54c1
+  - path: backends/xnnpack/third-party/cpuinfo
+    url: https://github.com/pytorch/cpuinfo.git
+    resolved_commit: f9a03241f8c3d4ed0c9728f5d70bff873d43d4e0
+  - path: backends/xnnpack/third-party/pthreadpool
+    url: https://github.com/Maratyszcza/pthreadpool.git
+    resolved_commit: a56dcd79c699366e7ac6466792c3025883ff7704
+  - path: third-party/flatbuffers
+    url: https://github.com/google/flatbuffers.git
+    resolved_commit: 595bf0007ab1929570c7671f091313c8fc20644e
+  - path: third-party/flatcc
+    url: https://github.com/dvidelabs/flatcc.git
+    resolved_commit: 896db54787e8b730a6be482c69324751f3f5f117
+  - path: third-party/gflags
+    url: https://github.com/gflags/gflags.git
+    resolved_commit: a738fdf9338412f83ab3f26f31ac11ed3f3ec4bd
+  - path: third-party/json
+    url: https://github.com/nlohmann/json.git
+    resolved_commit: ac0133ea89a8fd730a9cc9649c5226a9995dc3e1
 - name: mlc-llm
   url: https://github.com/mlc-ai/mlc-llm.git
   role: Android/Mali backend candidate
