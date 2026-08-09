@@ -30,6 +30,7 @@
     "expert": {"type": "integer", "minimum": 0},
     "bytes": {"type": "integer", "minimum": 0},
     "duration_ns": {"type": "integer", "minimum": 0},
+    "cache_hit": {"type": "boolean"},
     "prefetch_useful": {"type": "boolean"},
     "request_id": {"type": ["string", "null"]}
   },

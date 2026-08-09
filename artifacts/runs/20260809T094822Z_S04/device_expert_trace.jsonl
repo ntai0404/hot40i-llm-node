@@ -1,0 +1,14 @@
+{"schema_version":1,"ts_ns":11539,"event":"token_begin","token":0,"request_id":"tok0"}
+{"schema_version":1,"ts_ns":21269,"event":"layer_begin","token":0,"layer":0}
+{"schema_version":1,"ts_ns":23616,"event":"route","token":0,"layer":0,"expert":2}
+{"schema_version":1,"ts_ns":26269,"event":"cache_miss","token":0,"layer":0,"expert":2,"cache_hit":false}
+{"schema_version":1,"ts_ns":29269,"event":"read_begin","token":0,"layer":0,"expert":2,"bytes":13236480}
+{"schema_version":1,"ts_ns":32500,"event":"read_end","token":0,"layer":0,"expert":2,"bytes":13236480,"duration_ns":5000}
+{"schema_version":1,"ts_ns":35539,"event":"compute_begin","token":0,"layer":0,"expert":2}
+{"schema_version":1,"ts_ns":37539,"event":"compute_end","token":0,"layer":0,"expert":2,"duration_ns":9000}
+{"schema_version":1,"ts_ns":40346,"event":"prefetch_begin","token":0,"layer":1,"expert":4}
+{"schema_version":1,"ts_ns":42308,"event":"prefetch_end","token":0,"layer":1,"expert":4,"duration_ns":1000}
+{"schema_version":1,"ts_ns":45269,"event":"evict","token":0,"layer":0,"expert":1,"bytes":13236480}
+{"schema_version":1,"ts_ns":47962,"event":"cache_hit","token":0,"layer":0,"expert":2,"cache_hit":true}
+{"schema_version":1,"ts_ns":50077,"event":"layer_end","token":0,"layer":0}
+{"schema_version":1,"ts_ns":52154,"event":"token_end","token":0,"request_id":"tok0"}

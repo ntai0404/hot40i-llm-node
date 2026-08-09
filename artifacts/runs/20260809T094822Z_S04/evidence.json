@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "task_id": "S04",
+  "started_at": "2026-08-09T09:48:22.087226+00:00",
+  "finished_at": "2026-08-09T09:51:23.940936+00:00",
+  "status": "pass",
+  "git_commit": "c552f6b1970293ebfac8d445f26a34a5f359a20b",
+  "sources": [
+    {
+      "url": "https://developer.android.com/ndk/downloads",
+      "ref": "android-ndk-r27d local C:\\tmp\\android-ndk-r27d; D04 verified archive sha1=56607cbccd3642d4a1991f6bb3114a00f884f426",
+      "note": "Used local Android NDK r27d ARM64 clang to build h40_trace_writer_probe for stock Android trace emission."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\trace_writer_probe.cpp' -o 'artifacts\\runs\\20260809T094822Z_S04\\trace_writer_probe.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\001.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260809T094822Z_S04\\trace_writer_probe.exe' 'artifacts\\runs\\20260809T094822Z_S04\\expert_trace.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\002.log"
+    },
+    {
+      "argv": "python 'tools\\trace\\analyze_experts.py' 'artifacts\\runs\\20260809T094822Z_S04\\expert_trace.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\003.log"
+    },
+    {
+      "argv": "pytest -q 'tests\\python\\test_trace_analyzer.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\004.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android26-clang++.cmd' -std=c++20 -O3 -DNDEBUG -static-libstdc++ -I 'device\\runtime\\include' 'tests\\trace_writer_probe.cpp' -o 'build-android-direct\\h40_trace_writer_probe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\005.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\006.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' push 'build-android-direct\\h40_trace_writer_probe' /data/local/tmp/h40_trace_writer_probe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\007.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' shell chmod 755 /data/local/tmp/h40_trace_writer_probe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\008.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' shell /data/local/tmp/h40_trace_writer_probe /data/local/tmp/h40_expert_trace.jsonl",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\009.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' pull /data/local/tmp/h40_expert_trace.jsonl 'artifacts\\runs\\20260809T094822Z_S04\\device_expert_trace.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\010.log"
+    },
+    {
+      "argv": "python 'tools\\trace\\analyze_experts.py' 'artifacts\\runs\\20260809T094822Z_S04\\device_expert_trace.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\011.log"
+    },
+    {
+      "argv": "python -c 'import json, pathlib, jsonschema; schema=json.loads(pathlib.Path('\"'\"'schemas/expert_trace_event.schema.json'\"'\"').read_text(encoding='\"'\"'utf-8'\"'\"')); count=0; paths=['\"'\"'artifacts/runs/20260809T094822Z_S04/expert_trace.jsonl'\"'\"','\"'\"'artifacts/runs/20260809T094822Z_S04/device_expert_trace.jsonl'\"'\"'];\nfor path in paths:\n    for line in pathlib.Path(path).read_text(encoding='\"'\"'utf-8'\"'\"').splitlines():\n        if line.strip(): jsonschema.validate(json.loads(line), schema); count += 1\nprint(f'\"'\"'validated_events={count}'\"'\"')'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T094822Z_S04\\stdout\\012.log",
+      "stderr_file": "artifacts\\runs\\20260809T094822Z_S04\\stderr\\012.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T094822Z_S04/",
+    "device/runtime/include/h40/trace.hpp",
+    "schemas/expert_trace_event.schema.json",
+    "tests/python/test_trace_analyzer.py",
+    "tests/trace_writer_probe.cpp",
+    "tools/trace/analyze_experts.py"
+  ],
+  "verification": [
+    {
+      "name": "Trace parser/analyzer handles sample and device run.",
+      "passed": true,
+      "detail": "Host-generated expert_trace.jsonl and Android-generated device_expert_trace.jsonl each contain 14 monotonic JSONL events covering token/layer/route/cache/read/compute/prefetch/evict. Analyzer reconstructed flash_bytes_per_token={0:13236480}, cache_hit_rate=0.5, and schema validation passed for 28 total events."
+    }
+  ],
+  "metrics": {
+    "sample_trace_events": 14,
+    "device_trace_events": 14,
+    "flash_bytes_total": 13236480,
+    "cache_hit_rate": 0.5
+  },
+  "artifacts": [
+    "artifacts\\runs\\20260809T094822Z_S04\\expert_trace.jsonl",
+    "artifacts\\runs\\20260809T094822Z_S04\\device_expert_trace.jsonl",
+    "artifacts\\runs\\20260809T094822Z_S04\\trace_writer_probe.exe",
+    "tests\\trace_writer_probe.cpp",
+    "tools\\trace\\analyze_experts.py",
+    "schemas\\expert_trace_event.schema.json",
+    "tests\\python\\test_trace_analyzer.py"
+  ],
+  "limitations": [],
+  "notes": []
+}

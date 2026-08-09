@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Summarize canonical runtime `route` events from a JSONL trace."""
+"""Summarize canonical runtime JSONL traces."""
 from __future__ import annotations
 
 import argparse
@@ -20,6 +20,11 @@ def main() -> None:
     previous: tuple[int, int] | None = None
     tokens = 0
     route_events = 0
+    cache_hits = 0
+    cache_lookups = 0
+    flash_bytes_by_token: collections.Counter[int] = collections.Counter()
+    events = 0
+    last_ts = -1
 
     for line_number, line in enumerate(
         args.trace.read_text(encoding="utf-8").splitlines(), start=1
@@ -27,7 +32,21 @@ def main() -> None:
         if not line.strip():
             continue
         row = json.loads(line)
-        if row.get("event") != "route":
+        events += 1
+        ts_ns = int(row["ts_ns"])
+        if ts_ns < last_ts:
+            raise ValueError(f"trace timestamp moved backwards at line {line_number}")
+        last_ts = ts_ns
+        event = row.get("event")
+        if "token" in row:
+            tokens = max(tokens, int(row["token"]) + 1)
+        if event in {"cache_hit", "cache_miss"}:
+            cache_lookups += 1
+            if event == "cache_hit" or row.get("cache_hit") is True:
+                cache_hits += 1
+        if event == "read_end":
+            flash_bytes_by_token[int(row.get("token", 0))] += int(row.get("bytes", 0))
+        if event != "route":
             continue
         if "layer" not in row or "expert" not in row:
             raise ValueError(f"route event missing layer/expert at line {line_number}")
@@ -37,13 +56,22 @@ def main() -> None:
         if previous is not None:
             transitions[(previous, key)] += 1
         previous = key
-        tokens = max(tokens, int(row.get("token", 0)) + 1)
 
     print(
         json.dumps(
             {
+                "events": events,
                 "tokens_seen": tokens,
                 "route_events": route_events,
+                "cache_lookups": cache_lookups,
+                "cache_hits": cache_hits,
+                "cache_misses": cache_lookups - cache_hits,
+                "cache_hit_rate": (cache_hits / cache_lookups) if cache_lookups else None,
+                "flash_bytes_total": sum(flash_bytes_by_token.values()),
+                "flash_bytes_per_token": {
+                    str(token): flash_bytes_by_token[token]
+                    for token in sorted(flash_bytes_by_token)
+                },
                 "top_experts": [
                     {"layer": key[0], "expert": key[1], "count": count}
                     for key, count in counts.most_common(32)
