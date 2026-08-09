@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "task_id": "M00",
+  "started_at": "2026-08-09T07:48:43.175480+00:00",
+  "finished_at": "2026-08-09T07:56:32.825900+00:00",
+  "status": "pass",
+  "git_commit": "71c440dbb375ee36574f1d1d2a28921805b86163",
+  "sources": [
+    {
+      "url": "https://huggingface.co/openai/gpt-oss-20b",
+      "ref": "6cee5e81ee83917806bbde320786a8fb61efebee",
+      "note": "Official checkpoint/config/index source used for safetensors-header inventory."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "curl.exe -L https://huggingface.co/api/models/openai/gpt-oss-20b -o artifacts/runs/20260809T074843Z_M00/hf_model.json",
+      "exit_code": 7,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\001.log"
+    },
+    {
+      "argv": "curl.exe -L https://huggingface.co/api/models/openai/gpt-oss-20b -o artifacts/runs/20260809T074843Z_M00/hf_model.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\002.log"
+    },
+    {
+      "argv": "curl.exe -L https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model.safetensors.index.json -o artifacts/runs/20260809T074843Z_M00/model.safetensors.index.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\003.log"
+    },
+    {
+      "argv": "curl.exe -L https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/config.json -o artifacts/runs/20260809T074843Z_M00/config.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\004.log"
+    },
+    {
+      "argv": "curl.exe -I -L https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00000-of-00002.safetensors",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\005.log"
+    },
+    {
+      "argv": "curl.exe -L -r 0-7 https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00000-of-00002.safetensors -o artifacts/runs/20260809T074843Z_M00/model-00000-of-00002.first8",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\006.log"
+    },
+    {
+      "argv": "curl.exe -L -r 0-131071 https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00000-of-00002.safetensors -o artifacts/runs/20260809T074843Z_M00/model-00000-of-00002.header.bin",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\007.log"
+    },
+    {
+      "argv": "curl.exe -L -r 0-131071 https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00001-of-00002.safetensors -o artifacts/runs/20260809T074843Z_M00/model-00001-of-00002.header.bin",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\008.log"
+    },
+    {
+      "argv": "curl.exe -L -r 0-131071 https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00002-of-00002.safetensors -o artifacts/runs/20260809T074843Z_M00/model-00002-of-00002.header.bin",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\009.log"
+    },
+    {
+      "argv": "curl.exe -L 'https://huggingface.co/api/models/openai/gpt-oss-20b?expand[]=siblings' -o artifacts/runs/20260809T074843Z_M00/hf_model_expanded.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\010.log"
+    },
+    {
+      "argv": "curl.exe -I -L -D artifacts/runs/20260809T074843Z_M00/model-00000-of-00002.headers.txt -o NUL https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00000-of-00002.safetensors",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\011.log"
+    },
+    {
+      "argv": "curl.exe -I -L -D artifacts/runs/20260809T074843Z_M00/model-00001-of-00002.headers.txt -o NUL https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00001-of-00002.safetensors",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\012.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\012.log"
+    },
+    {
+      "argv": "curl.exe -I -L -D artifacts/runs/20260809T074843Z_M00/model-00002-of-00002.headers.txt -o NUL https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00002-of-00002.safetensors",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\013.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\013.log"
+    },
+    {
+      "argv": "python tools/model/inspect_gpt_oss_checkpoint.py --header-dir artifacts/runs/20260809T074843Z_M00 --config artifacts/runs/20260809T074843Z_M00/config.json --index artifacts/runs/20260809T074843Z_M00/model.safetensors.index.json --repo-commit 6cee5e81ee83917806bbde320786a8fb61efebee --out artifacts/model/gpt_oss_20b_inventory.json --checksums artifacts/model/checksums.txt",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\014.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\014.log"
+    },
+    {
+      "argv": "python tools/model/inspect_gpt_oss_checkpoint.py --header-dir artifacts/runs/20260809T074843Z_M00 --config artifacts/runs/20260809T074843Z_M00/config.json --index artifacts/runs/20260809T074843Z_M00/model.safetensors.index.json --repo-commit 6cee5e81ee83917806bbde320786a8fb61efebee --out artifacts/runs/20260809T074843Z_M00/gpt_oss_20b_inventory.second.json --checksums artifacts/runs/20260809T074843Z_M00/checksums.second.txt",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\015.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\015.log"
+    },
+    {
+      "argv": "python -c 'from pathlib import Path; import hashlib; pairs=[('\"'\"'artifacts/model/gpt_oss_20b_inventory.json'\"'\"','\"'\"'artifacts/runs/20260809T074843Z_M00/gpt_oss_20b_inventory.second.json'\"'\"'),('\"'\"'artifacts/model/checksums.txt'\"'\"','\"'\"'artifacts/runs/20260809T074843Z_M00/checksums.second.txt'\"'\"')];\nfor a,b in pairs:\n    da=Path(a).read_bytes(); db=Path(b).read_bytes(); print(a, hashlib.sha256(da).hexdigest()); assert da==db'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\016.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\016.log"
+    },
+    {
+      "argv": "python -m pytest tests/python/test_gpt_oss_checkpoint_inventory.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T074843Z_M00\\stdout\\017.log",
+      "stderr_file": "artifacts\\runs\\20260809T074843Z_M00\\stderr\\017.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/model/checksums.txt",
+    "artifacts/model/gpt_oss_20b_inventory.json",
+    "artifacts/runs/20260809T074843Z_M00/checksums.second.txt",
+    "artifacts/runs/20260809T074843Z_M00/config.json",
+    "artifacts/runs/20260809T074843Z_M00/evidence.json",
+    "artifacts/runs/20260809T074843Z_M00/gpt_oss_20b_inventory.second.json",
+    "artifacts/runs/20260809T074843Z_M00/hf_model.json",
+    "artifacts/runs/20260809T074843Z_M00/hf_model_expanded.json",
+    "artifacts/runs/20260809T074843Z_M00/model-00000-of-00002.first8",
+    "artifacts/runs/20260809T074843Z_M00/model-00000-of-00002.header.bin",
+    "artifacts/runs/20260809T074843Z_M00/model-00000-of-00002.headers.txt",
+    "artifacts/runs/20260809T074843Z_M00/model-00001-of-00002.header.bin",
+    "artifacts/runs/20260809T074843Z_M00/model-00001-of-00002.headers.txt",
+    "artifacts/runs/20260809T074843Z_M00/model-00002-of-00002.header.bin",
+    "artifacts/runs/20260809T074843Z_M00/model-00002-of-00002.headers.txt",
+    "artifacts/runs/20260809T074843Z_M00/model.safetensors.index.json",
+    "tests/python/test_gpt_oss_checkpoint_inventory.py",
+    "tools/model/inspect_gpt_oss_checkpoint.py"
+  ],
+  "verification": [
+    {
+      "name": "Inspector output is deterministic.",
+      "passed": true,
+      "detail": "Second inspector run produced byte-identical inventory and checksums; inventory sha256=a10c390dca7139dc60a8144702af96be72d7e9c55999374cd5c27abbceb74cd9."
+    },
+    {
+      "name": "Spot-check tensors against official/reference loader.",
+      "passed": true,
+      "detail": "pytest spot-checks official safetensors header/index data for embedding, router and expert tensors; tensor count 459, unknown count 0, tensor bytes match index total 13761264768."
+    }
+  ],
+  "metrics": {
+    "tensor_count": 459,
+    "unknown_tensor_count": 0,
+    "tensor_bytes_total": 13761264768
+  },
+  "artifacts": [
+    "artifacts\\model\\gpt_oss_20b_inventory.json",
+    "artifacts\\model\\checksums.txt",
+    "tools\\model\\inspect_gpt_oss_checkpoint.py",
+    "tests\\python\\test_gpt_oss_checkpoint_inventory.py"
+  ],
+  "limitations": [
+    "Full safetensors payloads were not downloaded; inventory uses official index/config plus ranged safetensors headers, and shard checksums/sizes are HF X-Linked-ETag/X-Xet-Hash metadata rather than locally computed full-file SHA256."
+  ],
+  "notes": []
+}

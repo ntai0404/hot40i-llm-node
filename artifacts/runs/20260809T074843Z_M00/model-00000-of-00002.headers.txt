@@ -1,0 +1,46 @@
+HTTP/1.1 302 Found
+Content-Type: text/plain; charset=utf-8
+Content-Length: 1052
+Connection: keep-alive
+Date: Sun, 09 Aug 2026 07:52:02 GMT
+Location: https://us.aws.cdn.hf.co/xet-bridge-us/68913539bd3d0a833438591d/01e8ee0bed82226ac31d791bb587136cc8abaeaa308b909f00f738561f6f57a0?X-Xet-Cas-Uid=public&user_id=public&response-content-disposition=inline%3B+filename*%3DUTF-8%27%27model-00000-of-00002.safetensors%3B+filename%3D%22model-00000-of-00002.safetensors%22%3B&Expires=1786265522&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly91cy5hd3MuY2RuLmhmLmNvL3hldC1icmlkZ2UtdXMvNjg5MTM1MzliZDNkMGE4MzM0Mzg1OTFkLzAxZThlZTBiZWQ4MjIyNmFjMzFkNzkxYmI1ODcxMzZjYzhhYmFlYWEzMDhiOTA5ZjAwZjczODU2MWY2ZjU3YTBcXD9YLVhldC1DYXMtVWlkPXB1YmxpYyZ1c2VyX2lkPXB1YmxpYyZyZXNwb25zZS1jb250ZW50LWRpc3Bvc2l0aW9uPWlubGluZSUzQitmaWxlbmFtZSUyQSUzRFVURi04JTI3JTI3bW9kZWwtMDAwMDAtb2YtMDAwMDIuc2FmZXRlbnNvcnMlM0IrZmlsZW5hbWUlM0QlMjJtb2RlbC0wMDAwMC1vZi0wMDAwMi5zYWZldGVuc29ycyUyMiUzQiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiRXBvY2hUaW1lIjoxNzg2MjY1NTIyfX19XX0_&Signature=MEYCIQCHgVOShqS4KlzPK%7ERUNmHJRUkobVWTVkeKs6B3uQRJvgIhAOjqcTGKYv8NWpbEDXSmKJr1nAK7wzILnqq8KvBMBqhv&Key-Pair-Id=01KXEF4KZ1B6FV465MAWR4M21F
+X-Powered-By: huggingface-moon
+X-Request-Id: Root=1-6a7831a2-78ad17d052f8f3243dabb756
+RateLimit: "resolvers";r=2992;t=20
+RateLimit-Policy: "fixed window";"resolvers";q=3000;w=300
+cross-origin-opener-policy: same-origin
+Referrer-Policy: strict-origin-when-cross-origin
+Access-Control-Max-Age: 86400
+Access-Control-Allow-Origin: https://huggingface.co
+Vary: Origin, Accept
+Access-Control-Expose-Headers: X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash
+X-Repo-Commit: 6cee5e81ee83917806bbde320786a8fb61efebee
+Accept-Ranges: bytes
+X-HF-Warning: unauthenticated; Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+X-Hub-Cache: MISS
+X-Linked-Size: 4792272488
+X-Linked-ETag: "16d0f997dcfc4462089d536bffe51b4bcea2f872f5c430be09ef8ed392312427"
+Cache-Control: no-store
+X-Xet-Hash: 01e8ee0bed82226ac31d791bb587136cc8abaeaa308b909f00f738561f6f57a0
+Link: <https://huggingface.co/api/models/openai/gpt-oss-20b/xet-read-token/6cee5e81ee83917806bbde320786a8fb61efebee>; rel="xet-auth", <https://cas-server.xethub.hf.co/v1/reconstructions/01e8ee0bed82226ac31d791bb587136cc8abaeaa308b909f00f738561f6f57a0>; rel="xet-reconstruction-info"
+X-Cache: Miss from cloudfront
+Via: 1.1 c7da149ed26f5a10a813cfc78a127cc2.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: HAN50-P2
+Alt-Svc: h3=":443"; ma=86400
+X-Amz-Cf-Id: jks3SqtDdV4iVFm1q-_-th1688H_PDKjSD6zXEzo93P3d4poyfOvAw==
+
+HTTP/1.1 200 OK
+content-type: application/octet-stream
+accept-ranges: bytes
+content-disposition: inline; filename*=UTF-8''model-00000-of-00002.safetensors; filename="model-00000-of-00002.safetensors";
+etag: "01e8ee0bed82226ac31d791bb587136cc8abaeaa308b909f00f738561f6f57a0"
+access-control-allow-headers: Content-Range, Content-Type, Content-Disposition, ETag
+access-control-expose-headers: *
+content-length: 4792272488
+vary: origin, access-control-request-method, access-control-request-headers
+access-control-allow-origin: *
+x-request-id: 01KZJR3RX2607E51YXN65RRPWG
+x-hf-cdn-pop: aws-ap-southeast-1
+date: Sun, 09 Aug 2026 07:52:02 GMT
+alt-svc: h3=":443";ma=60;
+
