@@ -37,7 +37,8 @@ completed_tasks:
 - S04
 - S05
 - S06
-in_progress: P00D
+- P00D
+in_progress: null
 blocked_tasks:
   P00:
     reason: 'P00 cannot be honestly passed because no device/runtime full official gpt-oss/H40M decoder executable
@@ -80,6 +81,7 @@ task_evidence:
   S04: artifacts/runs/20260809T094822Z_S04/evidence.json
   S05: artifacts/runs/20260809T101955Z_S05/evidence.json
   S06: artifacts/runs/20260809T103043Z_S06/evidence.json
+  P00D: artifacts/runs/20260809T132026Z_P00D/evidence.json
 skipped_optional_tasks: []
 decisions:
   destructive_device_authorized: false

@@ -2,8 +2,8 @@
   "schema_version": 1,
   "task_id": "P00D",
   "started_at": "2026-08-09T13:20:26.539926+00:00",
-  "finished_at": "",
-  "status": "fail",
+  "finished_at": "2026-08-09T15:21:15.373573+00:00",
+  "status": "pass",
   "git_commit": "1a361054a95794e463977bcc7d929dbd11cf180e",
   "sources": [
     {
@@ -276,9 +276,81 @@
       "exit_code": 0,
       "stdout_file": "artifacts\\runs\\20260809T132026Z_P00D\\stdout\\044.log",
       "stderr_file": "artifacts\\runs\\20260809T132026Z_P00D\\stderr\\044.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -O2 -Wall -Wextra -Wpedantic -static -I 'device\\runtime\\include' 'tests\\minimal_decoder_probe.cpp' 'device\\runtime\\src\\attention.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' 'device\\runtime\\src\\gptoss_expert.cpp' 'device\\runtime\\src\\h40m_tensor_catalog.cpp' 'device\\runtime\\src\\model_index.cpp' 'device\\runtime\\src\\mxfp4.cpp' 'device\\runtime\\src\\router.cpp' 'device\\runtime\\src\\ram_arena.cpp' -o 'artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_probe.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T132026Z_P00D\\stdout\\045.log",
+      "stderr_file": "artifacts\\runs\\20260809T132026Z_P00D\\stderr\\045.log"
+    },
+    {
+      "argv": "'C:\\My-Project\\hot40i-llm-node\\artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_probe.exe' 'artifacts\\model\\source' 'artifacts\\model\\h40m\\tensor_catalog.tsv' 'artifacts\\model\\h40m\\expert_arena.bin' 12194 'artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_host_refactor.json' 'artifacts\\runs\\20260809T132026Z_P00D\\decoder_trace_host_refactor.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T132026Z_P00D\\stdout\\046.log",
+      "stderr_file": "artifacts\\runs\\20260809T132026Z_P00D\\stderr\\046.log"
+    },
+    {
+      "argv": "'C:\\My-Project\\hot40i-llm-node\\artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_probe.exe' 'artifacts\\model\\source' 'artifacts\\model\\h40m\\tensor_catalog.tsv' 'artifacts\\model\\h40m\\expert_arena.bin' 200006,17360 'artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_host_2tok.json' 'artifacts\\runs\\20260809T132026Z_P00D\\decoder_trace_host_2tok.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T132026Z_P00D\\stdout\\047.log",
+      "stderr_file": "artifacts\\runs\\20260809T132026Z_P00D\\stderr\\047.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android26-clang++.cmd' -std=c++20 -O2 -DNDEBUG -Wall -Wextra -Wpedantic -static-libstdc++ -I 'device\\runtime\\include' 'tests\\minimal_decoder_probe.cpp' 'device\\runtime\\src\\attention.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' 'device\\runtime\\src\\gptoss_expert.cpp' 'device\\runtime\\src\\h40m_tensor_catalog.cpp' 'device\\runtime\\src\\model_index.cpp' 'device\\runtime\\src\\mxfp4.cpp' 'device\\runtime\\src\\router.cpp' 'device\\runtime\\src\\ram_arena.cpp' -o 'artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_probe_android'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T132026Z_P00D\\stdout\\048.log",
+      "stderr_file": "artifacts\\runs\\20260809T132026Z_P00D\\stderr\\048.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android26-clang++.cmd' -std=c++20 -O2 -DNDEBUG -Wall -Wextra -Wpedantic -static-libstdc++ -I 'device\\runtime\\include' 'tests\\minimal_decoder_probe.cpp' 'device\\runtime\\src\\attention.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' 'device\\runtime\\src\\gptoss_expert.cpp' 'device\\runtime\\src\\h40m_tensor_catalog.cpp' 'device\\runtime\\src\\model_index.cpp' 'device\\runtime\\src\\mxfp4.cpp' 'device\\runtime\\src\\router.cpp' 'device\\runtime\\src\\ram_arena.cpp' -o 'artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_probe_android'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T132026Z_P00D\\stdout\\049.log",
+      "stderr_file": "artifacts\\runs\\20260809T132026Z_P00D\\stderr\\049.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 push 'artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_probe_android' /data/local/tmp/h40m/minimal_decoder_probe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T132026Z_P00D\\stdout\\050.log",
+      "stderr_file": "artifacts\\runs\\20260809T132026Z_P00D\\stderr\\050.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell 'chmod 755 /data/local/tmp/h40m/minimal_decoder_probe && rm -f /data/local/tmp/h40m/minimal_decoder_device_2tok.json /data/local/tmp/h40m/decoder_trace_2tok.jsonl && cd /data/local/tmp/h40m && /system/bin/time -v ./minimal_decoder_probe /data/local/tmp/h40m/source /data/local/tmp/h40m/h40m/tensor_catalog.tsv /data/local/tmp/h40m/h40m/expert_arena.bin 200006,17360 /data/local/tmp/h40m/minimal_decoder_device_2tok.json /data/local/tmp/h40m/decoder_trace_2tok.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T132026Z_P00D\\stdout\\051.log",
+      "stderr_file": "artifacts\\runs\\20260809T132026Z_P00D\\stderr\\051.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 pull /data/local/tmp/h40m/minimal_decoder_device_2tok.json 'artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_device_2tok.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T132026Z_P00D\\stdout\\052.log",
+      "stderr_file": "artifacts\\runs\\20260809T132026Z_P00D\\stderr\\052.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 pull /data/local/tmp/h40m/decoder_trace_2tok.jsonl 'artifacts\\runs\\20260809T132026Z_P00D\\decoder_trace_2tok.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T132026Z_P00D\\stdout\\053.log",
+      "stderr_file": "artifacts\\runs\\20260809T132026Z_P00D\\stderr\\053.log"
     }
   ],
-  "files_changed": [],
+  "files_changed": [
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_70tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_70tok_rss.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_refactor.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/evidence.json",
+    "artifacts/runs/20260809T132026Z_P00D/full70.stdout.txt",
+    "artifacts/runs/20260809T132026Z_P00D/full70.time.txt",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_70tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_70tok_rss.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_refactor.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_probe.exe",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_probe_android",
+    "benchmarks/proof/minimal_decoder.json",
+    "tests/minimal_decoder_probe.cpp"
+  ],
   "verification": [
     {
       "name": "GPT-OSS attention primitive reference parity",
@@ -304,6 +376,21 @@
       "name": "Android decoder trace captured",
       "passed": true,
       "detail": "Pulled decoder_trace.jsonl with 697 events including decoder_layer_begin/end, attention_end, MoE route/cache_miss/read_end/compute_end, and streamed_lm_head_argmax bytes=1158266880."
+    },
+    {
+      "name": "Decoder component inventory recorded.",
+      "passed": true,
+      "detail": "Component inventory in benchmarks/proof/minimal_decoder.json covers embedding, RMSNorm, YaRN RoPE/GQA/sinks/mask, router/top-4, bounded expert loader/cache/MXFP4, 24-layer loop, final norm, streamed lm_head and deterministic argmax."
+    },
+    {
+      "name": "Host numerical reference checks pass.",
+      "passed": true,
+      "detail": "Host GPT-OSS attention reference parity is max_abs_diff=0; host 24-layer H40M single-token and 2-token paths complete with streamed argmax."
+    },
+    {
+      "name": "Android first-token decoder binary emits a token with bounded memory.",
+      "passed": true,
+      "detail": "Fresh ARM64 binary completed official 70-token Harmony prefill through 24 layers on Hot 40i: token_id=364, decoded=.\\\\n\\\\n, peak RSS=61280 KiB, dense flash=90650387328, expert flash=75924449280, cache hits=984, misses=5736, elapsed=1968759 ms; no OOM/swap observed."
     }
   ],
   "metrics": {
@@ -314,7 +401,11 @@
     "artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_host.json",
     "artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_device.json",
     "benchmarks\\proof\\minimal_decoder.json",
-    "artifacts\\runs\\20260809T132026Z_P00D\\decoder_trace.jsonl"
+    "artifacts\\runs\\20260809T132026Z_P00D\\decoder_trace.jsonl",
+    "artifacts\\runs\\20260809T132026Z_P00D\\minimal_decoder_device_70tok_rss.json",
+    "artifacts\\runs\\20260809T132026Z_P00D\\decoder_trace_70tok_rss.jsonl",
+    "artifacts\\runs\\20260809T132026Z_P00D\\full70.time.txt",
+    "artifacts\\runs\\20260809T132026Z_P00D\\full70.stdout.txt"
   ],
   "limitations": [],
   "notes": [

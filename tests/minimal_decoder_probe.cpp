@@ -17,9 +17,11 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <sstream>
 #include <span>
 #include <stdexcept>
 #include <string>
+#include <sys/resource.h>
 #include <vector>
 
 namespace {
@@ -47,11 +49,26 @@ struct Metrics {
     std::uint64_t layers_run{};
     std::uint32_t token_id{};
     float token_logit{-std::numeric_limits<float>::infinity()};
+    std::uint64_t peak_rss_kib{};
 };
 
 std::uint64_t elapsed_ms(std::chrono::steady_clock::time_point start) {
     return static_cast<std::uint64_t>(
         std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count());
+}
+
+std::vector<std::uint32_t> parse_tokens(std::string_view text) {
+    std::vector<std::uint32_t> tokens;
+    std::size_t start = 0;
+    while (start <= text.size()) {
+        const auto comma = text.find(',', start);
+        const auto part = text.substr(start, comma == std::string_view::npos ? text.size() - start : comma - start);
+        if (!part.empty()) tokens.push_back(static_cast<std::uint32_t>(std::stoul(std::string(part))));
+        if (comma == std::string_view::npos) break;
+        start = comma + 1;
+    }
+    if (tokens.empty()) throw std::invalid_argument("at least one token id is required");
+    return tokens;
 }
 
 h40::H40mTensorRecord must_find(const h40::H40mTensorCatalog& catalog, const std::string& name) {
@@ -132,40 +149,104 @@ h40::GptOssExpertView expert_view(std::span<const std::byte> bytes) {
     };
 }
 
-void single_token_attention(
+void yarn_rope_tables(std::size_t seq_len, std::span<float> cos, std::span<float> sin) {
+    if (cos.size() != seq_len * (kHeadDim / 2) || sin.size() != cos.size()) {
+        throw std::invalid_argument("rope table shape mismatch");
+    }
+    constexpr double base = 150000.0;
+    constexpr double factor = 32.0;
+    constexpr double beta_fast = 32.0;
+    constexpr double beta_slow = 1.0;
+    constexpr double original_max_position_embeddings = 4096.0;
+    constexpr double pi = 3.14159265358979323846264338327950288;
+    const double attention_factor = 0.1 * std::log(factor) + 1.0;
+    auto correction_dim = [](double rotations) {
+        return (static_cast<double>(kHeadDim) * std::log(original_max_position_embeddings / (rotations * 2.0 * pi))) /
+               (2.0 * std::log(base));
+    };
+    const double low = std::max(correction_dim(beta_fast), 0.0);
+    const double high = std::min(correction_dim(beta_slow), static_cast<double>(kHeadDim - 1));
+    for (std::size_t i = 0; i < kHeadDim / 2; ++i) {
+        const double pos_freq = std::pow(base, static_cast<double>(i * 2) / static_cast<double>(kHeadDim));
+        const double inv_extrapolate = 1.0 / pos_freq;
+        const double inv_interpolate = 1.0 / (factor * pos_freq);
+        const double ramp = std::clamp((static_cast<double>(i) - low) / (high - low), 0.0, 1.0);
+        const double extrapolate_factor = 1.0 - ramp;
+        const double inv_freq = inv_interpolate * (1.0 - extrapolate_factor) + inv_extrapolate * extrapolate_factor;
+        for (std::size_t pos = 0; pos < seq_len; ++pos) {
+            const double angle = static_cast<double>(pos) * inv_freq;
+            cos[pos * (kHeadDim / 2) + i] = static_cast<float>(std::cos(angle) * attention_factor);
+            sin[pos * (kHeadDim / 2) + i] = static_cast<float>(std::sin(angle) * attention_factor);
+        }
+    }
+}
+
+void apply_rope_all(std::size_t seq_len, std::span<float> q, std::span<float> k, std::span<const float> cos, std::span<const float> sin) {
+    for (std::size_t pos = 0; pos < seq_len; ++pos) {
+        const auto c = cos.subspan(pos * (kHeadDim / 2), kHeadDim / 2);
+        const auto s = sin.subspan(pos * (kHeadDim / 2), kHeadDim / 2);
+        auto q_row = q.subspan(pos * kQDim, kQDim);
+        auto k_row = k.subspan(pos * kKvDim, kKvDim);
+        for (std::size_t head = 0; head < kQHeads; ++head) {
+            h40::apply_rope_to_head(q_row.subspan(head * kHeadDim, kHeadDim), c, s);
+        }
+        for (std::size_t head = 0; head < kKvHeads; ++head) {
+            h40::apply_rope_to_head(k_row.subspan(head * kHeadDim, kHeadDim), c, s);
+        }
+    }
+}
+
+void sequence_attention(
+    std::size_t seq_len,
+    bool sliding,
     std::span<const float> q,
     std::span<const float> k,
     std::span<const float> v,
     std::span<const float> sinks,
     std::span<float> merged) {
-    if (q.size() != kQDim || k.size() != kKvDim || v.size() != kKvDim || sinks.size() != kQHeads || merged.size() != kQDim) {
-        throw std::invalid_argument("single-token attention shape mismatch");
+    if (q.size() != seq_len * kQDim || k.size() != seq_len * kKvDim || v.size() != seq_len * kKvDim ||
+        merged.size() != seq_len * kQDim) {
+        throw std::invalid_argument("sequence attention shape mismatch");
     }
     const float scale = 1.0F / std::sqrt(static_cast<float>(kHeadDim));
     const std::size_t group = kQHeads / kKvHeads;
-    for (std::size_t qh = 0; qh < kQHeads; ++qh) {
-        const std::size_t kvh = qh / group;
-        const auto qv = q.subspan(qh * kHeadDim, kHeadDim);
-        const auto kv = k.subspan(kvh * kHeadDim, kHeadDim);
-        float score = 0.0F;
-        for (std::size_t i = 0; i < kHeadDim; ++i) score += qv[i] * kv[i];
-        score *= scale;
-        const float max_score = std::max(score, sinks[qh]);
-        const double denom =
-            std::exp(static_cast<double>(score - max_score)) + std::exp(static_cast<double>(sinks[qh] - max_score));
-        const float prob = static_cast<float>(std::exp(static_cast<double>(score - max_score)) / denom);
-        const auto vv = v.subspan(kvh * kHeadDim, kHeadDim);
-        auto out = merged.subspan(qh * kHeadDim, kHeadDim);
-        for (std::size_t i = 0; i < kHeadDim; ++i) out[i] = prob * vv[i];
+    constexpr std::size_t window = 128;
+    for (std::size_t pos = 0; pos < seq_len; ++pos) {
+        auto out_row = merged.subspan(pos * kQDim, kQDim);
+        const std::size_t min_src = (!sliding || pos + 1 <= window) ? 0 : pos + 1 - window;
+        for (std::size_t qh = 0; qh < kQHeads; ++qh) {
+            const std::size_t kvh = qh / group;
+            const auto qv = q.subspan(pos * kQDim + qh * kHeadDim, kHeadDim);
+            std::vector<float> scores(pos - min_src + 1);
+            float max_score = sinks[qh];
+            for (std::size_t src = min_src; src <= pos; ++src) {
+                const auto kv = k.subspan(src * kKvDim + kvh * kHeadDim, kHeadDim);
+                float score = 0.0F;
+                for (std::size_t i = 0; i < kHeadDim; ++i) score += qv[i] * kv[i];
+                score *= scale;
+                scores[src - min_src] = score;
+                max_score = std::max(max_score, score);
+            }
+            double denom = std::exp(static_cast<double>(sinks[qh] - max_score));
+            for (const float score : scores) denom += std::exp(static_cast<double>(score - max_score));
+            auto out = out_row.subspan(qh * kHeadDim, kHeadDim);
+            std::fill(out.begin(), out.end(), 0.0F);
+            for (std::size_t src = min_src; src <= pos; ++src) {
+                const double prob = std::exp(static_cast<double>(scores[src - min_src] - max_score)) / denom;
+                const auto vv = v.subspan(src * kKvDim + kvh * kHeadDim, kHeadDim);
+                for (std::size_t i = 0; i < kHeadDim; ++i) out[i] += static_cast<float>(prob * vv[i]);
+            }
+        }
     }
 }
 
-void write_json(const std::filesystem::path& path, const Metrics& metrics, std::uint64_t elapsed) {
+void write_json(const std::filesystem::path& path, const Metrics& metrics, std::uint64_t elapsed, std::size_t input_tokens) {
     std::ofstream out(path);
     out << "{\n";
     out << "  \"schema_version\": 1,\n";
     out << "  \"status\": \"pass\",\n";
-    out << "  \"mode\": \"single_token_full_24_layer_h40m_decode\",\n";
+    out << "  \"mode\": \"" << (input_tokens == 1 ? "single_token_full_24_layer_h40m_decode" : "multi_token_full_24_layer_h40m_prefill_decode") << "\",\n";
+    out << "  \"input_tokens\": " << input_tokens << ",\n";
     out << "  \"layers_run\": " << metrics.layers_run << ",\n";
     out << "  \"emitted_token_id\": " << metrics.token_id << ",\n";
     out << "  \"emitted_token_text\": null,\n";
@@ -174,6 +255,7 @@ void write_json(const std::filesystem::path& path, const Metrics& metrics, std::
     out << "  \"expert_flash_bytes\": " << metrics.expert_flash_bytes << ",\n";
     out << "  \"cache_hits\": " << metrics.expert_cache_hits << ",\n";
     out << "  \"cache_misses\": " << metrics.expert_cache_misses << ",\n";
+    out << "  \"peak_rss_kib\": " << metrics.peak_rss_kib << ",\n";
     out << "  \"elapsed_ms\": " << elapsed << "\n";
     out << "}\n";
 }
@@ -189,7 +271,8 @@ int main(int argc, char** argv) {
     const std::filesystem::path source_dir = argv[1];
     const std::filesystem::path catalog_path = argv[2];
     const std::filesystem::path expert_arena = argv[3];
-    const auto input_token = static_cast<std::uint32_t>(std::stoul(argv[4]));
+    const auto input_tokens = parse_tokens(argv[4]);
+    const std::size_t seq_len = input_tokens.size();
     const std::filesystem::path out_json = argv[5];
     std::ofstream trace_file;
     std::unique_ptr<h40::JsonlTraceWriter> trace_owner;
@@ -209,22 +292,22 @@ int main(int argc, char** argv) {
     h40::ExpertLoader loader(model_index, expert_provider);
     h40::ExpertCache cache(kExpertPayloadBytes * kTopK, kExpertPayloadBytes, 1048576);
 
-    std::vector<float> hidden(kHidden);
-    std::vector<float> normed(kHidden);
+    std::vector<float> hidden(seq_len * kHidden);
+    std::vector<float> normed(seq_len * kHidden);
     std::vector<float> norm_weight(kHidden);
-    std::vector<float> q(kQDim);
-    std::vector<float> k(kKvDim);
-    std::vector<float> v(kKvDim);
+    std::vector<float> q(seq_len * kQDim);
+    std::vector<float> k(seq_len * kKvDim);
+    std::vector<float> v(seq_len * kKvDim);
     std::vector<float> q_bias(kQDim);
     std::vector<float> k_bias(kKvDim);
     std::vector<float> v_bias(kKvDim);
     std::vector<float> o_bias(kHidden);
     std::vector<float> sinks(kQHeads);
-    std::vector<float> merged(kQDim);
-    std::vector<float> attn_out(kHidden);
-    std::vector<float> router_logits(kExperts);
+    std::vector<float> merged(seq_len * kQDim);
+    std::vector<float> attn_out(seq_len * kHidden);
+    std::vector<float> router_logits(seq_len * kExperts);
     std::vector<float> router_bias(kExperts);
-    std::vector<float> moe_out(kHidden);
+    std::vector<float> moe_out(seq_len * kHidden);
     std::vector<float> expert_out(kHidden);
     std::vector<float> gate_up(kIntermediate * 2);
     std::vector<float> expert_hidden(kIntermediate);
@@ -232,7 +315,14 @@ int main(int argc, char** argv) {
     std::vector<float> expert_weights(kTopK);
     std::vector<std::uint16_t> row_buffer(std::max(kQDim, kHidden));
 
-    bf16_row_counted(reader, must_find(catalog, "model.embed_tokens.weight"), input_token, hidden, metrics);
+    std::vector<float> rope_cos(seq_len * (kHeadDim / 2));
+    std::vector<float> rope_sin(seq_len * (kHeadDim / 2));
+    yarn_rope_tables(seq_len, rope_cos, rope_sin);
+
+    const auto embedding = must_find(catalog, "model.embed_tokens.weight");
+    for (std::size_t pos = 0; pos < seq_len; ++pos) {
+        bf16_row_counted(reader, embedding, input_tokens[pos], std::span<float>(hidden).subspan(pos * kHidden, kHidden), metrics);
+    }
 
     for (std::uint32_t layer = 0; layer < kLayers; ++layer) {
         const auto prefix = std::string("model.layers.") + std::to_string(layer);
@@ -244,22 +334,46 @@ int main(int argc, char** argv) {
             trace->emit(row);
         }
         bf16_vector_counted(reader, must_find(catalog, prefix + ".input_layernorm.weight"), norm_weight, metrics);
-        h40::rms_norm(hidden, norm_weight, 1.0e-5F, normed);
+        for (std::size_t pos = 0; pos < seq_len; ++pos) {
+            h40::rms_norm(
+                std::span<const float>(hidden).subspan(pos * kHidden, kHidden),
+                norm_weight,
+                1.0e-5F,
+                std::span<float>(normed).subspan(pos * kHidden, kHidden));
+        }
 
-        bf16_matvec_counted(reader, must_find(catalog, prefix + ".self_attn.q_proj.weight"), normed, q, row_buffer, metrics);
-        bf16_matvec_counted(reader, must_find(catalog, prefix + ".self_attn.k_proj.weight"), normed, k, row_buffer, metrics);
-        bf16_matvec_counted(reader, must_find(catalog, prefix + ".self_attn.v_proj.weight"), normed, v, row_buffer, metrics);
+        const auto q_weight = must_find(catalog, prefix + ".self_attn.q_proj.weight");
+        const auto k_weight = must_find(catalog, prefix + ".self_attn.k_proj.weight");
+        const auto v_weight = must_find(catalog, prefix + ".self_attn.v_proj.weight");
+        for (std::size_t pos = 0; pos < seq_len; ++pos) {
+            const auto row = std::span<const float>(normed).subspan(pos * kHidden, kHidden);
+            bf16_matvec_counted(reader, q_weight, row, std::span<float>(q).subspan(pos * kQDim, kQDim), row_buffer, metrics);
+            bf16_matvec_counted(reader, k_weight, row, std::span<float>(k).subspan(pos * kKvDim, kKvDim), row_buffer, metrics);
+            bf16_matvec_counted(reader, v_weight, row, std::span<float>(v).subspan(pos * kKvDim, kKvDim), row_buffer, metrics);
+        }
         bf16_vector_counted(reader, must_find(catalog, prefix + ".self_attn.q_proj.bias"), q_bias, metrics);
         bf16_vector_counted(reader, must_find(catalog, prefix + ".self_attn.k_proj.bias"), k_bias, metrics);
         bf16_vector_counted(reader, must_find(catalog, prefix + ".self_attn.v_proj.bias"), v_bias, metrics);
         bf16_vector_counted(reader, must_find(catalog, prefix + ".self_attn.o_proj.bias"), o_bias, metrics);
         bf16_vector_counted(reader, must_find(catalog, prefix + ".self_attn.sinks"), sinks, metrics);
-        add_bias(q, q_bias);
-        add_bias(k, k_bias);
-        add_bias(v, v_bias);
-        single_token_attention(q, k, v, sinks, merged);
-        bf16_matvec_counted(reader, must_find(catalog, prefix + ".self_attn.o_proj.weight"), merged, attn_out, row_buffer, metrics);
-        add_bias(attn_out, o_bias);
+        for (std::size_t pos = 0; pos < seq_len; ++pos) {
+            add_bias(std::span<float>(q).subspan(pos * kQDim, kQDim), q_bias);
+            add_bias(std::span<float>(k).subspan(pos * kKvDim, kKvDim), k_bias);
+            add_bias(std::span<float>(v).subspan(pos * kKvDim, kKvDim), v_bias);
+        }
+        apply_rope_all(seq_len, q, k, rope_cos, rope_sin);
+        sequence_attention(seq_len, layer % 2 == 0, q, k, v, sinks, merged);
+        const auto o_weight = must_find(catalog, prefix + ".self_attn.o_proj.weight");
+        for (std::size_t pos = 0; pos < seq_len; ++pos) {
+            bf16_matvec_counted(
+                reader,
+                o_weight,
+                std::span<const float>(merged).subspan(pos * kQDim, kQDim),
+                std::span<float>(attn_out).subspan(pos * kHidden, kHidden),
+                row_buffer,
+                metrics);
+            add_bias(std::span<float>(attn_out).subspan(pos * kHidden, kHidden), o_bias);
+        }
         add_inplace(hidden, attn_out);
         if (trace) {
             h40::TraceEvent row;
@@ -272,20 +386,41 @@ int main(int argc, char** argv) {
         }
 
         bf16_vector_counted(reader, must_find(catalog, prefix + ".post_attention_layernorm.weight"), norm_weight, metrics);
-        h40::rms_norm(hidden, norm_weight, 1.0e-5F, normed);
-        bf16_matvec_counted(reader, must_find(catalog, prefix + ".mlp.router.weight"), normed, router_logits, row_buffer, metrics);
+        for (std::size_t pos = 0; pos < seq_len; ++pos) {
+            h40::rms_norm(
+                std::span<const float>(hidden).subspan(pos * kHidden, kHidden),
+                norm_weight,
+                1.0e-5F,
+                std::span<float>(normed).subspan(pos * kHidden, kHidden));
+        }
+        const auto router_weight = must_find(catalog, prefix + ".mlp.router.weight");
+        for (std::size_t pos = 0; pos < seq_len; ++pos) {
+            bf16_matvec_counted(
+                reader,
+                router_weight,
+                std::span<const float>(normed).subspan(pos * kHidden, kHidden),
+                std::span<float>(router_logits).subspan(pos * kExperts, kExperts),
+                row_buffer,
+                metrics);
+        }
         bf16_vector_counted(reader, must_find(catalog, prefix + ".mlp.router.bias"), router_bias, metrics);
-        add_bias(router_logits, router_bias);
+        for (std::size_t pos = 0; pos < seq_len; ++pos) {
+            add_bias(std::span<float>(router_logits).subspan(pos * kExperts, kExperts), router_bias);
+        }
 
         h40::run_moe_layer_streaming(
-            {layer, 1, kExperts, kTopK, kHidden},
+            {layer, seq_len, kExperts, kTopK, kHidden},
             router_logits,
             cache,
             loader,
             moe_out,
             {expert_ids, expert_weights, expert_out},
-            [&](std::size_t, std::uint32_t, std::span<const std::byte> packed, std::span<float> out) {
-                h40::run_gptoss_expert(expert_view(packed), normed, out, {gate_up, expert_hidden});
+            [&](std::size_t token, std::uint32_t, std::span<const std::byte> packed, std::span<float> out) {
+                h40::run_gptoss_expert(
+                    expert_view(packed),
+                    std::span<const float>(normed).subspan(token * kHidden, kHidden),
+                    out,
+                    {gate_up, expert_hidden});
             },
             trace);
         add_inplace(hidden, moe_out);
@@ -300,14 +435,16 @@ int main(int argc, char** argv) {
     }
 
     bf16_vector_counted(reader, must_find(catalog, "model.norm.weight"), norm_weight, metrics);
-    h40::rms_norm(hidden, norm_weight, 1.0e-5F, normed);
+    const auto last_hidden = std::span<const float>(hidden).subspan((seq_len - 1) * kHidden, kHidden);
+    auto last_normed = std::span<float>(normed).subspan((seq_len - 1) * kHidden, kHidden);
+    h40::rms_norm(last_hidden, norm_weight, 1.0e-5F, last_normed);
 
     const auto lm_head = must_find(catalog, "lm_head.weight");
     std::vector<float> logits(kLmHeadChunkRows);
     for (std::size_t row = 0; row < kVocab; row += kLmHeadChunkRows) {
         const auto rows = std::min(kLmHeadChunkRows, kVocab - row);
         auto chunk = std::span<float>(logits).first(rows);
-        reader.bf16_matvec_rows(lm_head, row, normed, chunk, row_buffer);
+        reader.bf16_matvec_rows(lm_head, row, last_normed, chunk, row_buffer);
         metrics.dense_bytes += rows * kHidden * sizeof(std::uint16_t);
         for (std::size_t i = 0; i < rows; ++i) {
             const float value = chunk[i];
@@ -323,7 +460,11 @@ int main(int argc, char** argv) {
     metrics.expert_cache_hits = stats.hits;
     metrics.expert_cache_misses = stats.misses;
     metrics.expert_flash_bytes = stats.bytes_loaded;
-    write_json(out_json, metrics, elapsed_ms(start));
+    struct rusage usage {};
+    if (getrusage(RUSAGE_SELF, &usage) == 0) {
+        metrics.peak_rss_kib = static_cast<std::uint64_t>(usage.ru_maxrss);
+    }
+    write_json(out_json, metrics, elapsed_ms(start), seq_len);
     if (trace) {
         h40::TraceEvent row;
         row.event = "streamed_lm_head_argmax";
