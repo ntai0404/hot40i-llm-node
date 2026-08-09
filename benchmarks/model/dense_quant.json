@@ -1,0 +1,65 @@
+{
+  "accept_logit_diff": 0.01,
+  "baseline_dense_bytes": 3595365888,
+  "dense_roles": [
+    "attention",
+    "embedding",
+    "lm_head",
+    "router"
+  ],
+  "expert_bytes_out_of_scope": 10165616640,
+  "fixture": "tiny_gpt_oss_shape_v1",
+  "results": [
+    {
+      "accepted": true,
+      "bits": 8,
+      "estimated_dense_bytes": 1797682944,
+      "estimated_reduction_bytes": 1797682944,
+      "max_abs_logit_diff": 0.006678083983630234,
+      "routing_match": true,
+      "tiny_quantized_storage_bytes": 476,
+      "tiny_quantized_values": 448
+    },
+    {
+      "accepted": false,
+      "bits": 6,
+      "estimated_dense_bytes": 1348262208,
+      "estimated_reduction_bytes": 2247103680,
+      "max_abs_logit_diff": 0.025531940251364432,
+      "routing_match": true,
+      "tiny_quantized_storage_bytes": 364,
+      "tiny_quantized_values": 448
+    },
+    {
+      "accepted": false,
+      "bits": 5,
+      "estimated_dense_bytes": 1123551840,
+      "estimated_reduction_bytes": 2471814048,
+      "max_abs_logit_diff": 0.08648257123302328,
+      "routing_match": false,
+      "tiny_quantized_storage_bytes": 308,
+      "tiny_quantized_values": 448
+    },
+    {
+      "accepted": false,
+      "bits": 4,
+      "estimated_dense_bytes": 898841472,
+      "estimated_reduction_bytes": 2696524416,
+      "max_abs_logit_diff": 0.19835907762249644,
+      "routing_match": true,
+      "tiny_quantized_storage_bytes": 252,
+      "tiny_quantized_values": 448
+    }
+  ],
+  "schema_version": 1,
+  "selected": {
+    "accepted": true,
+    "bits": 8,
+    "estimated_dense_bytes": 1797682944,
+    "estimated_reduction_bytes": 1797682944,
+    "max_abs_logit_diff": 0.006678083983630234,
+    "routing_match": true,
+    "tiny_quantized_storage_bytes": 476,
+    "tiny_quantized_values": 448
+  }
+}

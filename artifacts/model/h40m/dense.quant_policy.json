@@ -1,0 +1,13 @@
+{
+  "dense_quant_policy": {
+    "accepted": true,
+    "bits": 8,
+    "estimated_dense_bytes": 1797682944,
+    "estimated_reduction_bytes": 1797682944,
+    "max_abs_logit_diff": 0.006678083983630234,
+    "routing_match": true,
+    "tiny_quantized_storage_bytes": 476,
+    "tiny_quantized_values": 448
+  },
+  "schema_version": 1
+}

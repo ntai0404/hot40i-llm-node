@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "task_id": "M03",
+  "started_at": "2026-08-09T08:04:48.916001+00:00",
+  "finished_at": "2026-08-09T08:07:26.656402+00:00",
+  "status": "pass",
+  "git_commit": "37eaf67d1a773aa97f12d5050da3dde3a4b26ebb",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python tools/model/evaluate_dense_quant.py --fixture tests/fixtures/tiny_gpt_oss/fixture.json --inventory artifacts/model/gpt_oss_20b_inventory.json --out benchmarks/model/dense_quant.json --policy artifacts/model/h40m/dense.quant_policy.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080448Z_M03\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T080448Z_M03\\stderr\\001.log"
+    },
+    {
+      "argv": "python -m pytest tests/python/test_dense_quant.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080448Z_M03\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T080448Z_M03\\stderr\\002.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/model/h40m/dense.quant_policy.json",
+    "artifacts/runs/20260809T080448Z_M03/",
+    "benchmarks/model/",
+    "tests/python/test_dense_quant.py",
+    "tools/model/evaluate_dense_quant.py"
+  ],
+  "verification": [
+    {
+      "name": "Quality/numerical comparison for each accepted quant.",
+      "passed": true,
+      "detail": "Q8 accepted with routing_match=true and max_abs_logit_diff=0.006678083983630234 <= 0.01 on tiny_gpt_oss_shape_v1; Q6/Q5/Q4 rejected and recorded in dense_quant.json."
+    },
+    {
+      "name": "Memory byte reduction recorded.",
+      "passed": true,
+      "detail": "Exact M00 dense/shared baseline for attention+embedding+lm_head+router is 3,595,365,888 bytes; selected Q8 estimate is 1,797,682,944 bytes, reduction 1,797,682,944 bytes."
+    }
+  ],
+  "metrics": {
+    "baseline_dense_bytes": 3595365888,
+    "selected_dense_bits": 8,
+    "estimated_reduction_bytes": 1797682944,
+    "selected_max_abs_logit_diff": 0.006678083983630234
+  },
+  "artifacts": [
+    "benchmarks\\model\\dense_quant.json",
+    "artifacts\\model\\h40m\\dense.quant_policy.json",
+    "tools\\model\\evaluate_dense_quant.py",
+    "tests\\python\\test_dense_quant.py"
+  ],
+  "limitations": [],
+  "notes": []
+}
