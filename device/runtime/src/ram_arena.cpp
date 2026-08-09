@@ -1,6 +1,7 @@
 #include "h40/ram_arena.hpp"
 
 #include <algorithm>
+#include <cstdint>
 #include <stdexcept>
 #include <utility>
 
@@ -13,7 +14,10 @@ std::span<std::byte> RamArena::allocate(std::size_t bytes, std::size_t alignment
     if (alignment == 0 || (alignment & (alignment - 1)) != 0) {
         throw std::invalid_argument("alignment must be a non-zero power of two");
     }
-    const auto aligned = (cursor_ + alignment - 1) & ~(alignment - 1);
+    const auto base = reinterpret_cast<std::uintptr_t>(storage_.get());
+    const auto current = base + cursor_;
+    const auto aligned_address = (current + alignment - 1) & ~(static_cast<std::uintptr_t>(alignment) - 1);
+    const auto aligned = static_cast<std::size_t>(aligned_address - base);
     if (aligned > capacity_ || bytes > capacity_ - aligned) {
         throw std::bad_alloc();
     }

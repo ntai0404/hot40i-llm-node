@@ -6,26 +6,51 @@
 
 namespace h40 {
 
-ExpertCache::ExpertCache(std::size_t budget_bytes) : ExpertCache(budget_bytes, budget_bytes) {}
+namespace {
+
+std::size_t align_up(std::size_t value, std::size_t alignment) {
+    if (alignment == 0 || (alignment & (alignment - 1)) != 0) {
+        throw std::invalid_argument("slot alignment must be a non-zero power of two");
+    }
+    const auto mask = alignment - 1;
+    if (value > static_cast<std::size_t>(-1) - mask) throw std::bad_alloc();
+    return (value + mask) & ~mask;
+}
+
+}  // namespace
+
+ExpertCache::ExpertCache(std::size_t budget_bytes) : ExpertCache(budget_bytes, budget_bytes, 1) {}
 
 ExpertCache::ExpertCache(std::size_t budget_bytes, std::size_t slot_bytes)
+    : ExpertCache(budget_bytes, slot_bytes, 1) {}
+
+ExpertCache::ExpertCache(std::size_t budget_bytes, std::size_t slot_bytes, std::size_t slot_alignment)
     : owned_storage_(std::make_unique<std::byte[]>(budget_bytes)),
       storage_(owned_storage_.get(), budget_bytes),
       budget_bytes_(budget_bytes),
-      slot_bytes_(slot_bytes) {
+      slot_bytes_(slot_bytes),
+      slot_stride_bytes_(align_up(slot_bytes, slot_alignment)),
+      slot_alignment_(slot_alignment) {
     if (budget_bytes == 0) throw std::invalid_argument("cache budget must be > 0");
     if (slot_bytes == 0) throw std::invalid_argument("cache slot bytes must be > 0");
-    slot_count_ = budget_bytes_ / slot_bytes_;
+    slot_count_ = budget_bytes_ / slot_stride_bytes_;
     if (slot_count_ == 0) throw std::invalid_argument("cache budget must contain at least one slot");
     free_slots_.reserve(slot_count_);
     for (std::size_t i = 0; i < slot_count_; ++i) free_slots_.push_back(slot_count_ - i - 1);
 }
 
 ExpertCache::ExpertCache(std::span<std::byte> storage, std::size_t slot_bytes)
-    : storage_(storage), budget_bytes_(storage.size()), slot_bytes_(slot_bytes) {
+    : ExpertCache(storage, slot_bytes, 1) {}
+
+ExpertCache::ExpertCache(std::span<std::byte> storage, std::size_t slot_bytes, std::size_t slot_alignment)
+    : storage_(storage),
+      budget_bytes_(storage.size()),
+      slot_bytes_(slot_bytes),
+      slot_stride_bytes_(align_up(slot_bytes, slot_alignment)),
+      slot_alignment_(slot_alignment) {
     if (storage.empty()) throw std::invalid_argument("cache storage must be non-empty");
     if (slot_bytes == 0) throw std::invalid_argument("cache slot bytes must be > 0");
-    slot_count_ = budget_bytes_ / slot_bytes_;
+    slot_count_ = budget_bytes_ / slot_stride_bytes_;
     if (slot_count_ == 0) throw std::invalid_argument("cache storage must contain at least one slot");
     free_slots_.reserve(slot_count_);
     for (std::size_t i = 0; i < slot_count_; ++i) free_slots_.push_back(slot_count_ - i - 1);
@@ -51,13 +76,13 @@ void ExpertCache::evict_one() {
 
 std::span<std::byte> ExpertCache::slot_span(std::size_t slot, std::size_t bytes) {
     if (slot >= slot_count_ || bytes > slot_bytes_) throw std::out_of_range("cache slot span out of range");
-    const auto offset = slot * slot_bytes_;
+    const auto offset = slot * slot_stride_bytes_;
     return storage_.subspan(offset, bytes);
 }
 
 std::span<const std::byte> ExpertCache::slot_span(std::size_t slot, std::size_t bytes) const {
     if (slot >= slot_count_ || bytes > slot_bytes_) throw std::out_of_range("cache slot span out of range");
-    const auto offset = slot * slot_bytes_;
+    const auto offset = slot * slot_stride_bytes_;
     return storage_.subspan(offset, bytes);
 }
 
@@ -85,6 +110,9 @@ std::span<const std::byte> ExpertCache::get_or_load(
     provider.read(slice, destination);
     stats_.bytes_loaded += bytes;
     used_bytes_ += bytes;
+    stats_.peak_used_bytes = std::max<std::uint64_t>(
+        stats_.peak_used_bytes,
+        static_cast<std::uint64_t>(used_bytes_));
     lru_.push_front(key);
     entry.lru_it = lru_.begin();
     const auto [it, inserted] = entries_.emplace(key, std::move(entry));
