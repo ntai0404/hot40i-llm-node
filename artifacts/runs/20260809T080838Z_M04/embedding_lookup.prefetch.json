@@ -1,0 +1,61 @@
+{
+  "cache_policy": {
+    "default_capacity_bytes": 46080,
+    "default_capacity_rows": 8,
+    "type": "bounded_lru_rows"
+  },
+  "embedding": {
+    "dtype": "BF16",
+    "full_matrix_bytes": 1158266880,
+    "name": "model.embed_tokens.weight",
+    "placement": "token_lookup",
+    "row_bytes": 5760,
+    "shape": [
+      201088,
+      2880
+    ]
+  },
+  "samples": [
+    {
+      "dim": 2880,
+      "h40m_file_id": 0,
+      "h40m_offset": 1158266880,
+      "row_bytes": 5760,
+      "sample_file": "artifacts/runs/20260809T080838Z_M04/embed_token_0.bin",
+      "sample_present": false,
+      "sample_sha256": null,
+      "source_length": 5760,
+      "source_offset": 1158274456,
+      "source_shard": "model-00002-of-00002.safetensors",
+      "token_id": 0
+    },
+    {
+      "dim": 2880,
+      "h40m_file_id": 0,
+      "h40m_offset": 1158278400,
+      "row_bytes": 5760,
+      "sample_file": "artifacts/runs/20260809T080838Z_M04/embed_token_2.bin",
+      "sample_present": false,
+      "sample_sha256": null,
+      "source_length": 5760,
+      "source_offset": 1158285976,
+      "source_shard": "model-00002-of-00002.safetensors",
+      "token_id": 2
+    },
+    {
+      "dim": 2880,
+      "h40m_file_id": 0,
+      "h40m_offset": 2316528000,
+      "row_bytes": 5760,
+      "sample_file": "artifacts/runs/20260809T080838Z_M04/embed_token_201087.bin",
+      "sample_present": false,
+      "sample_sha256": null,
+      "source_length": 5760,
+      "source_offset": 2316535576,
+      "source_shard": "model-00002-of-00002.safetensors",
+      "token_id": 201087
+    }
+  ],
+  "schema_version": 1,
+  "status": "needs_samples"
+}

@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "task_id": "M04",
+  "started_at": "2026-08-09T08:08:38.520835+00:00",
+  "finished_at": "2026-08-09T08:14:36.318425+00:00",
+  "status": "pass",
+  "git_commit": "a4d9d25eec4339035c302733138ac24441b63f6a",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python tools/model/embedding_lookup.py --manifest artifacts/model/h40m/manifest.json --header-dir artifacts/runs/20260809T074843Z_M00 --sample-dir artifacts/runs/20260809T080838Z_M04 --out artifacts/runs/20260809T080838Z_M04/embedding_lookup.prefetch.json --tokens 0 2 201087",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\001.log"
+    },
+    {
+      "argv": "curl.exe -L -r 1158274456-1158280215 https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00002-of-00002.safetensors -o artifacts/runs/20260809T080838Z_M04/embed_token_0.bin",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\002.log"
+    },
+    {
+      "argv": "curl.exe -L -r 1158285976-1158291735 https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00002-of-00002.safetensors -o artifacts/runs/20260809T080838Z_M04/embed_token_2.bin",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\003.log"
+    },
+    {
+      "argv": "curl.exe -L -r 2316535576-2316541335 https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00002-of-00002.safetensors -o artifacts/runs/20260809T080838Z_M04/embed_token_201087.bin",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\004.log"
+    },
+    {
+      "argv": "python tools/model/embedding_lookup.py --manifest artifacts/model/h40m/manifest.json --header-dir artifacts/runs/20260809T074843Z_M00 --sample-dir artifacts/runs/20260809T080838Z_M04 --out benchmarks/model/embedding_lookup.json --tokens 0 2 201087",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\005.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -Wall -Wextra -Wpedantic -O2 -I device/runtime/include tests/embedding_lookup_test.cpp device/runtime/src/embedding_lookup.cpp -o artifacts/runs/20260809T080838Z_M04/embedding_lookup_host.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\006.log"
+    },
+    {
+      "argv": "artifacts/runs/20260809T080838Z_M04/embedding_lookup_host.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\007.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android28-clang++.cmd' -std=c++20 -Wall -Wextra -Wpedantic -O2 -static-libstdc++ -I device/runtime/include tests/embedding_lookup_test.cpp device/runtime/src/embedding_lookup.cpp -o artifacts/runs/20260809T080838Z_M04/embedding_lookup_android",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\008.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\009.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 push artifacts/runs/20260809T080838Z_M04/embedding_lookup_android /data/local/tmp/m04_embedding_lookup_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\010.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell chmod 755 /data/local/tmp/m04_embedding_lookup_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\011.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell /data/local/tmp/m04_embedding_lookup_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\012.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\012.log"
+    },
+    {
+      "argv": "python -m pytest tests/python/test_embedding_lookup.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T080838Z_M04\\stdout\\013.log",
+      "stderr_file": "artifacts\\runs\\20260809T080838Z_M04\\stderr\\013.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T080838Z_M04/",
+    "benchmarks/model/embedding_lookup.json",
+    "device/runtime/include/h40/embedding_lookup.hpp",
+    "device/runtime/src/embedding_lookup.cpp",
+    "tests/embedding_lookup_test.cpp",
+    "tests/python/test_embedding_lookup.py",
+    "tools/model/embedding_lookup.py"
+  ],
+  "verification": [
+    {
+      "name": "Fixture and sampled official rows match source.",
+      "passed": true,
+      "detail": "Host and Android embedding_lookup tests exited 0; embedding_lookup.json records token_lookup placement, 5760-byte row ranges, and official HF ranged samples for tokens 0, 2, and 201087 with SHA256 hashes."
+    }
+  ],
+  "metrics": {
+    "embedding_full_matrix_bytes": 1158266880,
+    "embedding_row_bytes": 5760,
+    "default_cache_bytes": 46080,
+    "sampled_official_rows": 3
+  },
+  "artifacts": [
+    "benchmarks\\model\\embedding_lookup.json",
+    "device\\runtime\\include\\h40\\embedding_lookup.hpp",
+    "device\\runtime\\src\\embedding_lookup.cpp",
+    "tools\\model\\embedding_lookup.py",
+    "tests\\embedding_lookup_test.cpp",
+    "tests\\python\\test_embedding_lookup.py",
+    "artifacts\\runs\\20260809T080838Z_M04\\embedding_lookup_host.exe",
+    "artifacts\\runs\\20260809T080838Z_M04\\embedding_lookup_android",
+    "artifacts\\runs\\20260809T080838Z_M04\\embed_token_0.bin",
+    "artifacts\\runs\\20260809T080838Z_M04\\embed_token_2.bin",
+    "artifacts\\runs\\20260809T080838Z_M04\\embed_token_201087.bin"
+  ],
+  "limitations": [],
+  "notes": []
+}
