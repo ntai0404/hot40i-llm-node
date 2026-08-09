@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "benchmark": "mlc_mali_android_backend_evaluation",
+  "status": "rejected",
+  "runnable": false,
+  "finished_at": "2026-08-09T07:18:00Z",
+  "device": {
+    "serial": "112193741U000563",
+    "model": "Infinix X6528",
+    "soc": "Spreadtrum T606",
+    "gpu": "Mali-G57"
+  },
+  "gpu_probe": {
+    "vulkan": {
+      "loadable": true,
+      "create_instance_rc": 0,
+      "enumerate_rc": 0,
+      "device_count": 1,
+      "devices": [
+        {
+          "name": "Mali-G57",
+          "api_version": 4206817,
+          "vendor_id": 5045,
+          "device_id": 2425421840,
+          "device_type": 1
+        }
+      ]
+    },
+    "opencl": {
+      "loadable": true,
+      "platform_rc": 0,
+      "platform_count": 1,
+      "platforms": [
+        {
+          "name": "ARM Platform",
+          "version": "OpenCL 3.0 v1.r34p0-01eac0.7835222d48155eaff07f9944fe4c9e83",
+          "device_rc": 0,
+          "device_count": 1,
+          "devices": [
+            {
+              "name": "Mali-G57 r0p1",
+              "version": "OpenCL 3.0 v1.r34p0-01eac0.7835222d48155eaff07f9944fe4c9e83"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "mlc_source": {
+    "url": "https://github.com/mlc-ai/mlc-llm.git",
+    "resolved_commit": "2f78caa4db0f90730a11ee3bb5cbd5f23bf67f9f",
+    "android_entrypoint": "android/mlc4j/prepare_libs.py",
+    "required_submodules": [
+      "3rdparty/tvm",
+      "3rdparty/tokenizers-cpp",
+      "3rdparty/xgrammar",
+      "3rdparty/argparse",
+      "3rdparty/stb"
+    ]
+  },
+  "decision": {
+    "hardware_support": "usable",
+    "software_support": "not_runnable_from_current_workspace",
+    "reason": "The Hot 40i exposes callable Vulkan and OpenCL Mali-G57 devices, but the pinned MLC source archive does not include required TVM/tokenizer submodules and the official Android prepare script fails at import time without tvm. A bounded pip install attempt for mlc-llm also found no matching distribution on the configured Python index.",
+    "commands": {
+      "gpu_probe": "B03 evidence command 004",
+      "mlc_prepare_without_pythonpath": "B03 evidence command 007",
+      "mlc_prepare_with_pythonpath": "B03 evidence command 008",
+      "pip_install_mlc_llm": "B03 evidence command 009"
+    }
+  },
+  "metrics": {
+    "vulkan_device_count": 1,
+    "opencl_platform_count": 1,
+    "opencl_device_count": 1,
+    "benchmark_sample_count": 0
+  },
+  "limitations": [
+    "No MLC inference throughput was measured because the MLC Android runtime build was rejected at the missing TVM/toolchain stage.",
+    "The GPU API probe validates loader/device availability only; it is not an MLC kernel benchmark.",
+    "A future MLC revisit needs a complete pinned TVM/Relax and tokenizers-cpp submodule checkout or an official compatible mlc-llm package."
+  ]
+}

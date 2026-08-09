@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "task_id": "B03",
+  "started_at": "2026-08-09T07:09:59.349478+00:00",
+  "finished_at": "2026-08-09T07:15:24.689830+00:00",
+  "status": "pass",
+  "git_commit": "5ef6411ed9456cb52b4831be2a15f848d8bc1eec",
+  "sources": [
+    {
+      "url": "https://github.com/mlc-ai/mlc-llm.git",
+      "ref": "2f78caa4db0f90730a11ee3bb5cbd5f23bf67f9f",
+      "note": "Pinned MLC-LLM Android/Mali backend candidate"
+    }
+  ],
+  "commands": [
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\001.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell 'echo ---props---; getprop | grep -Ei gpu|vulkan|opengl|egl|gles|ro.hardware|ro.board|soc|mediatek|mt6|graphics; echo ---features---; pm list features | grep -Ei vulkan|opengl|gles|gpu|hardware; echo ---egl-vendor-libs---; ls -l /vendor/lib64/egl /vendor/lib/egl 2>/dev/null; echo ---vulkan-libs---; ls -l /vendor/lib64/hw/vulkan* /vendor/lib/hw/vulkan* /system/lib64/libvulkan.so /system/lib/libvulkan.so 2>/dev/null; echo ---opencl-libs---; ls -l /vendor/lib64/libOpenCL* /vendor/lib/libOpenCL* /system/vendor/lib64/libOpenCL* /system/vendor/lib/libOpenCL* 2>/dev/null; echo ---thermal---; for z in /sys/class/thermal/thermal_zone*/type; do t=$(cat $z 2>/dev/null); v=$(cat ${z%/type}/temp 2>/dev/null); echo $z=$t:$v; done | head -n 30'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\002.log"
+    },
+    {
+      "argv": "powershell.exe -ExecutionPolicy Bypass -File 'scripts\\build_android_gpu_probe.ps1'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\003.log"
+    },
+    {
+      "argv": "powershell.exe -NoProfile -Command 'C:\\mobile-remote-tools\\platform-tools\\adb.exe -s 112193741U000563 push artifacts\\build\\mlc-gpu-probe\\gpu_probe /data/local/tmp/b03_gpu_probe; C:\\mobile-remote-tools\\platform-tools\\adb.exe -s 112193741U000563 shell chmod 700 /data/local/tmp/b03_gpu_probe; C:\\mobile-remote-tools\\platform-tools\\adb.exe -s 112193741U000563 shell /data/local/tmp/b03_gpu_probe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\004.log"
+    },
+    {
+      "argv": "curl.exe -L https://github.com/mlc-ai/mlc-llm/archive/2f78caa4db0f90730a11ee3bb5cbd5f23bf67f9f.zip -o 'C:\\tmp\\mlc-llm-2f78caa.zip'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\005.log"
+    },
+    {
+      "argv": "powershell.exe -NoProfile -Command '$root=(Resolve-Path third_party).Path; $target=Join-Path $root mlc-llm; $tmp=C:\\tmp\\mlc_llm_expand; if (Test-Path -LiteralPath $tmp) { Remove-Item -LiteralPath $tmp -Recurse -Force }; New-Item -ItemType Directory -Force -Path $tmp | Out-Null; Expand-Archive -LiteralPath C:\\tmp\\mlc-llm-2f78caa.zip -DestinationPath $tmp -Force; if (Test-Path -LiteralPath $target) { Remove-Item -LiteralPath $target -Recurse -Force }; Move-Item -LiteralPath (Join-Path $tmp mlc-llm-2f78caa4db0f90730a11ee3bb5cbd5f23bf67f9f) -Destination $target; Get-ChildItem -LiteralPath $target -Force | Select-Object -First 20 Name,Mode,Length'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\006.log"
+    },
+    {
+      "argv": "powershell.exe -NoProfile -Command '$root=(Resolve-Path -LiteralPath '\"'\"'third_party'\"'\"').Path; $target=Join-Path $root '\"'\"'mlc-llm'\"'\"'; $tmp='\"'\"'C:\\tmp\\mlc_llm_expand'\"'\"'; if (Test-Path -LiteralPath $tmp) { Remove-Item -LiteralPath $tmp -Recurse -Force }; New-Item -ItemType Directory -Force -Path $tmp | Out-Null; Expand-Archive -LiteralPath '\"'\"'C:\\tmp\\mlc-llm-2f78caa.zip'\"'\"' -DestinationPath $tmp -Force; if (Test-Path -LiteralPath $target) { Remove-Item -LiteralPath $target -Recurse -Force }; Move-Item -LiteralPath (Join-Path $tmp '\"'\"'mlc-llm-2f78caa4db0f90730a11ee3bb5cbd5f23bf67f9f'\"'\"') -Destination $target; Get-ChildItem -LiteralPath $target -Force | Select-Object -First 20 Name,Mode,Length'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\007.log"
+    },
+    {
+      "argv": "powershell.exe -NoProfile -Command '$root=(Resolve-Path -LiteralPath '\"'\"'third_party'\"'\"').Path; $target=Join-Path $root '\"'\"'mlc-llm'\"'\"'; $tmp='\"'\"'C:\\tmp\\mlc_llm_expand'\"'\"'; if (Test-Path -LiteralPath $tmp) { Remove-Item -LiteralPath $tmp -Recurse -Force }; New-Item -ItemType Directory -Force -Path $tmp | Out-Null; Expand-Archive -LiteralPath '\"'\"'C:\\tmp\\mlc-llm-2f78caa.zip'\"'\"' -DestinationPath $tmp -Force; if (Test-Path -LiteralPath $target) { Remove-Item -LiteralPath $target -Recurse -Force }; Move-Item -LiteralPath (Join-Path $tmp '\"'\"'mlc-llm-2f78caa4db0f90730a11ee3bb5cbd5f23bf67f9f'\"'\"') -Destination $target; Get-ChildItem -LiteralPath $target -Force | Select-Object -First 20 Name,Mode,Length'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\008.log"
+    },
+    {
+      "argv": "powershell.exe -NoProfile -Command '$env:ANDROID_NDK='\"'\"'C:\\tmp\\android-ndk-r27d'\"'\"'; $env:ANDROID_NDK_HOME='\"'\"'C:\\tmp\\android-ndk-r27d'\"'\"'; python third_party\\mlc-llm\\android\\mlc4j\\prepare_libs.py --mlc-llm-source-dir third_party\\mlc-llm'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\009.log"
+    },
+    {
+      "argv": "powershell.exe -NoProfile -Command '$env:ANDROID_NDK='\"'\"'C:\\tmp\\android-ndk-r27d'\"'\"'; $env:ANDROID_NDK_HOME='\"'\"'C:\\tmp\\android-ndk-r27d'\"'\"'; $env:PYTHONPATH=(Resolve-Path third_party\\mlc-llm\\python).Path; python third_party\\mlc-llm\\android\\mlc4j\\prepare_libs.py --mlc-llm-source-dir third_party\\mlc-llm'",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\010.log"
+    },
+    {
+      "argv": "python -m pip install mlc-llm",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T070959Z_B03\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260809T070959Z_B03\\stderr\\011.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T070959Z_B03/",
+    "benchmarks/runtimes/mlc.json",
+    "scripts/android_gpu_probe.cpp",
+    "scripts/build_android_gpu_probe.ps1",
+    "third_party/mlc-llm/"
+  ],
+  "verification": [
+    {
+      "name": "Evidence either a runnable benchmark or a hardware/software support decision.",
+      "passed": true,
+      "detail": "Hardware support is real: native probe enumerated Vulkan Mali-G57 and OpenCL Mali-G57 r0p1 from /data/local/tmp. Software decision: reject MLC runtime build for this pass because pinned source archive lacks TVM/tokenizer submodules, official Android prepare script fails without tvm, and pip install mlc-llm has no matching distribution."
+    }
+  ],
+  "metrics": {
+    "vulkan_device_count": 1,
+    "opencl_device_count": 1
+  },
+  "artifacts": [
+    "benchmarks\\runtimes\\mlc.json"
+  ],
+  "limitations": [
+    "No MLC inference throughput was measured because the MLC Android runtime build was rejected at the missing TVM/toolchain stage.",
+    "GPU API probe validates Vulkan/OpenCL loader and device availability only; it is not an MLC kernel benchmark."
+  ],
+  "notes": []
+}
