@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "task": "P01",
+  "device": "112193741U000563",
+  "input_tokens": 128,
+  "layers_run": 24,
+  "sequence_kind": "fixed_official_harmony_prefix_with_deterministic_benchmark_text",
+  "runs": [
+    {
+      "run": 1,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 13.2962,
+      "elapsed_ms": 3599763,
+      "peak_rss_kib": 65980,
+      "dense_flash_bytes": 164800445568,
+      "expert_flash_bytes": 137937358080,
+      "cache_hits": 1867,
+      "cache_misses": 10421,
+      "trace_events": 70115
+    },
+    {
+      "run": 2,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 13.2962,
+      "elapsed_ms": 3567897,
+      "peak_rss_kib": 66056,
+      "dense_flash_bytes": 164800445568,
+      "expert_flash_bytes": 137937358080,
+      "cache_hits": 1867,
+      "cache_misses": 10421,
+      "trace_events": 70115
+    },
+    {
+      "run": 3,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 13.2962,
+      "elapsed_ms": 3569228,
+      "peak_rss_kib": 65652,
+      "dense_flash_bytes": 164800445568,
+      "expert_flash_bytes": 137937358080,
+      "cache_hits": 1867,
+      "cache_misses": 10421,
+      "trace_events": 70115
+    }
+  ],
+  "stability": {
+    "token_id_agreement": true,
+    "logit_max_abs_delta": 0.0,
+    "peak_rss_kib_min": 65652,
+    "peak_rss_kib_max": 66056,
+    "elapsed_ms_min": 3567897,
+    "elapsed_ms_max": 3599763,
+    "no_oom_or_unbounded_swap": true
+  },
+  "artifacts": "artifacts/runs/20260809T152502Z_P01"
+}

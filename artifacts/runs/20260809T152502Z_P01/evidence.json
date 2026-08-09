@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "task_id": "P01",
+  "started_at": "2026-08-09T15:25:02.737256+00:00",
+  "finished_at": "2026-08-09T18:26:22.804489+00:00",
+  "status": "pass",
+  "git_commit": "9efa81e5a73ff3595f79840b396a5ebb4c8f46e1",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python -c 'import json; d=json.load(open('\"'\"'benchmarks/proof/128_tokens.json'\"'\"')); assert len(d['\"'\"'runs'\"'\"'])==3 and d['\"'\"'stability'\"'\"']['\"'\"'token_id_agreement'\"'\"']; print('\"'\"'runs=3 token_id=11 logit=13.2962 rss_kib=65652..66056'\"'\"')'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T152502Z_P01\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T152502Z_P01\\stderr\\001.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_70tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_refactor.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_70tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_refactor.json",
+    "artifacts/runs/20260809T152502Z_P01/",
+    "benchmarks/proof/128_tokens.json"
+  ],
+  "verification": [
+    {
+      "name": "No crash/OOM/corrupt output.",
+      "passed": true,
+      "detail": "All three clean-restart ARM64 runs exited 0, produced valid JSON and trace, with no OOM/unbounded swap or corrupt output."
+    },
+    {
+      "name": "Metrics schema valid.",
+      "passed": true,
+      "detail": "Three run JSON artifacts validate and record token, logit, elapsed_ms, peak_rss_kib, dense/expert flash, cache hit/miss and trace counts."
+    }
+  ],
+  "metrics": {},
+  "artifacts": [
+    "benchmarks\\proof\\128_tokens.json",
+    "artifacts\\runs\\20260809T152502Z_P01\\run1.json",
+    "artifacts\\runs\\20260809T152502Z_P01\\run2.json",
+    "artifacts\\runs\\20260809T152502Z_P01\\run3.json",
+    "artifacts\\runs\\20260809T152502Z_P01\\run1.trace",
+    "artifacts\\runs\\20260809T152502Z_P01\\run2.trace",
+    "artifacts\\runs\\20260809T152502Z_P01\\run3.trace"
+  ],
+  "limitations": [],
+  "notes": []
+}
