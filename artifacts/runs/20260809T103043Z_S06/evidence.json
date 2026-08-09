@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "task_id": "S06",
+  "started_at": "2026-08-09T10:30:43.385256+00:00",
+  "finished_at": "2026-08-09T10:35:26.333978+00:00",
+  "status": "pass",
+  "git_commit": "276a77f07372dcfa7ab02bd4dcdaef4e772bb079",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "C:/msys64/ucrt64/bin/g++.exe -std=c++20 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\bounded_runtime_graph_test.cpp' 'device\\runtime\\src\\router.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' 'device\\runtime\\src\\model_index.cpp' 'device\\runtime\\src\\ram_arena.cpp' -o 'artifacts\\runs\\20260809T103043Z_S06\\bounded_runtime_graph_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T103043Z_S06\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T103043Z_S06\\stderr\\001.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260809T103043Z_S06\\bounded_runtime_graph_test.exe' 'benchmarks\\custom\\bounded_graph.json' 'artifacts\\runs\\20260809T103043Z_S06\\bounded_graph_trace.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T103043Z_S06\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T103043Z_S06\\stderr\\002.log"
+    },
+    {
+      "argv": "python -m json.tool 'benchmarks\\custom\\bounded_graph.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T103043Z_S06\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T103043Z_S06\\stderr\\003.log"
+    },
+    {
+      "argv": "python 'tools\\trace\\analyze_experts.py' 'artifacts\\runs\\20260809T103043Z_S06\\bounded_graph_trace.jsonl'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T103043Z_S06\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T103043Z_S06\\stderr\\004.log"
+    },
+    {
+      "argv": "python -c 'import json; p='\"'\"'benchmarks/custom/bounded_graph.json'\"'\"'; d=json.load(open(p)); assert d['\"'\"'status'\"'\"']=='\"'\"'pass'\"'\"'; assert d['\"'\"'committed_bytes'\"'\"'] <= d['\"'\"'safe_rss_budget_bytes'\"'\"']; assert d['\"'\"'peak_allocation_bytes'\"'\"'] <= d['\"'\"'safe_rss_budget_bytes'\"'\"']; assert d['\"'\"'runtime_started'\"'\"'] and d['\"'\"'runtime_stopped_cleanly'\"'\"']; assert d['\"'\"'full_checkpoint_residency_rejected'\"'\"']; assert d['\"'\"'cache_hits'\"'\"'] > 0 and d['\"'\"'cache_misses'\"'\"'] > 0 and d['\"'\"'cache_evictions'\"'\"'] > 0; assert d['\"'\"'cache_bytes_loaded'\"'\"'] == d['\"'\"'cache_misses'\"'\"'] * d['\"'\"'expert_bytes_per_miss'\"'\"']; assert d['\"'\"'provider_bytes'\"'\"'] == d['\"'\"'cache_bytes_loaded'\"'\"']; assert d['\"'\"'max_abs_moe_diff'\"'\"'] <= d['\"'\"'tolerance'\"'\"']; assert d['\"'\"'max_abs_logit_diff'\"'\"'] <= d['\"'\"'tolerance'\"'\"']; print('\"'\"'bounded graph accounting and numerical assertions passed'\"'\"')'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T103043Z_S06\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T103043Z_S06\\stderr\\005.log"
+    },
+    {
+      "argv": "cmake --build build --config Release -j 4",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T103043Z_S06\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T103043Z_S06\\stderr\\006.log"
+    },
+    {
+      "argv": "ctest --test-dir build --output-on-failure",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T103043Z_S06\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T103043Z_S06\\stderr\\007.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T103043Z_S06/",
+    "benchmarks/custom/bounded_graph.json",
+    "device/runtime/include/h40/runtime_graph.hpp",
+    "tests/bounded_runtime_graph_test.cpp"
+  ],
+  "verification": [
+    {
+      "name": "Memory/accounting checks.",
+      "passed": true,
+      "detail": "Scaled bounded graph committed 88736 of 92800 bytes, peak allocation stayed within budget, full checkpoint residency config was rejected, cache/provider byte accounting matched misses."
+    },
+    {
+      "name": "Numerical regression.",
+      "passed": true,
+      "detail": "Streaming bounded graph MoE and output-head logits matched resident reference with max_abs_moe_diff=0 and max_abs_logit_diff=0."
+    }
+  ],
+  "metrics": {
+    "cache_misses": 16,
+    "committed_bytes": 88736,
+    "safe_rss_budget_bytes": 92800,
+    "cache_hits": 8,
+    "cache_evictions": 12,
+    "provider_bytes": 16384,
+    "max_abs_moe_diff": 0,
+    "max_abs_logit_diff": 0
+  },
+  "artifacts": [
+    "device\\runtime\\include\\h40\\runtime_graph.hpp",
+    "benchmarks\\custom\\bounded_graph.json",
+    "artifacts\\runs\\20260809T103043Z_S06\\bounded_graph_trace.jsonl",
+    "tests\\bounded_runtime_graph_test.cpp",
+    "artifacts\\runs\\20260809T103043Z_S06\\bounded_runtime_graph_test.exe"
+  ],
+  "limitations": [],
+  "notes": [
+    "S06 uses a host-side scaled fixture because task verification does not require Android execution; storage path still goes through FlashTensorProvider, indexed ExpertLoader, fixed ExpertCache, synchronous MoE scheduler, KV/output/embedding/scratch regions under one FixedMemoryArenas plan."
+  ]
+}
