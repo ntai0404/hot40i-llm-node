@@ -4,6 +4,7 @@
 #include "h40/tensor_provider.hpp"
 
 #include <cstddef>
+#include <memory>
 #include <list>
 #include <span>
 #include <unordered_map>
@@ -21,6 +22,8 @@ struct CacheStats {
 class ExpertCache {
 public:
     explicit ExpertCache(std::size_t budget_bytes);
+    ExpertCache(std::size_t budget_bytes, std::size_t slot_bytes);
+    ExpertCache(std::span<std::byte> storage, std::size_t slot_bytes);
 
     [[nodiscard]] std::span<const std::byte> get_or_load(
         ExpertKey key,
@@ -30,18 +33,28 @@ public:
     [[nodiscard]] CacheStats stats() const noexcept { return stats_; }
     [[nodiscard]] std::size_t used_bytes() const noexcept { return used_bytes_; }
     [[nodiscard]] std::size_t budget_bytes() const noexcept { return budget_bytes_; }
+    [[nodiscard]] std::size_t slot_bytes() const noexcept { return slot_bytes_; }
+    [[nodiscard]] std::size_t slot_count() const noexcept { return slot_count_; }
 
 private:
     struct Entry {
-        std::vector<std::byte> bytes;
+        std::size_t slot{};
+        std::size_t bytes{};
         std::list<ExpertKey>::iterator lru_it;
     };
 
     void touch(ExpertKey key, Entry& entry);
-    void evict_until(std::size_t required);
+    void evict_one();
+    [[nodiscard]] std::span<std::byte> slot_span(std::size_t slot, std::size_t bytes);
+    [[nodiscard]] std::span<const std::byte> slot_span(std::size_t slot, std::size_t bytes) const;
 
+    std::unique_ptr<std::byte[]> owned_storage_;
+    std::span<std::byte> storage_;
     std::size_t budget_bytes_{};
+    std::size_t slot_bytes_{};
+    std::size_t slot_count_{};
     std::size_t used_bytes_{};
+    std::vector<std::size_t> free_slots_;
     std::list<ExpertKey> lru_;
     std::unordered_map<ExpertKey, Entry, ExpertKeyHash> entries_;
     CacheStats stats_{};

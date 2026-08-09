@@ -1,0 +1,29 @@
+{
+  "cache_evictions": 1,
+  "committed_bytes": 3328,
+  "configured_budget_bytes": 4096,
+  "device_rss_probe": {
+    "adb_devices": "List of devices attached\n112193741U000563       device product:X6528-OP model:Infinix_X6528 device:Infinix-X6528 transport_id:1",
+    "limitation": "S01 arena test was not Android-built because no host Android NDK/cross compiler or device C++ compiler is available in this environment; RSS probe uses the deployed native benchmark path.",
+    "native_benchmark_ls": "-rwx------ 1 shell shell 1270048 2026-08-07 23:32 /data/local/tmp/h40_cpu_memory_bench",
+    "native_benchmark_present": true,
+    "probe_command": "h40_cpu_memory_bench --threads 1 --cpus 0 --seconds 3 --mem-bytes 67108864",
+    "probe_exit_code": 0,
+    "raw_status": "Name:\th40_cpu_memory_\nUmask:\t0000\nState:\tS (sleeping)\nTgid:\t27729\nNgid:\t0\nPid:\t27729\nPPid:\t27727\nTracerPid:\t0\nUid:\t2000\t2000\t2000\t2000\nGid:\t2000\t2000\t2000\t2000\nFDSize:\t64\nGroups:\t1004 1007 1011 1015 1028 1078 1079 3001 3002 3003 3006 3009 3011 3012 \nVmPeak:\t10939024 kB\nVmSize:\t10939024 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t  134636 kB\nVmRSS:\t  134636 kB\nRssAnon:\t  131880 kB\nRssFile:\t    2508 kB\nRssShmem:\t     248 kB\nVmData:\t  140004 kB\nVmStk:\t     136 kB\nVmExe:\t     768 kB\nVmLib:\t    1820 kB\nVmPTE:\t     356 kB\nVmSwap:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nThreads:\t2\nSigQ:\t0/13638\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000080000000\nSigIgn:\t0000002000000000\nSigCgt:\t0000004c400084f8\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t00000000008000c0\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tunknown\nCpus_allowed:\tff\nCpus_allowed_list:\t0-7\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t1\nnonvoluntary_ctxt_switches:\t2\nPROBE_EXIT:0\n",
+    "target_device_present": true,
+    "toolchain_checks": {
+      "device_clangpp": false,
+      "device_gpp": false
+    },
+    "vmhwm_kb": 134636,
+    "vmrss_kb": 134636
+  },
+  "expert_cache_slot_bytes": 256,
+  "expert_cache_slot_count": 4,
+  "headroom_bytes": 768,
+  "over_budget_rejected": true,
+  "oversize_expert_rejected": true,
+  "safe_rss_budget_bytes": 646080512,
+  "schema_version": 1,
+  "status": "pass"
+}

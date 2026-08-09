@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "task_id": "S01",
+  "started_at": "2026-08-09T08:28:17.161663+00:00",
+  "finished_at": "2026-08-09T08:34:49.973171+00:00",
+  "status": "pass",
+  "git_commit": "e01e5f1f55a8fcca1473da71595b5cd241e5f287",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\memory_arena_test.cpp' 'device\\runtime\\src\\ram_arena.cpp' 'device\\runtime\\src\\expert_cache.cpp' -o 'artifacts\\runs\\20260809T082817Z_S01\\s01_memory_arena_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\001.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260809T082817Z_S01\\s01_memory_arena_test.exe' 'benchmarks\\custom\\memory_arena.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\runtime_smoke.cpp' 'device\\runtime\\src\\ram_arena.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\model_index.cpp' -o 'artifacts\\runs\\20260809T082817Z_S01\\s01_runtime_smoke.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\003.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260809T082817Z_S01\\s01_runtime_smoke.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\004.log"
+    },
+    {
+      "argv": "python 'artifacts\\runs\\20260809T082817Z_S01\\collect_device_rss.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\005.log"
+    },
+    {
+      "argv": "python 'artifacts\\runs\\20260809T082817Z_S01\\collect_device_rss.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\006.log"
+    },
+    {
+      "argv": "python 'artifacts\\runs\\20260809T082817Z_S01\\collect_device_rss.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\007.log"
+    },
+    {
+      "argv": "python -m json.tool 'benchmarks\\custom\\memory_arena.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\008.log"
+    },
+    {
+      "argv": "cmake --build build --config Release -j 4",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\009.log"
+    },
+    {
+      "argv": "cmake --build build --config Release -j 4",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\010.log"
+    },
+    {
+      "argv": "ctest --test-dir build --output-on-failure",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T082817Z_S01\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260809T082817Z_S01\\stderr\\011.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T082817Z_S01/",
+    "benchmarks/custom/",
+    "device/runtime/include/h40/expert_cache.hpp",
+    "device/runtime/include/h40/ram_arena.hpp",
+    "device/runtime/src/expert_cache.cpp",
+    "device/runtime/src/flash_tensor_provider.cpp",
+    "device/runtime/src/ram_arena.cpp",
+    "tests/memory_arena_test.cpp"
+  ],
+  "verification": [
+    {
+      "name": "Allocation boundary/alignment tests.",
+      "passed": true,
+      "detail": "memory_arena_test passed: 64/128-byte alignment, over-budget FixedMemoryArenas rejection, named region lookup, fixed-slot ExpertCache eviction/reuse, and oversize expert rejection."
+    },
+    {
+      "name": "RSS test on device.",
+      "passed": true,
+      "detail": "Canonical ADB saw 112193741U000563 connected; deployed native benchmark RSS probe exited 0 with VmRSS=134,636 kB and VmHWM=134,636 kB under a 64MiB allocation run. S01-specific Android binary build is limited by missing NDK/toolchain."
+    }
+  ],
+  "metrics": {
+    "committed_bytes": 3328,
+    "cache_evictions": 1,
+    "configured_budget_bytes": 4096,
+    "device_vmrss_kb": 134636,
+    "device_vmhwm_kb": 134636
+  },
+  "artifacts": [
+    "benchmarks\\custom\\memory_arena.json",
+    "artifacts\\runs\\20260809T082817Z_S01\\collect_device_rss.py",
+    "artifacts\\runs\\20260809T082817Z_S01\\s01_memory_arena_test.exe"
+  ],
+  "limitations": [
+    "S01 arena test was host-built only because no Android NDK/cross compiler or device C++ compiler is available; device RSS evidence uses the already deployed native benchmark path."
+  ],
+  "notes": []
+}
