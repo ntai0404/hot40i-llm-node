@@ -45,6 +45,12 @@ blocked_tasks:
       Evidence: artifacts/runs/20260809T104143Z_P00/evidence.json. ESCALATION_RECOMMENDED: implement/import pinned
       full gpt-oss/H40M decoder path before proof-stage token claims.'
     at: '2026-08-09T10:44:25.939893+00:00'
+  P00D:
+    reason: 'P00D made verified progress by implementing split-scale H40M MXFP4 expert compute, but remains blocked:
+      no full 24-layer H40M-native decoder executable with official attention/final-norm/lm_head logits exists yet;
+      upstream Transformers route is not bounded/device-viable because MXFP4 requires GPU or full BF16 dequantization.
+      Evidence: artifacts/runs/20260809T123543Z_P00D/evidence.json. ESCALATION_RECOMMENDED.'
+    at: '2026-08-09T12:38:22.835252+00:00'
 task_evidence:
   R00: artifacts/runs/20260807T140229Z_R00/evidence.json
   R01: artifacts/runs/20260807T142448Z_R01/evidence.json
@@ -125,3 +131,4 @@ task_started_at:
   S05: '2026-08-09T09:52:24.364016+00:00'
   S06: '2026-08-09T10:24:16.699500+00:00'
   P00: '2026-08-09T10:36:31.979519+00:00'
+  P00D: '2026-08-09T12:26:50.898207+00:00'

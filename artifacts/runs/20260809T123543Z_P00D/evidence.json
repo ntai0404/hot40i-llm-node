@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "task_id": "P00D",
+  "started_at": "2026-08-09T12:35:43.373423+00:00",
+  "finished_at": "2026-08-09T12:38:52.810636+00:00",
+  "status": "blocked",
+  "git_commit": "48c36f0bcddb45f9a666a92291c83fbae062cf53",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "C:/msys64/ucrt64/bin/g++.exe -std=c++20 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\gptoss_expert_test.cpp' 'device\\runtime\\src\\gptoss_expert.cpp' 'device\\runtime\\src\\mxfp4.cpp' -o 'artifacts\\runs\\20260809T123543Z_P00D\\gptoss_expert_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T123543Z_P00D\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T123543Z_P00D\\stderr\\001.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260809T123543Z_P00D\\gptoss_expert_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T123543Z_P00D\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T123543Z_P00D\\stderr\\002.log"
+    },
+    {
+      "argv": "C:/tmp/android-ndk-r27d/toolchains/llvm/prebuilt/windows-x86_64/bin/aarch64-linux-android26-clang++.cmd -std=c++20 -O2 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\gptoss_expert_test.cpp' 'device\\runtime\\src\\gptoss_expert.cpp' 'device\\runtime\\src\\mxfp4.cpp' -static-libstdc++ -o 'artifacts\\runs\\20260809T123543Z_P00D\\gptoss_expert_test_android'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T123543Z_P00D\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T123543Z_P00D\\stderr\\003.log"
+    },
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T123543Z_P00D\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T123543Z_P00D\\stderr\\004.log"
+    },
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe push 'artifacts\\runs\\20260809T123543Z_P00D\\gptoss_expert_test_android' /data/local/tmp/p00d_gptoss_expert_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T123543Z_P00D\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T123543Z_P00D\\stderr\\005.log"
+    },
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe shell chmod 700 /data/local/tmp/p00d_gptoss_expert_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T123543Z_P00D\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T123543Z_P00D\\stderr\\006.log"
+    },
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe shell /data/local/tmp/p00d_gptoss_expert_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T123543Z_P00D\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T123543Z_P00D\\stderr\\007.log"
+    },
+    {
+      "argv": "python -c 'import json, pathlib, transformers, importlib.util as u; cfg=json.load(open('\"'\"'artifacts/model/source/config.json'\"'\"')); idx=json.load(open('\"'\"'artifacts/model/source/model.safetensors.index.json'\"'\"')); print(json.dumps({'\"'\"'transformers_version'\"'\"':transformers.__version__,'\"'\"'has_gpt_oss_model'\"'\"':bool(u.find_spec('\"'\"'transformers.models.gpt_oss'\"'\"')),'\"'\"'local_config_model_type'\"'\"':cfg.get('\"'\"'model_type'\"'\"'),'\"'\"'local_index_tensors'\"'\"':len(idx['\"'\"'weight_map'\"'\"']),'\"'\"'route'\"'\"':'\"'\"'upstream_transformers_oracle'\"'\"','\"'\"'status'\"'\"':'\"'\"'blocked'\"'\"','\"'\"'reason'\"'\"':'\"'\"'Transformers can supply official semantics, but local MXFP4 load on this host reports that MXFP4 quantized models require GPU and otherwise dequantizes the full 20B model to BF16, which is not a bounded Android/H40M decoder path.'\"'\"'}, indent=2))'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T123543Z_P00D\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260809T123543Z_P00D\\stderr\\008.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/model/source/",
+    "artifacts/runs/20260809T123543Z_P00D/",
+    "benchmarks/proof/minimal_decoder.json",
+    "device/runtime/include/h40/gptoss_expert.hpp",
+    "device/runtime/src/gptoss_expert.cpp",
+    "tests/gptoss_expert_test.cpp"
+  ],
+  "verification": [
+    {
+      "name": "Decoder component inventory recorded.",
+      "passed": true,
+      "detail": "Inventory recorded in benchmarks/proof/minimal_decoder.json and decoder_trace.jsonl; full stack and lm_head remain missing."
+    }
+  ],
+  "metrics": {
+    "android_expert_kernel_exit_code": 0
+  },
+  "artifacts": [
+    "benchmarks\\proof\\minimal_decoder.json",
+    "artifacts\\runs\\20260809T123543Z_P00D\\decoder_trace.jsonl",
+    "device\\runtime\\include\\h40\\gptoss_expert.hpp",
+    "device\\runtime\\src\\gptoss_expert.cpp",
+    "tests\\gptoss_expert_test.cpp",
+    "artifacts\\runs\\20260809T123543Z_P00D\\gptoss_expert_test.exe",
+    "artifacts\\runs\\20260809T123543Z_P00D\\gptoss_expert_test_android"
+  ],
+  "limitations": [
+    "BLOCKER: P00D did not produce a full first-token decoder. Two routes were attempted: custom H40M-native path made progress by implementing split-scale MXFP4 expert compute but still lacks full 24-layer attention/final-norm/lm_head executable; upstream Transformers route is not bounded/device-viable because MXFP4 requires GPU or full BF16 dequantization."
+  ],
+  "notes": [
+    "ESCALATION_RECOMMENDED: continue implementing H40M-native dense/attention/lm_head streaming decoder; do not unblock P00 until official logits/token are produced on device."
+  ]
+}
