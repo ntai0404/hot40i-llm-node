@@ -6,26 +6,28 @@
   "implemented_this_task": [
     "Official gpt-oss split-scale H40M MXFP4 expert matvec primitive",
     "Official gpt-oss expert activation formula: gate * sigmoid(gate * 1.702), (up + 1) * glu, gate max 7, up clamp [-7, 7]",
-    "Host and Android ARM64 tests for split-scale MXFP4 expert compute"
+    "Host and Android ARM64 tests for split-scale MXFP4 expert compute",
+    "Compact H40M tensor catalog generated from official safetensors headers",
+    "BF16 tensor vector, row, full matvec, and row-range matvec reader for streamed dense/router/lm_head chunks"
   ],
   "component_inventory": {
-    "embedding_lookup": "partial_existing_row_resolver_and_cache_policy; not integrated into full decoder executable",
+    "embedding_lookup": "official BF16 embedding row can be read from safetensors through H40M tensor catalog",
     "rms_norm": "existing primitive",
     "rope_attention": "partial_existing_tiny/full attention primitive; missing official alternating sliding/full attention mask integration for H40M runner",
     "router_topk": "existing primitive",
     "expert_compute": "implemented_split_scale_h40m_mxfp4_primitive_this_task",
     "expert_loader_cache_trace": "existing S02/S03/S04/S05 path",
     "full_stack_decode": "missing",
-    "final_norm": "primitive exists through RMSNorm but not wired to full stack",
-    "lm_head_projection": "missing streamed/chunked official output projection executable path",
+    "final_norm": "BF16 final norm vector can be read; RMSNorm primitive exists but not wired to full stack",
+    "lm_head_projection": "official lm_head row-range BF16 matvec chunks can be streamed; full argmax runner not wired",
     "deterministic_token_selection": "missing because logits are not produced"
   },
   "architecture_attempts": [
     {
       "name": "custom_h40m_native_decoder",
       "status": "blocked",
-      "progress": "Expert MXFP4 split-scale compute now exists and passes host/device tests.",
-      "blocker": "No complete H40M-native decoder executable yet wires embedding, official attention masks/RoPE, 24 blocks, final norm, streamed lm_head logits, and argmax under S06 memory plan."
+      "progress": "Expert MXFP4 split-scale compute, H40M tensor catalog, BF16 embedding/router/lm_head chunk readers now exist and pass host tests; expert primitive also passes device test.",
+      "blocker": "No complete H40M-native decoder executable yet wires official attention masks/RoPE, all 24 blocks, final norm, streamed lm_head argmax and token decode under S06 memory plan."
     },
     {
       "name": "upstream_transformers_reference_decoder",
@@ -35,7 +37,8 @@
     }
   ],
   "host_tests": {
-    "gptoss_expert_test": "pass"
+    "gptoss_expert_test": "pass",
+    "h40m_tensor_catalog_test": "pass"
   },
   "device_tests": {
     "adb_serial": "112193741U000563",

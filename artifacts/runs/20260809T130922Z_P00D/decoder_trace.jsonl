@@ -1,0 +1,4 @@
+{"schema_version":1,"task":"P00D","event":"component_progress","component":"h40m_tensor_catalog","status":"pass","records":459,"source":"official safetensors headers"}
+{"schema_version":1,"task":"P00D","event":"component_progress","component":"bf16_tensor_reader","status":"pass","coverage":"embedding row, final norm vector, layer0 router matvec, lm_head row-range chunk"}
+{"schema_version":1,"task":"P00D","event":"component_progress","component":"gptoss_expert_split_mxfp4","status":"pass","coverage":"host and Android ARM64 synthetic reference checks"}
+{"schema_version":1,"task":"P00D","event":"remaining_blocker","status":"blocked","missing":"official attention mask/RoPE integration, 24-layer decode loop, final-norm wiring, streamed lm_head argmax over full vocab, device first-token runner"}

@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "task_id": "P00D",
+  "started_at": "2026-08-09T13:09:22.716094+00:00",
+  "finished_at": "2026-08-09T13:13:06.953572+00:00",
+  "status": "blocked",
+  "git_commit": "93351a46d31a55ea624aba1aaf7b0edb8e90bfa2",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python -c 'import pathlib; p=pathlib.Path('\"'\"'artifacts/model/h40m/tensor_catalog.tsv'\"'\"'); lines=p.read_text(encoding='\"'\"'utf-8'\"'\"').splitlines(); assert lines[0]=='\"'\"'name\\tfile\\toffset\\tlength\\tdtype\\tshape'\"'\"'; assert len(lines)==460; print({'\"'\"'catalog'\"'\"':str(p),'\"'\"'records'\"'\"':len(lines)-1})'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T130922Z_P00D\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T130922Z_P00D\\stderr\\001.log"
+    },
+    {
+      "argv": "C:/msys64/ucrt64/bin/g++.exe -std=c++20 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\h40m_tensor_catalog_test.cpp' 'device\\runtime\\src\\h40m_tensor_catalog.cpp' 'device\\runtime\\src\\gptoss_expert.cpp' 'device\\runtime\\src\\mxfp4.cpp' -o 'artifacts\\runs\\20260809T130922Z_P00D\\h40m_tensor_catalog_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T130922Z_P00D\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T130922Z_P00D\\stderr\\002.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260809T130922Z_P00D\\h40m_tensor_catalog_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T130922Z_P00D\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T130922Z_P00D\\stderr\\003.log"
+    },
+    {
+      "argv": "C:/msys64/ucrt64/bin/g++.exe -std=c++20 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\gptoss_expert_test.cpp' 'device\\runtime\\src\\gptoss_expert.cpp' 'device\\runtime\\src\\mxfp4.cpp' -o 'artifacts\\runs\\20260809T130922Z_P00D\\gptoss_expert_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T130922Z_P00D\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T130922Z_P00D\\stderr\\004.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260809T130922Z_P00D\\gptoss_expert_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T130922Z_P00D\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T130922Z_P00D\\stderr\\005.log"
+    },
+    {
+      "argv": "C:/tmp/android-ndk-r27d/toolchains/llvm/prebuilt/windows-x86_64/bin/aarch64-linux-android26-clang++.cmd -std=c++20 -O2 -Wall -Wextra -Wpedantic -I 'device\\runtime\\include' 'tests\\gptoss_expert_test.cpp' 'device\\runtime\\src\\gptoss_expert.cpp' 'device\\runtime\\src\\mxfp4.cpp' -static-libstdc++ -o 'artifacts\\runs\\20260809T130922Z_P00D\\gptoss_expert_test_android'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T130922Z_P00D\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T130922Z_P00D\\stderr\\006.log"
+    },
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T130922Z_P00D\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260809T130922Z_P00D\\stderr\\007.log"
+    },
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe push 'artifacts\\runs\\20260809T130922Z_P00D\\gptoss_expert_test_android' /data/local/tmp/p00d_gptoss_expert_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T130922Z_P00D\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260809T130922Z_P00D\\stderr\\008.log"
+    },
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe shell chmod 700 /data/local/tmp/p00d_gptoss_expert_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T130922Z_P00D\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260809T130922Z_P00D\\stderr\\009.log"
+    },
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe shell /data/local/tmp/p00d_gptoss_expert_test",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T130922Z_P00D\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260809T130922Z_P00D\\stderr\\010.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/model/h40m/tensor_catalog.tsv",
+    "artifacts/runs/20260809T130922Z_P00D/",
+    "benchmarks/proof/minimal_decoder.json",
+    "device/runtime/include/h40/h40m_tensor_catalog.hpp",
+    "device/runtime/src/h40m_tensor_catalog.cpp",
+    "tests/h40m_tensor_catalog_test.cpp"
+  ],
+  "verification": [
+    {
+      "name": "Decoder component inventory recorded.",
+      "passed": true,
+      "detail": "Updated minimal_decoder.json and decoder_trace.jsonl record catalog/BF16/expert progress and remaining full-decoder gaps."
+    }
+  ],
+  "metrics": {
+    "h40m_catalog_records": 459
+  },
+  "artifacts": [
+    "benchmarks\\proof\\minimal_decoder.json",
+    "artifacts\\runs\\20260809T130922Z_P00D\\decoder_trace.jsonl",
+    "artifacts\\model\\h40m\\tensor_catalog.tsv",
+    "device\\runtime\\include\\h40\\h40m_tensor_catalog.hpp",
+    "device\\runtime\\src\\h40m_tensor_catalog.cpp",
+    "tests\\h40m_tensor_catalog_test.cpp",
+    "artifacts\\runs\\20260809T130922Z_P00D\\h40m_tensor_catalog_test.exe",
+    "artifacts\\runs\\20260809T130922Z_P00D\\gptoss_expert_test_android"
+  ],
+  "limitations": [
+    "BLOCKER: P00D still does not emit an official first token. New progress covers H40M tensor catalog, BF16 streamed embedding/router/lm_head row-range readers, and split-scale MXFP4 expert compute; remaining work is full official attention/RoPE masks, 24-layer loop, final norm wiring, full-vocab streamed argmax, and Android first-token runner."
+  ],
+  "notes": []
+}
