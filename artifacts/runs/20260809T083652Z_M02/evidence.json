@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "task_id": "M02",
+  "started_at": "2026-08-09T08:36:52.273387+00:00",
+  "finished_at": "2026-08-09T09:10:46.932771+00:00",
+  "status": "pass",
+  "git_commit": "7898b0cc74be906fdaa1807944a5f3d921493cce",
+  "sources": [
+    {
+      "url": "https://huggingface.co/openai/gpt-oss-20b",
+      "ref": "6cee5e81ee83917806bbde320786a8fb61efebee",
+      "note": "Pinned official safetensors payload shards model-00000/00001/00002 downloaded for exact expert repack."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "curl.exe -L --fail --continue-at - --output 'artifacts\\model\\source\\model-00000-of-00002.safetensors' https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00000-of-00002.safetensors",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T083652Z_M02\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T083652Z_M02\\stderr\\001.log"
+    },
+    {
+      "argv": "curl.exe -L --fail --continue-at - --output 'artifacts\\model\\source\\model-00001-of-00002.safetensors' https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00001-of-00002.safetensors",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T083652Z_M02\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T083652Z_M02\\stderr\\002.log"
+    },
+    {
+      "argv": "curl.exe -L --fail --continue-at - --output 'artifacts\\model\\source\\model-00002-of-00002.safetensors' https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/model-00002-of-00002.safetensors",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T083652Z_M02\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T083652Z_M02\\stderr\\003.log"
+    },
+    {
+      "argv": "python 'tools\\model\\repack_expert_arena.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T083652Z_M02\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260809T083652Z_M02\\stderr\\004.log"
+    },
+    {
+      "argv": "python 'artifacts\\runs\\20260809T083652Z_M02\\measure_arena_reads.py'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T083652Z_M02\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260809T083652Z_M02\\stderr\\005.log"
+    },
+    {
+      "argv": "python -m json.tool 'artifacts\\model\\h40m\\expert_arena.layout.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T083652Z_M02\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260809T083652Z_M02\\stderr\\006.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/model/h40m/expert_arena.layout.json",
+    "artifacts/runs/20260809T083652Z_M02/",
+    "benchmarks/model/h40m_layout.json",
+    "tools/model/repack_expert_arena.py"
+  ],
+  "verification": [
+    {
+      "name": "Randomly sample expert ranges and compare bytes/checksums to source.",
+      "passed": true,
+      "detail": "Repacker verified 96 deterministic source-vs-arena part samples across selected expert records; all SHA-256 comparisons matched. Source shard SHA-256 values matched official X-Linked-ETag metadata."
+    },
+    {
+      "name": "Measure read behavior of H40M arena.",
+      "passed": true,
+      "detail": "Host arena read probe sampled 16 deterministic expert records (211,783,680 bytes) from expert_arena.bin at 229.874 MiB/s; every sampled record hash matched the layout. D04 remains device flash basis until full arena is pushed to Android storage."
+    }
+  ],
+  "metrics": {
+    "expert_record_count": 768,
+    "expert_arena_size_bytes": 10468587776,
+    "source_expert_bytes": 10165616640,
+    "sample_checks_passed": 96,
+    "arena_read_mib_per_second": 229.8744752433193
+  },
+  "artifacts": [
+    "artifacts\\model\\h40m\\expert_arena.bin",
+    "artifacts\\model\\h40m\\expert_arena.layout.json",
+    "benchmarks\\model\\h40m_layout.json",
+    "tools\\model\\repack_expert_arena.py",
+    "artifacts\\runs\\20260809T083652Z_M02\\measure_arena_reads.py"
+  ],
+  "limitations": [
+    "Arena read probe was performed on the host filesystem over expert_arena.bin; device flash behavior is represented by D04 until a later task pushes the 10,468,587,776-byte arena to Android storage."
+  ],
+  "notes": []
+}

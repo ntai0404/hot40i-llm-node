@@ -1,0 +1,157 @@
+{
+  "alignment_bytes": 1048576,
+  "arena_path": "C:/My-Project/hot40i-llm-node/artifacts/model/h40m/expert_arena.bin",
+  "arena_read_probe": {
+    "all_record_hashes_match": true,
+    "bytes_read": 211783680,
+    "combined_sha256": "02c67abe4a1555f5cd780b8b7b38632ddf0db0d2d01db955f6336ebc947df75c",
+    "limitation": "Host filesystem read probe over generated arena; device flash behavior is represented by D04 until the full arena is pushed to Android storage.",
+    "mib_per_second": 229.8744752433193,
+    "sample_count": 16,
+    "samples": [
+      {
+        "expert_id": 26,
+        "layer": 0,
+        "length": 13236480,
+        "matched": true,
+        "offset": 354418688,
+        "sha256": "cc6685f0f7fc1c83514ddb7189753a8f875505c9ef8a317a0e3c1657d1769300"
+      },
+      {
+        "expert_id": 12,
+        "layer": 1,
+        "length": 13236480,
+        "matched": true,
+        "offset": 599785472,
+        "sha256": "7970179142581c2ed457b14f097d96de4fa003456a07d9926dcee319cabb89c1"
+      },
+      {
+        "expert_id": 14,
+        "layer": 1,
+        "length": 13236480,
+        "matched": true,
+        "offset": 627048448,
+        "sha256": "c808f5eec64acdcb2c0f301f8681985eb98eda4aa51d9237a36746efc87ea593"
+      },
+      {
+        "expert_id": 1,
+        "layer": 2,
+        "length": 13236480,
+        "matched": true,
+        "offset": 886046720,
+        "sha256": "df051d9dfc23524ab4d809109d9dde832f519d1d806a5cde46bd3866b7c6d510"
+      },
+      {
+        "expert_id": 25,
+        "layer": 2,
+        "length": 13236480,
+        "matched": true,
+        "offset": 1213202432,
+        "sha256": "587b48f9aa591dee51eb65c04ef36ac849c643f6a873f77e038f9f63dbc3adf8"
+      },
+      {
+        "expert_id": 16,
+        "layer": 7,
+        "length": 13236480,
+        "matched": true,
+        "offset": 3271557120,
+        "sha256": "9461262525f57baf52798100bd60f35ad3f62545185588786283ca792ee8270e"
+      },
+      {
+        "expert_id": 2,
+        "layer": 9,
+        "length": 13236480,
+        "matched": true,
+        "offset": 3953131520,
+        "sha256": "8bb88fbd58352a2f59e234017e6dfef044a368f162c0d089883c16b23e680f33"
+      },
+      {
+        "expert_id": 16,
+        "layer": 13,
+        "length": 13236480,
+        "matched": true,
+        "offset": 5888802816,
+        "sha256": "44c086dce658a228344043e8a451f3dc34a9ad3d96f6cb90d2b8f9e0cf670202"
+      },
+      {
+        "expert_id": 30,
+        "layer": 14,
+        "length": 13236480,
+        "matched": true,
+        "offset": 6515851264,
+        "sha256": "67336fa5860effb73832632d8bbea767db3577f913ab59b1ce83b72a8f0e7c22"
+      },
+      {
+        "expert_id": 13,
+        "layer": 15,
+        "length": 13236480,
+        "matched": true,
+        "offset": 6720323584,
+        "sha256": "1190788b2a145c7d85a1cf8752c984c7c7fb35bf82b240d00b91ee362157c114"
+      },
+      {
+        "expert_id": 24,
+        "layer": 18,
+        "length": 13236480,
+        "matched": true,
+        "offset": 8178892800,
+        "sha256": "0056f2cd327edb882b477dbec66e59487fe74f39b76c2fe815364303bbb2a2b8"
+      },
+      {
+        "expert_id": 13,
+        "layer": 19,
+        "length": 13236480,
+        "matched": true,
+        "offset": 8465154048,
+        "sha256": "5727011de9dfffe9ae126ded3df1d9afcd5e03df11599000e6ceeafc6f048328"
+      },
+      {
+        "expert_id": 18,
+        "layer": 20,
+        "length": 13236480,
+        "matched": true,
+        "offset": 8969519104,
+        "sha256": "93eaab8f340c9b4909fb37380f581eef6837a46eaa9362e7283e556398971aff"
+      },
+      {
+        "expert_id": 5,
+        "layer": 22,
+        "length": 13236480,
+        "matched": true,
+        "offset": 9664724992,
+        "sha256": "9cc186601fbc8c55b6ec4e5455911d9676a488812929687793167b3522e6effc"
+      },
+      {
+        "expert_id": 7,
+        "layer": 23,
+        "length": 13236480,
+        "matched": true,
+        "offset": 10128195584,
+        "sha256": "6db67a7a6bd1c761b8ea9b06fb50c18c2e52e6bcd6027d9ff65572617a88e6c6"
+      },
+      {
+        "expert_id": 27,
+        "layer": 23,
+        "length": 13236480,
+        "matched": true,
+        "offset": 10400825344,
+        "sha256": "c3eeef9643d9c7bcbd22e93e9f6398a5478c3f4533f8f74aa555c94680b6a85f"
+      }
+    ],
+    "seconds": 0.8786215000000084
+  },
+  "arena_size_bytes": 10468587776,
+  "d04_basis": {
+    "alignment_decision": "1MiB expert-record alignment; D04 shows expert-sized 8/16MiB random reads exceed 1.1GiB/s while 1MiB avoids multi-GB padding.",
+    "random_16m_mib_per_second_median": 1157.59,
+    "random_8m_mib_per_second_median": 1151.15
+  },
+  "padding_bytes": 302971136,
+  "record_count": 768,
+  "record_payload_bytes": 13236480,
+  "sample_check_count": 96,
+  "sample_checks_passed": 96,
+  "schema_version": 1,
+  "source_expert_bytes": 10165616640,
+  "status": "pass"
+}
