@@ -93,6 +93,15 @@ def _resolve_required_artifact(spec: str, evidence_path: Path) -> Path:
     return ROOT / resolved
 
 
+def _required_artifact_matches(spec: str, evidence_path: Path) -> tuple[list[Path], str]:
+    run_name = evidence_path.parent.name
+    resolved = spec.replace("<run>", run_name)
+    if any(char in resolved for char in "*?[]"):
+        return [path for path in ROOT.glob(resolved) if path.exists()], resolved
+    path = ROOT / resolved
+    return ([path] if path.exists() else []), resolved
+
+
 def validate_task_evidence(
     evidence_path: Path,
     task: dict[str, Any],
@@ -135,13 +144,17 @@ def validate_task_evidence(
     evidence_artifacts.add(evidence_rel)
 
     for spec in task.get("required_artifacts", []):
-        required = _resolve_required_artifact(spec, evidence_path)
-        if not required.exists():
-            raise SystemExit(f"required task artifact does not exist: {required.relative_to(ROOT)}")
-        required_rel = _normalize_repo_path(str(required.relative_to(ROOT)))
-        if required_rel != evidence_rel and required_rel not in evidence_artifacts:
+        required_matches, resolved_spec = _required_artifact_matches(spec, evidence_path)
+        if not required_matches:
+            raise SystemExit(f"required task artifact does not exist: {resolved_spec}")
+        required_rels = {
+            _normalize_repo_path(str(required.relative_to(ROOT)))
+            for required in required_matches
+        }
+        if evidence_rel not in required_rels and evidence_artifacts.isdisjoint(required_rels):
             raise SystemExit(
-                f"required task artifact is not registered in evidence.artifacts: {required_rel}"
+                "required task artifact is not registered in evidence.artifacts: "
+                + resolved_spec
             )
 
     allowed_paths = task.get("allowed_paths", [])
