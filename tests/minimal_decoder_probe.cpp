@@ -6,6 +6,7 @@
 #include "h40/h40m_tensor_catalog.hpp"
 #include "h40/model_index.hpp"
 #include "h40/moe_scheduler.hpp"
+#include "h40/parallel_bf16.hpp"
 #include "h40/trace.hpp"
 
 #include <algorithm>
@@ -40,7 +41,9 @@ constexpr std::size_t kKvDim = kKvHeads * kHeadDim;
 constexpr std::size_t kVocab = 201088;
 constexpr std::size_t kExpertPayloadBytes = 13236480;
 constexpr std::size_t kExpertStrideBytes = 13631488;
-constexpr std::size_t kLmHeadChunkRows = 256;
+constexpr std::size_t kLmHeadChunkRows = 8192;
+constexpr std::size_t kMaxDenseThreads = 8;
+constexpr std::size_t kDefaultDenseThreads = 6;
 
 struct Metrics {
     std::uint64_t dense_bytes{};
@@ -54,6 +57,12 @@ struct Metrics {
     std::uint64_t prefetched_experts{};
     std::uint64_t prefetch_read_ns{};
     std::uint64_t prefetch_wait_ns{};
+    std::uint64_t embedding_ns{};
+    std::uint64_t dense_matvec_ns{};
+    std::uint64_t attention_ns{};
+    std::uint64_t moe_ns{};
+    std::uint64_t lm_head_ns{};
+    std::size_t dense_threads{1};
     bool io_overlap_enabled{};
 };
 
@@ -93,13 +102,18 @@ void add_inplace(std::span<float> lhs, std::span<const float> rhs) {
 }
 
 void bf16_matvec_counted(
-    const h40::FileTensorReader& reader,
+    h40::ParallelBf16Matvec& executor,
     const h40::H40mTensorRecord& record,
     std::span<const float> input,
     std::span<float> output,
-    std::span<std::uint16_t> row_buffer,
+    std::size_t workers,
     Metrics& metrics) {
-    reader.bf16_matvec(record, input, output, row_buffer);
+    const auto start = std::chrono::steady_clock::now();
+    executor.matvec(record, input, output, workers);
+    metrics.dense_matvec_ns += static_cast<std::uint64_t>(
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::steady_clock::now() - start)
+            .count());
     metrics.dense_bytes += record.length;
 }
 
@@ -265,6 +279,13 @@ void write_json(const std::filesystem::path& path, const Metrics& metrics, std::
     out << "  \"prefetched_experts\": " << metrics.prefetched_experts << ",\n";
     out << "  \"prefetch_read_ns\": " << metrics.prefetch_read_ns << ",\n";
     out << "  \"prefetch_wait_ns\": " << metrics.prefetch_wait_ns << ",\n";
+    out << "  \"embedding_ns\": " << metrics.embedding_ns << ",\n";
+    out << "  \"dense_matvec_ns\": " << metrics.dense_matvec_ns << ",\n";
+    out << "  \"attention_ns\": " << metrics.attention_ns << ",\n";
+    out << "  \"moe_ns\": " << metrics.moe_ns << ",\n";
+    out << "  \"lm_head_ns\": " << metrics.lm_head_ns << ",\n";
+    out << "  \"dense_threads\": " << metrics.dense_threads << ",\n";
+    out << "  \"lm_head_chunk_rows\": " << kLmHeadChunkRows << ",\n";
     out << "  \"elapsed_ms\": " << elapsed << "\n";
     out << "}\n";
 }
@@ -296,6 +317,15 @@ int main(int argc, char** argv) {
     Metrics metrics;
     const auto catalog = h40::H40mTensorCatalog::load_tsv(catalog_path);
     h40::FileTensorReader reader(source_dir);
+    std::size_t dense_threads = kDefaultDenseThreads;
+    if (const char* setting = std::getenv("H40_THREADS")) {
+        dense_threads = static_cast<std::size_t>(std::stoul(setting));
+    }
+    if (dense_threads == 0 || dense_threads > kMaxDenseThreads) {
+        throw std::invalid_argument("H40_THREADS must be in [1, 8]");
+    }
+    h40::ParallelBf16Matvec dense_executor(reader, kMaxDenseThreads, std::max(kQDim, kHidden));
+    metrics.dense_threads = dense_threads;
     h40::FlashTensorProvider expert_provider(expert_arena);
     const auto model_index = build_expert_index();
     h40::ExpertLoader loader(model_index, expert_provider);
@@ -331,16 +361,20 @@ int main(int argc, char** argv) {
     std::vector<float> expert_hidden(kIntermediate);
     std::vector<std::uint32_t> expert_ids(kTopK);
     std::vector<float> expert_weights(kTopK);
-    std::vector<std::uint16_t> row_buffer(std::max(kQDim, kHidden));
 
     std::vector<float> rope_cos(seq_len * (kHeadDim / 2));
     std::vector<float> rope_sin(seq_len * (kHeadDim / 2));
     yarn_rope_tables(seq_len, rope_cos, rope_sin);
 
     const auto embedding = must_find(catalog, "model.embed_tokens.weight");
+    const auto embedding_start = std::chrono::steady_clock::now();
     for (std::size_t pos = 0; pos < seq_len; ++pos) {
         bf16_row_counted(reader, embedding, input_tokens[pos], std::span<float>(hidden).subspan(pos * kHidden, kHidden), metrics);
     }
+    metrics.embedding_ns = static_cast<std::uint64_t>(
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::steady_clock::now() - embedding_start)
+            .count());
 
     for (std::uint32_t layer = 0; layer < kLayers; ++layer) {
         const auto prefix = std::string("model.layers.") + std::to_string(layer);
@@ -365,9 +399,9 @@ int main(int argc, char** argv) {
         const auto v_weight = must_find(catalog, prefix + ".self_attn.v_proj.weight");
         for (std::size_t pos = 0; pos < seq_len; ++pos) {
             const auto row = std::span<const float>(normed).subspan(pos * kHidden, kHidden);
-            bf16_matvec_counted(reader, q_weight, row, std::span<float>(q).subspan(pos * kQDim, kQDim), row_buffer, metrics);
-            bf16_matvec_counted(reader, k_weight, row, std::span<float>(k).subspan(pos * kKvDim, kKvDim), row_buffer, metrics);
-            bf16_matvec_counted(reader, v_weight, row, std::span<float>(v).subspan(pos * kKvDim, kKvDim), row_buffer, metrics);
+            bf16_matvec_counted(dense_executor, q_weight, row, std::span<float>(q).subspan(pos * kQDim, kQDim), dense_threads, metrics);
+            bf16_matvec_counted(dense_executor, k_weight, row, std::span<float>(k).subspan(pos * kKvDim, kKvDim), dense_threads, metrics);
+            bf16_matvec_counted(dense_executor, v_weight, row, std::span<float>(v).subspan(pos * kKvDim, kKvDim), dense_threads, metrics);
         }
         bf16_vector_counted(reader, must_find(catalog, prefix + ".self_attn.q_proj.bias"), q_bias, metrics);
         bf16_vector_counted(reader, must_find(catalog, prefix + ".self_attn.k_proj.bias"), k_bias, metrics);
@@ -379,16 +413,21 @@ int main(int argc, char** argv) {
             add_bias(std::span<float>(k).subspan(pos * kKvDim, kKvDim), k_bias);
             add_bias(std::span<float>(v).subspan(pos * kKvDim, kKvDim), v_bias);
         }
+        const auto attention_start = std::chrono::steady_clock::now();
         apply_rope_all(seq_len, q, k, rope_cos, rope_sin);
         sequence_attention(seq_len, layer % 2 == 0, q, k, v, sinks, merged);
+        metrics.attention_ns += static_cast<std::uint64_t>(
+            std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::steady_clock::now() - attention_start)
+                .count());
         const auto o_weight = must_find(catalog, prefix + ".self_attn.o_proj.weight");
         for (std::size_t pos = 0; pos < seq_len; ++pos) {
             bf16_matvec_counted(
-                reader,
+                dense_executor,
                 o_weight,
                 std::span<const float>(merged).subspan(pos * kQDim, kQDim),
                 std::span<float>(attn_out).subspan(pos * kHidden, kHidden),
-                row_buffer,
+                dense_threads,
                 metrics);
             add_bias(std::span<float>(attn_out).subspan(pos * kHidden, kHidden), o_bias);
         }
@@ -414,11 +453,11 @@ int main(int argc, char** argv) {
         const auto router_weight = must_find(catalog, prefix + ".mlp.router.weight");
         for (std::size_t pos = 0; pos < seq_len; ++pos) {
             bf16_matvec_counted(
-                reader,
+                dense_executor,
                 router_weight,
                 std::span<const float>(normed).subspan(pos * kHidden, kHidden),
                 std::span<float>(router_logits).subspan(pos * kExperts, kExperts),
-                row_buffer,
+                dense_threads,
                 metrics);
         }
         bf16_vector_counted(reader, must_find(catalog, prefix + ".mlp.router.bias"), router_bias, metrics);
@@ -426,6 +465,7 @@ int main(int argc, char** argv) {
             add_bias(std::span<float>(router_logits).subspan(pos * kExperts, kExperts), router_bias);
         }
 
+        const auto moe_start = std::chrono::steady_clock::now();
         h40::run_moe_layer_streaming(
             {layer, seq_len, kExperts, kTopK, kHidden},
             router_logits,
@@ -443,6 +483,10 @@ int main(int argc, char** argv) {
             trace,
             false,
             read_pipeline.get());
+        metrics.moe_ns += static_cast<std::uint64_t>(
+            std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::steady_clock::now() - moe_start)
+                .count());
         add_inplace(hidden, moe_out);
         ++metrics.layers_run;
         if (trace) {
@@ -461,10 +505,11 @@ int main(int argc, char** argv) {
 
     const auto lm_head = must_find(catalog, "lm_head.weight");
     std::vector<float> logits(kLmHeadChunkRows);
+    const auto lm_head_start = std::chrono::steady_clock::now();
     for (std::size_t row = 0; row < kVocab; row += kLmHeadChunkRows) {
         const auto rows = std::min(kLmHeadChunkRows, kVocab - row);
         auto chunk = std::span<float>(logits).first(rows);
-        reader.bf16_matvec_rows(lm_head, row, last_normed, chunk, row_buffer);
+        dense_executor.matvec_rows(lm_head, row, last_normed, chunk, dense_threads);
         metrics.dense_bytes += rows * kHidden * sizeof(std::uint16_t);
         for (std::size_t i = 0; i < rows; ++i) {
             const float value = chunk[i];
@@ -475,6 +520,10 @@ int main(int argc, char** argv) {
             }
         }
     }
+    metrics.lm_head_ns = static_cast<std::uint64_t>(
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::steady_clock::now() - lm_head_start)
+            .count());
 
     const auto stats = cache.stats();
     metrics.expert_cache_hits = stats.hits;

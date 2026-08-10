@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "task": "O07",
+  "device": "112193741U000563",
+  "model": "openai/gpt-oss-20b",
+  "profile_before": {
+    "input_tokens": 2,
+    "elapsed_ms": 63407,
+    "embedding_ms": 2.28,
+    "dense_projection_ms": 9782.898,
+    "attention_ms": 2.688,
+    "moe_ms": 49000.999,
+    "lm_head_ms": 4446.985,
+    "emitted_token_id": 11,
+    "emitted_token_logit": 13.5247,
+    "artifact": "artifacts/runs/20260810T114308Z_O07/o07_profile2.json"
+  },
+  "short_screen_2_tokens": [
+    {
+      "threads": 1,
+      "elapsed_ms": 63908,
+      "tokens_per_second": 0.031295,
+      "dense_ms": 9769.693,
+      "lm_head_ms": 4828.903
+    },
+    {
+      "threads": 2,
+      "elapsed_ms": 57756,
+      "tokens_per_second": 0.034628,
+      "dense_ms": 5821.378,
+      "lm_head_ms": 2736.971
+    },
+    {
+      "threads": 4,
+      "elapsed_ms": 56604,
+      "tokens_per_second": 0.035333,
+      "dense_ms": 4642.2,
+      "lm_head_ms": 2590.8
+    },
+    {
+      "threads": 6,
+      "elapsed_ms": 55940,
+      "tokens_per_second": 0.035753,
+      "dense_ms": 4298.7,
+      "lm_head_ms": 2644.2
+    },
+    {
+      "threads": 8,
+      "elapsed_ms": 56609,
+      "tokens_per_second": 0.03533,
+      "dense_ms": 4589.6,
+      "lm_head_ms": 2654.2
+    }
+  ],
+  "production_16_token_sweep": [
+    {
+      "threads": 1,
+      "elapsed_ms": 456848,
+      "tokens_per_second": 0.035022917,
+      "dense_ms": 63719.669,
+      "lm_head_ms": 4721.111,
+      "moe_ms": 387403.679,
+      "peak_rss_kib": 69696
+    },
+    {
+      "threads": 2,
+      "elapsed_ms": 424436,
+      "tokens_per_second": 0.037697087,
+      "dense_ms": 33286.765,
+      "lm_head_ms": 2812.947,
+      "moe_ms": 387329.235,
+      "peak_rss_kib": 69664
+    },
+    {
+      "threads": 4,
+      "elapsed_ms": 412448,
+      "tokens_per_second": 0.038792762,
+      "dense_ms": 21614.144,
+      "lm_head_ms": 2564.541,
+      "moe_ms": 387320.641,
+      "peak_rss_kib": 70060
+    },
+    {
+      "threads": 6,
+      "elapsed_ms": 407198,
+      "tokens_per_second": 0.039292924,
+      "dense_ms": 15981.076,
+      "lm_head_ms": 2697.445,
+      "moe_ms": 387598.368,
+      "peak_rss_kib": 70056
+    },
+    {
+      "threads": 8,
+      "elapsed_ms": 405798,
+      "tokens_per_second": 0.039428484,
+      "dense_ms": 14812.111,
+      "lm_head_ms": 2620.351,
+      "moe_ms": 387325.935,
+      "peak_rss_kib": 70176
+    }
+  ],
+  "selected": {
+    "dense_threads": 6,
+    "lm_head_chunk_rows": 8192,
+    "reason": "Six workers won the 2-token screen and remained within 0.34% of eight workers over 16 tokens. The eight-worker difference is below a clear-win threshold and reversed in the short run, so six is the robust production default with scheduler headroom. O06 will revisit 6-vs-8 under sustained affinity and thermal measurement.",
+    "speedup_vs_same_sweep_1_thread_x": 1.121930854,
+    "speedup_vs_retained_o00_x": 1.090555553,
+    "dense_projection_speedup_x": 3.987194,
+    "lm_head_speedup_x": 1.7502,
+    "correctness": {
+      "all_candidates_emitted_token_id": 11,
+      "all_candidates_emitted_token_logit": 13.8495,
+      "parallel_host_max_abs_error": 0.0
+    }
+  },
+  "final_default_smoke": {
+    "input_tokens": 2,
+    "dense_threads": 6,
+    "elapsed_ms": 56804,
+    "emitted_token_id": 11,
+    "emitted_token_logit": 13.5247,
+    "peak_rss_kib": 55796,
+    "artifact": "artifacts/runs/20260810T114308Z_O07/o07_final_default2.json"
+  },
+  "conclusion": "Retain deterministic row-partitioned BF16 projections and streamed lm_head. Dense work scaled about 3.99x and end-to-end throughput improved 12.19% versus the same-sweep single-thread control. Attention was only about 2.7 ms in the profile and was not changed. MoE remains the dominant CPU target."
+}

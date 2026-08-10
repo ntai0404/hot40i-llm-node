@@ -1,0 +1,108 @@
+threads=6 pid=30968
+Threads: 3934 total,   9 running, 3925 sleeping,   0 stopped,   0 zombie
+  Mem:  3844364K total,  3779476K used,    64888K free,      796K buffers
+ Swap:  2114396K total,  1629192K used,   485204K free,  1689764K cached
+800%cpu 212%user  96%nice 246%sys 170%idle  45%iow  12%irq  19%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD          PROCESS
+30968 shell        20   0  10G  68M 2.7M R  102   1.8   0:29.80 minimal_decoder minimal_decoder_o07_parallel
+31189 shell        20   0  10G 7.7M 3.8M R 65.6   0.2   0:00.41 top             top
+  142 root         20   0    0    0    0 S 49.2   0.0  80:05.25 kswapd0         [kswapd0]
+31171 u0_a110      30  10  17G 146M 110M D 34.3   3.8   0:00.06 lowpool[2391]   com.google.android.gms.persistent
+30960 u0_a109      31  11  17G 173M 128M S 19.4   4.6   0:00.00 Primes-2        com.android.vending
+31202 u0_a111      31  11  17G 108M  84M S 13.4   2.8   0:00.00 Blocking Thread com.google.android.googlequicksearchbox:googleapp
+31198 u0_a111      30  10  17G 108M  84M S 13.4   2.8   0:00.00 BG Thread #0    com.google.android.googlequicksearchbox:googleapp
+31173 u0_a111      20   0  17G 108M  84M R 13.4   2.8   0:00.28 chbox:googleapp com.google.android.googlequicksearchbox:googleapp
+ 2711 system       20   0  23G 452M 389M S 11.9  12.0   3:54.08 binder:1095_E   system_server
+ 6398 u0_a110      20   0  17G 146M 110M R  7.4   3.8   0:07.45 CronetNet       com.google.android.gms.persistent
+ 1489 u0_a159      20   0  18G 144M  86M S  7.4   3.8  52:55.09 ndroid.systemui com.android.systemui
+31013 u0_a109      20   0  17G 173M 128M S  5.9   4.6   0:00.00 ThreadPoolServi com.android.vending
+30988 u0_a109      30  10  17G 173M 128M S  5.9   4.6   0:00.00 AppAccessRiskDi com.android.vending
+30457 u0_a110      29   9  17G 146M 110M S  5.9   3.8   0:00.09 highpool[247]   com.google.android.gms.persistent
+16850 u0_a110      29   9  17G 146M 110M S  5.9   3.8   0:00.43 highpool[3]     com.google.android.gms.persistent
+ 3077 system       20   0  23G 452M 389M S  5.9  12.0   3:36.76 binder:1095_17  system_server
+30977 shell        20   0  10G  68M 2.7M S  4.4   1.8   0:01.12 minimal_decoder minimal_decoder_o07_parallel
+30276 u999_a110    30  10  16G  78M  65M S  4.4   2.0   0:00.24 lowpool[1]      com.google.android.gms
+ 6396 u0_a110      20   0  17G 146M 110M S  4.4   3.8   0:03.43 ThreadPoolForeg com.google.android.gms.persistent
+ 3065 system       20   0  23G 452M 389M S  4.4  12.0   3:12.64 binder:1095_15  system_server
+31197 u0_a111      29   9  17G 108M  84M S  2.9   2.8   0:00.01 GoogleApiHandle com.google.android.googlequicksearchbox:googleapp
+30993 u0_a109      20   0  17G 173M 128M S  2.9   4.6   0:00.01 CronetInit      com.android.vending
+30298 u999_a110    30  10  16G  78M  65M S  2.9   2.0   0:00.04 lowpool[3]      com.google.android.gms
+30277 u999_a110    30  10  16G  78M  65M R  2.9   2.0   0:00.29 lowpool[2]      com.google.android.gms
+30263 u999_a110    30  10  16G  78M  65M S  2.9   2.0   0:00.01 lowpool[0]      com.google.android.gms
+28323 u999_a110    20   0  17G 106M  92M S  2.9   2.8   0:00.06 binder:28310_2  com.google.android.gms.persistent
+25458 u0_a110      29   9  17G 146M 110M S  2.9   3.8   0:00.52 highpool[237]   com.google.android.gms.persistent
+ 3222 system       20   0  23G 452M 389M S  2.9  12.0   3:32.99 binder:1095_1B  system_server
+ 1236 system       20   0  23G 452M 389M S  2.9  12.0   3:41.27 binder:1095_3   system_server
+ 1119 system       18  -2  23G 452M 389M S  2.9  12.0  22:35.27 android.ui      system_server
+  478 root         20   0    0    0    0 S  2.9   0.0   2:58.21 f2fs_ckpt-254:4 [f2fs_ckpt-254:4]
+31172 u0_a110      30  10  17G 146M 110M S  1.4   3.8   0:00.00 lowpool[2392]   com.google.android.gms.persistent
+30770 root         20   0    0    0    0 I  1.4   0.0   0:01.00 kworker/u16:4-events_freezable_power_ [kworker/u16:4-events_freezable_power_]
+30548 u0_a110      30  10  17G 146M 110M S  1.4   3.8   0:00.43 lowpool[2384]   com.google.android.gms.persistent
+25809 u0_a110      20   0  16G  30M  30M S  1.4   0.8   0:00.32 binder:4459_9   com.google.process.gservices
+13324 u0_a110      29   9  17G  89M  80M S  1.4   2.3   0:02.72 Jit thread pool com.google.android.gms
+13320 u0_a110      20   0  17G  89M  80M S  1.4   2.3   0:14.32 gle.android.gms com.google.android.gms
+17253 u0_a110      20   0  17G 146M 110M S  1.4   3.8   0:04.20 binder:16706_A  com.google.android.gms.persistent
+16955 u0_a110      20   0  17G 146M 110M S  1.4   3.8   0:04.07 binder:16706_6  com.google.android.gms.persistent
+16836 u0_a110      30  10  17G 146M 110M S  1.4   3.8   0:12.98 netscheduler-qu com.google.android.gms.persistent
+===STATUS===
+Name:	minimal_decoder
+Umask:	0000
+State:	R (running)
+Tgid:	30968
+Ngid:	0
+Pid:	30968
+PPid:	28840
+TracerPid:	0
+Uid:	2000	2000	2000	2000
+Gid:	2000	2000	2000	2000
+FDSize:	64
+Groups:	1004 1007 1011 1015 1028 1078 1079 3001 3002 3003 3006 3009 3011 3012 
+VmPeak:	11001796 kB
+VmSize:	11001796 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   69748 kB
+VmRSS:	   69748 kB
+RssAnon:	   66936 kB
+RssFile:	    2572 kB
+RssShmem:	     240 kB
+VmData:	   86852 kB
+VmStk:	     136 kB
+VmExe:	     920 kB
+VmLib:	    1784 kB
+VmPTE:	     340 kB
+VmSwap:	       0 kB
+CoreDumping:	0
+THP_enabled:	1
+Threads:	9
+SigQ:	0/13638
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000080000000
+SigIgn:	0000002000000000
+SigCgt:	0000004c400084f8
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	00000000008000c0
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	0
+Seccomp_filters:	0
+Speculation_Store_Bypass:	unknown
+Cpus_allowed:	ff
+Cpus_allowed_list:	0-7
+Mems_allowed:	1
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	399
+nonvoluntary_ctxt_switches:	283
+===AFFINITY===
+===FREQUENCIES===
+/sys/devices/system/cpu/cpu0 1612000
+/sys/devices/system/cpu/cpu1 1612000
+/sys/devices/system/cpu/cpu2 1612000
+/sys/devices/system/cpu/cpu3 1612000
+/sys/devices/system/cpu/cpu4 1612000
+/sys/devices/system/cpu/cpu5 1612000
+/sys/devices/system/cpu/cpu6 1612000
+/sys/devices/system/cpu/cpu7 1612000

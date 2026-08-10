@@ -1,0 +1,108 @@
+threads=4 pid=30439
+Threads: 3727 total,   2 running, 3725 sleeping,   0 stopped,   0 zombie
+  Mem:  3844364K total,  3726420K used,   117944K free,      556K buffers
+ Swap:  2114396K total,  1623096K used,   491300K free,  1760904K cached
+800%cpu 132%user   2%nice  79%sys 575%idle   3%iow   3%irq   6%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD          PROCESS
+30439 shell        20   0  11G  68M 2.7M R  103   1.8   0:29.76 minimal_decoder minimal_decoder_o07_parallel
+30472 shell        20   0  10G 7.3M 3.6M R 61.9   0.1   0:00.37 top             top
+ 1489 u0_a159      20   0  18G 140M  87M S 11.1   3.7  52:10.72 ndroid.systemui com.android.systemui
+28825 root         20   0    0    0    0 I  6.3   0.0   0:13.20 kworker/0:0-pm  [kworker/0:0-pm]
+  142 root         20   0    0    0    0 S  6.3   0.0  79:54.73 kswapd0         [kswapd0]
+30449 shell        20   0  11G  68M 2.7M S  3.1   1.8   0:01.21 minimal_decoder minimal_decoder_o07_parallel
+12372 u0_a111      30  10  17G  32M  30M S  3.1   0.8   0:02.71 BG Thread #2    com.google.android.googlequicksearchbox:interactor
+  849 system       -3   0  12G  15M 9.0M S  3.1   0.3  54:18.53 app             surfaceflinger
+  790 system       20   0  12G  15M 9.0M S  3.1   0.3   9:32.51 binder:747_2    surfaceflinger
+17055 u0_a187      30  10  43G 173M 167M S  1.5   4.6  12:08.39 pool-23-thread- com.transsion.XOSLauncher
+12357 u0_a111      20   0  17G  32M  30M S  1.5   0.8   0:00.91 Scheduler Threa com.google.android.googlequicksearchbox:interactor
+20784 u0_a187      10 -10  43G 173M 167M S  1.5   4.6  23:27.66 ion.XOSLauncher com.transsion.XOSLauncher
+ 3223 system       20   0  23G 447M 386M S  1.5  11.9   3:54.73 binder:1095_1C  system_server
+ 1119 system       18  -2  23G 447M 386M S  1.5  11.9  22:33.45 android.ui      system_server
+  234 root         RT   0    0    0    0 S  1.5   0.0   8:51.97 sbuf-6-4        [sbuf-6-4]
+  212 root         RT   0    0    0    0 S  1.5   0.0  96:33.00 sugov:0         [sugov:0]
+30463 u0_a187      31  11  18G  71M  68M S  0.0   1.8   0:00.00 Firebase Blocki com.transsion.XOSLauncher:personalizedService
+30462 u0_a187      31  11  18G  71M  68M S  0.0   1.8   0:00.00 Firebase Blocki com.transsion.XOSLauncher:personalizedService
+30458 u0_a110      30  10  17G 166M 124M S  0.0   4.4   0:00.01 lowpool[2378]   com.google.android.gms.persistent
+30456 u0_a110      29   9  17G 166M 124M S  0.0   4.4   0:00.01 highpool[246]   com.google.android.gms.persistent
+30457 u0_a110      29   9  17G 166M 124M S  0.0   4.4   0:00.01 highpool[247]   com.google.android.gms.persistent
+30452 u0_a121      20   0  17G  67M  61M S  0.0   1.7   0:00.00 Light-P0-2385   com.google.android.inputmethod.latin
+30450 u0_a121      20   0  17G  67M  61M S  0.0   1.7   0:00.00 Light-P0-2384   com.google.android.inputmethod.latin
+30448 shell        20   0  11G  68M 2.7M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_parallel
+30443 shell        20   0  11G  68M 2.7M S  0.0   1.8   0:01.55 minimal_decoder minimal_decoder_o07_parallel
+30444 shell        20   0  11G  68M 2.7M S  0.0   1.8   0:01.50 minimal_decoder minimal_decoder_o07_parallel
+30445 shell        20   0  11G  68M 2.7M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_parallel
+30446 shell        20   0  11G  68M 2.7M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_parallel
+30441 shell        20   0  11G  68M 2.7M S  0.0   1.8   0:01.40 minimal_decoder minimal_decoder_o07_parallel
+30447 shell        20   0  11G  68M 2.7M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_parallel
+30422 root         20   0    0    0    0 I  0.0   0.0   0:00.00 kworker/0:1-events [kworker/0:1-events]
+30412 u0_a121      20   0  17G  67M  61M S  0.0   1.7   0:00.00 Light-P0-2383   com.google.android.inputmethod.latin
+30411 u0_a121      20   0  17G  67M  61M S  0.0   1.7   0:00.00 Light-P0-2382   com.google.android.inputmethod.latin
+30404 u0_a180      20   0  16G  50M  50M S  0.0   1.3   0:00.00 binder:30067_4  com.transsion.calculator
+30352 root         20   0    0    0    0 I  0.0   0.0   0:00.00 kworker/2:0     [kworker/2:0]
+30325 u0_a177      20   0  18G  81M  71M S  0.0   2.1   0:00.02 binder:29414_5  com.transsion.phonemaster
+30315 root         20   0    0    0    0 I  0.0   0.0   0:00.00 kworker/5:0     [kworker/5:0]
+30300 u999_a110    20   0  16G  66M  52M S  0.0   1.7   0:00.00 arch_disk_io_0  com.google.android.gms
+30304 u999_a110    20   0  16G  66M  52M S  0.0   1.7   0:00.00 arch_disk_io_3  com.google.android.gms
+30302 u999_a110    20   0  16G  66M  52M S  0.0   1.7   0:00.00 arch_disk_io_1  com.google.android.gms
+===STATUS===
+Name:	minimal_decoder
+Umask:	0000
+State:	R (running)
+Tgid:	30439
+Ngid:	0
+Pid:	30439
+PPid:	28840
+TracerPid:	0
+Uid:	2000	2000	2000	2000
+Gid:	2000	2000	2000	2000
+FDSize:	64
+Groups:	1004 1007 1011 1015 1028 1078 1079 3001 3002 3003 3006 3009 3011 3012 
+VmPeak:	11069380 kB
+VmSize:	11069380 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   69556 kB
+VmRSS:	   69556 kB
+RssAnon:	   66748 kB
+RssFile:	    2560 kB
+RssShmem:	     248 kB
+VmData:	   86852 kB
+VmStk:	     136 kB
+VmExe:	     920 kB
+VmLib:	    1784 kB
+VmPTE:	     352 kB
+VmSwap:	       0 kB
+CoreDumping:	0
+THP_enabled:	1
+Threads:	9
+SigQ:	0/13638
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000080000000
+SigIgn:	0000002000000000
+SigCgt:	0000004c400084f8
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	00000000008000c0
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	0
+Seccomp_filters:	0
+Speculation_Store_Bypass:	unknown
+Cpus_allowed:	ff
+Cpus_allowed_list:	0-7
+Mems_allowed:	1
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	431
+nonvoluntary_ctxt_switches:	222
+===AFFINITY===
+===FREQUENCIES===
+/sys/devices/system/cpu/cpu0 1040000
+/sys/devices/system/cpu/cpu1 614400
+/sys/devices/system/cpu/cpu2 614400
+/sys/devices/system/cpu/cpu3 614400
+/sys/devices/system/cpu/cpu4 614400
+/sys/devices/system/cpu/cpu5 1612000
+/sys/devices/system/cpu/cpu6 1612000
+/sys/devices/system/cpu/cpu7 1612000

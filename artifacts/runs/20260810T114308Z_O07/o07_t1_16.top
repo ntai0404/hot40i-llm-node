@@ -1,0 +1,108 @@
+threads=1 pid=28843
+Threads: 3545 total,   3 running, 3542 sleeping,   0 stopped,   0 zombie
+  Mem:  3844364K total,  3801276K used,    43088K free,      868K buffers
+ Swap:  2114396K total,  1587204K used,   527192K free,  1802240K cached
+800%cpu 267%user   1%nice 101%sys 421%idle   2%iow   4%irq   4%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD          PROCESS
+28843 shell        20   0  11G  68M 2.7M R  118   1.8   0:30.26 minimal_decoder minimal_decoder_o07_parallel
+28969 shell        20   0  10G  68M 2.7M R  117   1.8   0:22.42 minimal_decoder minimal_decoder_o07_parallel
+29057 shell        20   0  10G 7.2M 3.6M R 87.8   0.1   0:00.56 top             top
+  142 root         20   0    0    0    0 S 13.4   0.0  79:32.86 kswapd0         [kswapd0]
+ 1489 u0_a159      20   0  18G 117M  85M S  7.3   3.1  50:33.85 ndroid.systemui com.android.systemui
+28852 shell        20   0  11G  68M 2.7M S  3.6   1.8   0:01.03 minimal_decoder minimal_decoder_o07_parallel
+28977 shell        20   0  10G  68M 2.7M S  2.4   1.8   0:00.55 minimal_decoder minimal_decoder_o07_parallel
+20784 u0_a187      10 -10  43G 162M 162M S  2.4   4.3  23:14.03 ion.XOSLauncher com.transsion.XOSLauncher
+  849 system       -3   0  12G  15M  10M S  2.4   0.4  53:54.18 app             surfaceflinger
+26522 root          0 -20    0    0    0 I  1.2   0.0   0:00.41 kworker/u17:7-ufs_clk_gating_0 [kworker/u17:7-ufs_clk_gating_0]
+13320 u0_a110      20   0  17G  82M  80M S  1.2   2.1   0:13.91 gle.android.gms com.google.android.gms
+26778 root         20   0    0    0    0 S  1.2   0.0   0:45.32 sblock-3-8      [sblock-3-8]
+16706 u0_a110      20   0  17G 113M  98M S  1.2   3.0   0:31.64 .gms.persistent com.google.android.gms.persistent
+17055 u0_a187      30  10  43G 162M 162M S  1.2   4.3  12:00.01 pool-23-thread- com.transsion.XOSLauncher
+ 1119 system       18  -2  23G 466M 392M S  1.2  12.4  22:29.52 android.ui      system_server
+  929 root         20   0  10G 668K 464K S  1.2   0.0   2:05.65 ip_monitor.sh   sh
+  847 system       -3   0  12G  15M  10M S  1.2   0.4  24:45.53 TimerDispatch   surfaceflinger
+  790 system       20   0  12G  15M  10M S  1.2   0.4   9:27.13 binder:747_2    surfaceflinger
+  229 root         -6   0    0    0    0 S  1.2   0.0  14:15.85 shub_rd_nwu     [shub_rd_nwu]
+   48 root         20   0    0    0    0 S  1.2   0.0   0:50.85 ksoftirqd/7     [ksoftirqd/7]
+   33 root         20   0    0    0    0 S  1.2   0.0   1:16.43 ksoftirqd/4     [ksoftirqd/4]
+29053 u0_a174      20   0  16G 131M 101M S  0.0   3.4   0:00.00 WifiManagerThre com.transsion.dynamicbar
+29052 u0_a174      20   0  16G 131M 101M S  0.0   3.4   0:00.00 binder:29009_3  com.transsion.dynamicbar
+29049 u0_a174      18  -2  16G 131M 101M S  0.0   3.4   0:00.00 hwuiTask1       com.transsion.dynamicbar
+29048 u0_a174      18  -2  16G 131M 101M S  0.0   3.4   0:00.00 hwuiTask0       com.transsion.dynamicbar
+29041 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+29040 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+29039 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+29038 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+29042 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+29043 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+29044 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+29045 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+29046 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-cmar-backe com.transsion.dynamicbar
+29036 root          0 -20    0    0    0 I  0.0   0.0   0:00.00 kbase_event     [kbase_event]
+29037 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-mem-purge  com.transsion.dynamicbar
+29035 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.06 RenderThread    com.transsion.dynamicbar
+29032 u0_a174      20   0  16G 131M 101M S  0.0   3.4   0:00.00 islandView-work com.transsion.dynamicbar
+29031 u0_a174      20   0  16G 131M 101M S  0.0   3.4   0:00.00 GSLB Worker     com.transsion.dynamicbar
+29030 u0_a174      20   0  16G 131M 101M S  0.0   3.4   0:00.00 Island-workThre com.transsion.dynamicbar
+===STATUS===
+Name:	minimal_decoder
+Umask:	0000
+State:	R (running)
+Tgid:	28843
+Ngid:	0
+Pid:	28843
+PPid:	28840
+TracerPid:	0
+Uid:	2000	2000	2000	2000
+Gid:	2000	2000	2000	2000
+FDSize:	64
+Groups:	1004 1007 1011 1015 1028 1078 1079 3001 3002 3003 3006 3009 3011 3012 
+VmPeak:	11030468 kB
+VmSize:	11030468 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   69696 kB
+VmRSS:	   69696 kB
+RssAnon:	   66924 kB
+RssFile:	    2524 kB
+RssShmem:	     248 kB
+VmData:	   86852 kB
+VmStk:	     136 kB
+VmExe:	     920 kB
+VmLib:	    1784 kB
+VmPTE:	     356 kB
+VmSwap:	       0 kB
+CoreDumping:	0
+THP_enabled:	1
+Threads:	9
+SigQ:	0/13638
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000080000000
+SigIgn:	0000002000000000
+SigCgt:	0000004c400084f8
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	00000000008000c0
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	0
+Seccomp_filters:	0
+Speculation_Store_Bypass:	unknown
+Cpus_allowed:	ff
+Cpus_allowed_list:	0-7
+Mems_allowed:	1
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	392
+nonvoluntary_ctxt_switches:	416
+===AFFINITY===
+===FREQUENCIES===
+/sys/devices/system/cpu/cpu0 1612000
+/sys/devices/system/cpu/cpu1 1612000
+/sys/devices/system/cpu/cpu2 1612000
+/sys/devices/system/cpu/cpu3 1612000
+/sys/devices/system/cpu/cpu4 1612000
+/sys/devices/system/cpu/cpu5 1612000
+/sys/devices/system/cpu/cpu6 1612000
+/sys/devices/system/cpu/cpu7 1612000

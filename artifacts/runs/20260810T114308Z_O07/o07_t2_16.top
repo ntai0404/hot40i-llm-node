@@ -1,0 +1,108 @@
+threads=2 pid=29982
+Threads: 3768 total,   2 running, 3766 sleeping,   0 stopped,   0 zombie
+  Mem:  3844364K total,  3721704K used,   122660K free,      664K buffers
+ Swap:  2114396K total,  1619348K used,   495048K free,  1714296K cached
+800%cpu 129%user   2%nice  74%sys 587%idle   0%iow   3%irq   5%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD          PROCESS
+29982 shell        20   0  11G  68M 2.6M R  100   1.8   0:30.01 minimal_decoder minimal_decoder_o07_parallel
+30007 shell        20   0  10G 7.5M 3.6M R 59.6   0.2   0:00.36 top             top
+  142 root         20   0    0    0    0 S 20.9   0.0  79:43.85 kswapd0         [kswapd0]
+ 1489 u0_a159      20   0  18G 146M  88M S 12.9   3.8  51:23.95 ndroid.systemui com.android.systemui
+28825 root         20   0    0    0    0 I  8.0   0.0   0:04.74 kworker/0:0-events [kworker/0:0-events]
+29991 shell        20   0  11G  68M 2.6M S  3.2   1.8   0:01.16 minimal_decoder minimal_decoder_o07_parallel
+ 1587 u0_a159      16  -4  18G 146M  88M S  3.2   3.8  11:23.76 RenderThread    com.android.systemui
+  849 system       -3   0  12G  14M 8.7M S  3.2   0.3  54:06.75 app             surfaceflinger
+29496 u0_a177      20   0  18G  99M  86M S  1.6   2.6   0:00.09 DefaultDispatch com.transsion.phonemaster
+17055 u0_a187      30  10  43G 207M 171M S  1.6   5.5  12:04.33 pool-23-thread- com.transsion.XOSLauncher
+20784 u0_a187      10 -10  43G 207M 171M S  1.6   5.5  23:21.10 ion.XOSLauncher com.transsion.XOSLauncher
+ 1368 system       20   0  12G  14M 8.7M S  1.6   0.3   9:50.82 binder:747_4    surfaceflinger
+ 1366 system       20   0  23G 496M 415M S  1.6  13.2   7:33.12 SunLightProtect system_server
+ 1119 system       18  -2  23G 496M 415M S  1.6  13.2  22:31.61 android.ui      system_server
+  929 root         20   0  10G 668K 464K S  1.6   0.0   2:05.94 ip_monitor.sh   sh
+  847 system       -3   0  12G  14M 8.7M S  1.6   0.3  24:50.12 TimerDispatch   surfaceflinger
+  229 root         -6   0    0    0    0 S  1.6   0.0  14:17.69 shub_rd_nwu     [shub_rd_nwu]
+  212 root         RT   0    0    0    0 S  1.6   0.0  96:24.31 sugov:0         [sugov:0]
+30003 system       30  10  16G  34M  34M S  0.0   0.8   0:00.00 dc-record-4354  com.transsion.kolun.aiservice
+30002 u0_a121      20   0  17G  68M  62M S  0.0   1.8   0:00.00 Light-P0-2371   com.google.android.inputmethod.latin
+29994 u0_a121      20   0  17G  68M  62M S  0.0   1.8   0:00.00 Light-P0-2370   com.google.android.inputmethod.latin
+29986 shell        20   0  11G  68M 2.6M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_parallel
+29984 shell        20   0  11G  68M 2.6M S  0.0   1.8   0:02.59 minimal_decoder minimal_decoder_o07_parallel
+29987 shell        20   0  11G  68M 2.6M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_parallel
+29989 shell        20   0  11G  68M 2.6M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_parallel
+29990 shell        20   0  11G  68M 2.6M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_parallel
+29988 shell        20   0  11G  68M 2.6M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_parallel
+29985 shell        20   0  11G  68M 2.6M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_parallel
+29927 system       30  10  16G  34M  34M S  0.0   0.8   0:00.00 StandardDataSer com.transsion.kolun.aiservice
+29924 u0_a187      31  11  18G  72M  68M S  0.0   1.9   0:00.00 Firebase Blocki com.transsion.XOSLauncher:personalizedService
+29920 u0_a110      30  10  17G 112M  85M S  0.0   2.9   0:00.00 lowpool[2375]   com.google.android.gms.persistent
+29916 u0_a119      20   0  16G  81M  63M S  0.0   2.1   0:00.00 binder:29841_4  com.facebook.appmanager
+29911 system       30  10  16G  34M  34M S  0.0   0.8   0:00.00 dcc_bg-4352     com.transsion.kolun.aiservice
+29910 u0_a119      34  14  16G  81M  63M S  0.0   2.1   0:00.00 Norm_Shared10   com.facebook.appmanager
+29908 u0_a119      39  19  16G  81M  63M S  0.0   2.1   0:00.00 Bg_Shared1      com.facebook.appmanager
+29909 u0_a119      34  14  16G  81M  63M S  0.0   2.1   0:00.00 Norm_Shared9    com.facebook.appmanager
+29906 u0_a119      34  14  16G  81M  63M S  0.0   2.1   0:00.00 Norm_Shared7    com.facebook.appmanager
+29907 u0_a119      34  14  16G  81M  63M S  0.0   2.1   0:00.00 Norm_Shared8    com.facebook.appmanager
+29905 root          0 -20    0    0    0 I  0.0   0.0   0:00.00 kworker/u17:6   [kworker/u17:6]
+29904 root          0 -20    0    0    0 I  0.0   0.0   0:00.00 kworker/u17:1-fsverity_read_queue [kworker/u17:1-fsverity_read_queue]
+===STATUS===
+Name:	minimal_decoder
+Umask:	0000
+State:	R (running)
+Tgid:	29982
+Ngid:	0
+Pid:	29982
+PPid:	28840
+TracerPid:	0
+Uid:	2000	2000	2000	2000
+Gid:	2000	2000	2000	2000
+FDSize:	64
+Groups:	1004 1007 1011 1015 1028 1078 1079 3001 3002 3003 3006 3009 3011 3012 
+VmPeak:	11044804 kB
+VmSize:	11044804 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   69664 kB
+VmRSS:	   69664 kB
+RssAnon:	   66924 kB
+RssFile:	    2492 kB
+RssShmem:	     248 kB
+VmData:	   86852 kB
+VmStk:	     136 kB
+VmExe:	     920 kB
+VmLib:	    1784 kB
+VmPTE:	     352 kB
+VmSwap:	       0 kB
+CoreDumping:	0
+THP_enabled:	1
+Threads:	9
+SigQ:	0/13638
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000080000000
+SigIgn:	0000002000000000
+SigCgt:	0000004c400084f8
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	00000000008000c0
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	0
+Seccomp_filters:	0
+Speculation_Store_Bypass:	unknown
+Cpus_allowed:	ff
+Cpus_allowed_list:	0-7
+Mems_allowed:	1
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	434
+nonvoluntary_ctxt_switches:	277
+===AFFINITY===
+===FREQUENCIES===
+/sys/devices/system/cpu/cpu0 614400
+/sys/devices/system/cpu/cpu1 614400
+/sys/devices/system/cpu/cpu2 614400
+/sys/devices/system/cpu/cpu3 614400
+/sys/devices/system/cpu/cpu4 614400
+/sys/devices/system/cpu/cpu5 768000
+/sys/devices/system/cpu/cpu6 1612000
+/sys/devices/system/cpu/cpu7 1612000
