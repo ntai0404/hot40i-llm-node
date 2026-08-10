@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "mode": "multi_token_full_24_layer_h40m_prefill_decode",
+  "input_tokens": 16,
+  "layers_run": 24,
+  "emitted_token_id": 11,
+  "emitted_token_text": null,
+  "emitted_token_logit": 13.8495,
+  "dense_flash_bytes": 21614126208,
+  "expert_flash_bytes": 18133977600,
+  "cache_hits": 166,
+  "cache_misses": 1370,
+  "peak_rss_kib": 57152,
+  "io_overlap_enabled": false,
+  "prefetched_experts": 0,
+  "prefetch_read_ns": 0,
+  "prefetch_wait_ns": 0,
+  "elapsed_ms": 451422
+}

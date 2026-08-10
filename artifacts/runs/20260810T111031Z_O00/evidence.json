@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "O00",
   "started_at": "2026-08-10T11:10:31.508869+00:00",
-  "finished_at": "2026-08-10T11:42:32.641930+00:00",
+  "finished_at": "2026-08-10T11:50:21.924352+00:00",
   "status": "pass",
   "git_commit": "cf6b4bc04545f2c3831beafb111bb159c9bbe37a",
   "sources": [],
@@ -240,20 +240,37 @@
       "exit_code": 0,
       "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\039.log",
       "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\039.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_control16_fresh.json 'artifacts\\runs\\20260810T111031Z_O00\\o00_control16.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\040.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\040.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_control16_fresh.stdout 'artifacts\\runs\\20260810T111031Z_O00\\o00_control16.stdout'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\041.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\041.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_control16_fresh.stderr 'artifacts\\runs\\20260810T111031Z_O00\\o00_control16.stderr'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\042.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\042.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_control16_fresh.exit 'artifacts\\runs\\20260810T111031Z_O00\\o00_control16.exit'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\043.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\043.log"
     }
   ],
   "files_changed": [
+    "CMakeLists.txt",
     "PROJECT_STATE.yaml",
-    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_2tok.jsonl",
-    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_70tok.jsonl",
-    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_2tok.jsonl",
-    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_refactor.jsonl",
-    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_2tok.json",
-    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_70tok.json",
-    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_2tok.json",
-    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_refactor.json",
     "artifacts/runs/20260810T111031Z_O00/",
-    "benchmarks/optimization/",
+    "benchmarks/optimization/double_buffer.json",
     "device/runtime/include/h40/expert_cache.hpp",
     "device/runtime/include/h40/expert_read_pipeline.hpp",
     "device/runtime/include/h40/moe_scheduler.hpp",
@@ -266,25 +283,28 @@
     {
       "name": "Same correctness regression.",
       "passed": true,
-      "detail": "Host expert pipeline, tiny parity, and bounded runtime graph tests passed. Same-device 16-token baseline and O00 runs emitted identical token 11 and logit 13.8495 with identical cache hits/misses."
+      "detail": "Host pipeline, tiny parity, and bounded graph tests pass. Same-input Hot 40i control/overlap runs both emit token 11 with logit 13.8495 and identical flash/cache counters."
     },
     {
       "name": "Before/after same device/config.",
       "passed": true,
-      "detail": "Hot 40i production no-trace A/B used the same H40M artifacts and 16-token input: 0.034789491 to 0.036030274 tok/s, 1.035665468x. A fresh 2-token full trace measured 99.99701% prefetch overlap."
+      "detail": "Same ARM64 -O3 binary and 16-token input on Hot 40i: overlap-off 0.0354447 tok/s versus overlap-on 0.0360303 tok/s, 1.016554x. Two-token trace records 135 paired prefetch begin/end/wait events and 99.997954% read overlap."
     }
   ],
   "metrics": {
-    "baseline_tokens_per_second": 0.034789491,
-    "optimized_tokens_per_second": 0.036030274,
-    "speedup_x": 1.035665468,
+    "baseline_tokens_per_second": 0.0354447,
+    "optimized_tokens_per_second": 0.0360303,
+    "speedup_x": 1.016554,
     "optimized_peak_rss_kib": 69668,
-    "production_prefetch_overlap_ratio": 0.999935211,
-    "trace_prefetch_overlap_ratio": 0.9999701,
     "trace_prefetched_experts": 135,
     "sampled_decoder_cpu_percent": 100,
     "sampled_system_idle_percent_of_800": 657,
-    "thermal_status": 0
+    "thermal_status": 0,
+    "production_prefetch_overlap_ratio": 0.999935211,
+    "trace_prefetch_overlap_ratio": 0.99997954,
+    "bounded_staging_bytes": 13236480,
+    "control_peak_rss_kib": 57152,
+    "device_cpu_idle_percent_during_single_thread_baseline": 82.125
   },
   "artifacts": [
     "benchmarks\\optimization\\double_buffer.json",
@@ -298,12 +318,20 @@
     "artifacts\\runs\\20260810T111031Z_O00\\o00_trace2_interrupted.stderr",
     "artifacts\\runs\\20260810T111031Z_O00\\minimal_decoder_probe_android",
     "artifacts\\runs\\20260810T111031Z_O00\\bounded_graph.json",
-    "artifacts\\runs\\20260810T111031Z_O00\\bounded_graph.trace"
+    "artifacts\\runs\\20260810T111031Z_O00\\bounded_graph.trace",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_control16.json",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_control16.exit",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_trace2.exit",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_control16.stdout",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_control16.stderr"
   ],
   "limitations": [
-    "One detached 2-token trace process received SIGTERM near the end without LMKD/OOM/thermal evidence. Its partial trace and stderr are retained; a fresh foreground run with the same binary/config completed and is the pass evidence."
+    "One detached 2-token trace process received SIGTERM near the end without LMKD/OOM/thermal evidence. Its partial trace and stderr are retained; a fresh foreground run with the same binary/config completed and is the pass evidence.",
+    "O00 yields a measured but modest 1.66% end-to-end gain because expert compute remains approximately single-core and dominates read latency. Further I/O tuning is deferred to its dedicated downstream tasks; CPU parallelism is the next performance priority."
   ],
   "notes": [
-    "CPU topology probe found six Cortex-A55 CPUs (0-5) and two Cortex-A75 CPUs (6-7), all online under schedutil; the decoder sampled at about 100% CPU while 657% of 800% remained idle."
+    "CPU topology probe found six Cortex-A55 CPUs (0-5) and two Cortex-A75 CPUs (6-7), all online under schedutil; the decoder sampled at about 100% CPU while 657% of 800% remained idle.",
+    "Benchmark mode is selected by providing a trace path; production mode omits the trace path. H40_IO_OVERLAP=0 provides a same-binary control; overlap is enabled by default.",
+    "The first 2-token trace launch unexpectedly produced duplicate writers after an ADB-shell retry. Both invalid PIDs were stopped, their shared output was rejected, and the retained fresh trace used a device-side mkdir lock with one verified PID and separate filenames."
   ]
 }

@@ -3,49 +3,64 @@
   "status": "pass",
   "task": "O00",
   "device": "112193741U000563",
+  "transport": "192.168.100.189:5555",
   "model": "openai/gpt-oss-20b",
   "comparison": {
     "input_tokens": 16,
+    "token_ids": "12194 repeated 16 times",
+    "compiler": "Android NDK r27d aarch64-linux-android26-clang++ -O3",
     "runtime_mode": "production_minimal_trace",
-    "same_device_and_input": true,
-    "baseline": {
+    "control": {
       "io_overlap_enabled": false,
-      "elapsed_ms": 459909,
-      "tokens_per_second": 0.034789491,
-      "peak_rss_kib": 57172,
+      "elapsed_ms": 451422,
+      "tokens_per_second": 0.0354447,
+      "seconds_per_token": 28.213875,
+      "peak_rss_kib": 57152,
       "emitted_token_id": 11,
       "emitted_token_logit": 13.8495,
+      "dense_flash_bytes": 21614126208,
+      "expert_flash_bytes": 18133977600,
       "cache_hits": 166,
-      "cache_misses": 1370
+      "cache_misses": 1370,
+      "artifact": "artifacts/runs/20260810T111031Z_O00/o00_control16.json"
     },
-    "double_buffered": {
+    "double_buffer": {
       "io_overlap_enabled": true,
       "elapsed_ms": 444071,
-      "tokens_per_second": 0.036030274,
+      "tokens_per_second": 0.0360303,
+      "seconds_per_token": 27.754438,
+      "speedup_x": 1.016554,
+      "latency_reduction_fraction": 0.016284,
       "peak_rss_kib": 69668,
+      "bounded_staging_bytes": 13236480,
       "emitted_token_id": 11,
       "emitted_token_logit": 13.8495,
+      "dense_flash_bytes": 21614126208,
+      "expert_flash_bytes": 18133977600,
       "cache_hits": 166,
       "cache_misses": 1370,
       "prefetched_experts": 1034,
       "prefetch_read_ns": 19022646936,
       "prefetch_wait_ns": 1232465,
-      "measured_overlap_ratio": 0.999935211
-    },
-    "speedup_x": 1.035665468,
-    "latency_reduction_fraction": 0.034437247
+      "artifact": "artifacts/runs/20260810T111031Z_O00/o00_after16.json"
+    }
   },
   "trace_validation": {
     "input_tokens": 2,
+    "runtime_mode": "benchmark_full_trace",
     "events": 1650,
-    "prefetched_experts": 135,
-    "prefetch_read_ns": 6158431614,
-    "prefetch_wait_ns": 184114,
-    "measured_overlap_ratio": 0.9999701,
+    "prefetch_begin_events": 135,
+    "prefetch_end_events": 135,
+    "prefetch_wait_events": 135,
+    "prefetch_read_ns": 5753011765,
+    "prefetch_wait_ns": 117689,
+    "hidden_read_ns": 5752894076,
+    "overlap_ratio": 0.99997954,
+    "compute_ns": 47760591193,
     "emitted_token_id": 11,
     "emitted_token_logit": 13.5247,
-    "elapsed_ms": 61469,
-    "trace": "artifacts/runs/20260810T111031Z_O00/o00_trace2.trace"
+    "trace": "artifacts/runs/20260810T111031Z_O00/o00_trace2.trace",
+    "result": "artifacts/runs/20260810T111031Z_O00/o00_trace2.json"
   },
   "device_profile": {
     "online_cpus": "0-7",
@@ -64,5 +79,15 @@
     "sampled_io_wait_percent": 0,
     "thermal_status": 0
   },
-  "conclusion": "Retain bounded read/compute overlap: same-device production throughput improved 3.57% with identical token/logit and cache behavior. Prefetch wait was nearly eliminated. CPU compute remains the dominant target because the decoder still saturates approximately one core while most cores are idle."
+  "correctness": {
+    "same_input_token_id_match": true,
+    "same_input_logit_match": true,
+    "dense_flash_bytes_match": true,
+    "expert_flash_bytes_match": true,
+    "cache_counters_match": true,
+    "host_tiny_parity_pass": true,
+    "host_bounded_graph_pass": true,
+    "host_pipeline_overlap_test_pass": true
+  },
+  "interpretation": "A single preallocated 13,236,480-byte staging buffer plus the bounded expert cache overlaps the next known top-k expert read with current expert compute. The same-binary 16-token device comparison improves end-to-end throughput by 1.66%. Full trace shows 99.997954% of asynchronous read time hidden. The gain is intentionally modest because expert compute remains the dominant single-thread bottleneck; no further O00 expansion is retained."
 }
