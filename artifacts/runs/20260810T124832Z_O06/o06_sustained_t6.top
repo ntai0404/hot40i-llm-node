@@ -1,0 +1,140 @@
+Threads: 3492 total,   7 running, 3485 sleeping,   0 stopped,   0 zombie
+  Mem:  3844364K total,  3756088K used,    88276K free,      912K buffers
+ Swap:  2114396K total,  1664908K used,   449488K free,  1912232K cached
+800%cpu 365%user   0%nice 190%sys 219%idle   8%iow  11%irq   6%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD          PROCESS
+ 5916 shell        20   0  11G  70M 2.8M R 79.3   1.8   0:00.26 minimal_decoder minimal_decoder_o07_final
+ 5915 shell        20   0  11G  70M 2.8M R 77.7   1.8   0:00.26 minimal_decoder minimal_decoder_o07_final
+ 5919 shell        20   0  11G  70M 2.8M R 76.1   1.8   0:00.26 minimal_decoder minimal_decoder_o07_final
+ 5917 shell        20   0  11G  70M 2.8M R 76.1   1.8   0:00.25 minimal_decoder minimal_decoder_o07_final
+ 5918 shell        20   0  11G  70M 2.8M R 73.0   1.8   0:00.27 minimal_decoder minimal_decoder_o07_final
+ 5911 shell        20   0  11G  70M 2.8M R 71.4   1.8   0:00.30 minimal_decoder minimal_decoder_o07_final
+ 5932 shell        20   0  10G 6.4M 3.7M R 61.9   0.1   0:00.26 top             top
+  142 root         20   0    0    0    0 S 11.1   0.0  81:32.89 kswapd0         [kswapd0]
+ 1489 u0_a159      20   0  18G 123M  87M S  7.9   3.2  56:38.62 ndroid.systemui com.android.systemui
+20784 u0_a187      10 -10  43G 208M 170M S  1.5   5.5  24:06.90 ion.XOSLauncher com.transsion.XOSLauncher
+ 2052 u0_a159      16  -4  18G 123M  87M S  1.5   3.2   6:50.79 mali-cmar-backe com.android.systemui
+ 1368 system       20   0  12G  16M  10M S  1.5   0.4   9:59.56 binder:747_4    surfaceflinger
+  868 system       -3  -8  12G  16M  10M S  1.5   0.4   8:49.57 surfaceflinger  surfaceflinger
+  849 system       -3   0  12G  16M  10M S  1.5   0.4  55:26.78 app             surfaceflinger
+  847 system       -3   0  12G  16M  10M S  1.5   0.4  25:18.35 TimerDispatch   surfaceflinger
+  791 system       -3  -8  12G  16M  10M S  1.5   0.4   8:25.51 RenderEngine    surfaceflinger
+  747 system       -3  -8  12G  16M  10M S  1.5   0.4  52:08.86 surfaceflinger  surfaceflinger
+  229 root         -6   0    0    0    0 S  1.5   0.0  14:29.51 shub_rd_nwu     [shub_rd_nwu]
+   38 root         20   0    0    0    0 S  1.5   0.0   1:19.51 ksoftirqd/5     [ksoftirqd/5]
+   22 root         RT   0    0    0    0 S  1.5   0.0   0:21.00 migration/2     [migration/2]
+   12 root         20   0    0    0    0 I  1.5   0.0   9:50.58 rcu_preempt     [rcu_preempt]
+ 5924 shell        20   0  11G  70M 2.8M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_final
+ 5920 shell        20   0  11G  70M 2.8M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_final
+ 5921 shell        20   0  11G  70M 2.8M S  0.0   1.8   0:00.00 minimal_decoder minimal_decoder_o07_final
+ 5908 shell        20   0  10G 3.3M 2.5M S  0.0   0.0   0:00.02 o06_sustained.s sh
+ 5907 shell        20   0  10G 3.4M 2.7M S  0.0   0.0   0:00.00 sleep           sleep
+ 5906 shell        20   0  10G 3.2M 2.5M S  0.0   0.0   0:00.01 sh              sh
+ 5897 shell        20   0  11G 2.5M 1.0M S  0.0   0.0   0:00.00 shell svc 5896  adbd
+ 5896 shell        20   0  10G 3.2M 2.5M S  0.0   0.0   0:00.01 sh              sh
+ 5894 u0_a110      30  10  17G 115M  95M S  0.0   3.0   0:00.00 lowpool[2457]   com.google.android.gms.persistent
+Threads: 3719 total,   2 running, 3717 sleeping,   0 stopped,   0 zombie
+  Mem:  3844364K total,  3742916K used,   101448K free,      492K buffers
+ Swap:  2114396K total,  1570460K used,   543936K free,  1736620K cached
+800%cpu 126%user   0%nice  89%sys 577%idle   0%iow   3%irq   5%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD          PROCESS
+ 5911 shell        20   0  11G  70M 2.9M R 98.3   1.8   4:58.06 minimal_decoder minimal_decoder_o07_final
+ 6709 shell        20   0  10G 6.6M 3.7M R 58.0   0.1   0:00.26 top             top
+ 1371 system       20   0  23G 483M 405M S 29.0  12.8 129:48.37 resmonitor      system_server
+  142 root         20   0    0    0    0 S 12.9   0.0  81:35.94 kswapd0         [kswapd0]
+ 1489 u0_a159      20   0  18G 167M  98M S  8.0   4.4  57:10.35 ndroid.systemui com.android.systemui
+ 2586 root         20   0    0    0    0 I  6.4   0.0   0:23.58 kworker/0:0-events [kworker/0:0-events]
+20784 u0_a187      10 -10  43G 187M 170M S  3.2   4.9  24:11.23 ion.XOSLauncher com.transsion.XOSLauncher
+ 5924 shell        20   0  11G  70M 2.9M S  1.6   1.8   0:10.66 minimal_decoder minimal_decoder_o07_final
+17055 u0_a187      30  10  43G 187M 170M S  1.6   4.9  12:34.45 pool-23-thread- com.transsion.XOSLauncher
+ 1127 system       30  10  23G 483M 405M S  1.6  12.8  22:10.43 android.bg      system_server
+  849 system       -3   0  12G  15M  10M S  1.6   0.4  55:34.78 app             surfaceflinger
+  710 nobody       20   0  10G 2.1M 2.1M S  1.6   0.0   7:44.68 vendor.sprd.har vendor.sprd.hardware.memtrack-service
+  212 root         RT   0    0    0    0 S  1.6   0.0  97:36.24 sugov:0         [sugov:0]
+   48 root         20   0    0    0    0 S  1.6   0.0   0:51.56 ksoftirqd/7     [ksoftirqd/7]
+   33 root         20   0    0    0    0 S  1.6   0.0   1:17.17 ksoftirqd/4     [ksoftirqd/4]
+ 6692 u0_a174      20   0  16G 131M 101M S  0.0   3.4   0:00.00 WifiManagerThre com.transsion.dynamicbar
+ 6691 u0_a174      20   0  16G 131M 101M S  0.0   3.4   0:00.00 binder:6646_4   com.transsion.dynamicbar
+ 6688 u0_a174      20   0  16G 131M 101M S  0.0   3.4   0:00.00 binder:6646_4   com.transsion.dynamicbar
+ 6686 u0_a174      18  -2  16G 131M 101M S  0.0   3.4   0:00.00 hwuiTask1       com.transsion.dynamicbar
+ 6685 u0_a174      18  -2  16G 131M 101M S  0.0   3.4   0:00.00 hwuiTask0       com.transsion.dynamicbar
+ 6673 root          0 -20    0    0    0 I  0.0   0.0   0:00.00 kbase_event     [kbase_event]
+ 6677 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+ 6675 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+ 6683 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-cmar-backe com.transsion.dynamicbar
+ 6682 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+ 6681 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+ 6680 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+ 6679 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+ 6674 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-mem-purge  com.transsion.dynamicbar
+ 6676 u0_a174      16  -4  16G 131M 101M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+Threads: 3862 total,   2 running, 3860 sleeping,   0 stopped,   0 zombie
+  Mem:  3844364K total,  3693168K used,   151196K free,      896K buffers
+ Swap:  2114396K total,  1604560K used,   509836K free,  1709200K cached
+800%cpu 122%user   0%nice  78%sys 587%idle   3%iow   3%irq   6%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD          PROCESS
+ 5911 shell        20   0  11G  57M 2.5M R 98.4   1.5   9:56.11 minimal_decoder minimal_decoder_o07_final
+ 8025 shell        20   0  10G 6.7M 3.6M R 58.7   0.1   0:00.28 top             top
+  142 root         20   0    0    0    0 S 17.4   0.0  81:41.71 kswapd0         [kswapd0]
+ 1489 u0_a159      20   0  18G 174M 104M S  9.5   4.6  57:41.58 ndroid.systemui com.android.systemui
+ 2586 root         20   0    0    0    0 I  7.9   0.0   0:29.57 kworker/0:0-events [kworker/0:0-events]
+ 5924 shell        20   0  11G  57M 2.5M S  6.3   1.5   0:21.29 minimal_decoder minimal_decoder_o07_final
+ 7107 root         20   0    0    0    0 I  4.7   0.0   0:00.80 kworker/u16:7-fts_wq [kworker/u16:7-fts_wq]
+  849 system       -3   0  12G  15M 9.1M S  3.1   0.3  55:42.65 app             surfaceflinger
+17055 u0_a187      30  10  43G 185M 161M S  1.5   4.9  12:37.10 pool-23-thread- com.transsion.XOSLauncher
+20784 u0_a187      10 -10  43G 185M 161M S  1.5   4.9  24:15.59 ion.XOSLauncher com.transsion.XOSLauncher
+ 2190 system       20   0  12G  15M 9.1M S  1.5   0.3  10:11.99 binder:747_5    surfaceflinger
+ 1166 system       10 -10  23G 437M 402M S  1.5  11.6   5:56.70 PowerManagerSer system_server
+ 1127 system       30  10  23G 437M 402M S  1.5  11.6  22:11.48 android.bg      system_server
+  212 root         RT   0    0    0    0 S  1.5   0.0  97:42.62 sugov:0         [sugov:0]
+   43 root         20   0    0    0    0 S  1.5   0.0   0:54.32 ksoftirqd/6     [ksoftirqd/6]
+   33 root         20   0    0    0    0 S  1.5   0.0   1:17.23 ksoftirqd/4     [ksoftirqd/4]
+ 8011 u0_a105      20   0  16G  57M  57M S  0.0   1.5   0:00.00 binder:6474_6   com.google.android.apps.safetyhub
+ 8008 u0_a187      31  11  18G  71M  69M S  0.0   1.8   0:00.00 Firebase Blocki com.transsion.XOSLauncher:personalizedService
+ 8004 u0_a110      30  10  17G 157M 121M S  0.0   4.1   0:00.00 lowpool[2486]   com.google.android.gms.persistent
+ 7993 root         20   0    0    0    0 I  0.0   0.0   0:00.00 kworker/0:1-mm_percpu_wq [kworker/0:1-mm_percpu_wq]
+ 7987 u0_a109      39  19  16G 140M 112M S  0.0   3.7   0:00.00 ConscryptStatsL com.android.vending:background
+ 7984 u0_a121      20   0  17G  64M  62M S  0.0   1.6   0:00.00 Light-P0-2487   com.google.android.inputmethod.latin
+ 7983 system       30  10  16G  37M  37M S  0.0   0.9   0:00.00 dc-record-4435  com.transsion.kolun.aiservice
+ 7982 u0_a121      20   0  17G  64M  62M S  0.0   1.6   0:00.00 Light-P0-2486   com.google.android.inputmethod.latin
+ 7957 u0_a110      18  -2  16G 116M 108M S  0.0   3.0   0:00.00 queued-work-loo com.google.android.gms.unstable
+ 7947 u0_a110      20   0  16G 116M 108M S  0.0   3.0   0:00.00 binder:7900_5   com.google.android.gms.unstable
+ 7946 u0_a110      20   0  16G 116M 108M S  0.0   3.0   0:00.00 binder:7900_4   com.google.android.gms.unstable
+ 7943 u0_a110      30  10  16G 116M 108M S  0.0   3.0   0:00.01 lowpool[3]      com.google.android.gms.unstable
+ 7940 u0_a110      30  10  16G 116M 108M S  0.0   3.0   0:00.01 lowpool[1]      com.google.android.gms.unstable
+ 7941 u0_a110      30  10  16G 116M 108M S  0.0   3.0   0:00.00 lowpool[2]      com.google.android.gms.unstable
+Threads: 4011 total,   3 running, 4008 sleeping,   0 stopped,   0 zombie
+  Mem:  3844364K total,  3773048K used,    71316K free,     2856K buffers
+ Swap:  2114396K total,  1666120K used,   448276K free,  1665224K cached
+800%cpu 127%user   2%nice  86%sys 563%idle  13%iow   3%irq   8%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD          PROCESS
+ 5911 shell        20   0  11G  57M 2.5M R 98.4   1.5  14:54.05 minimal_decoder minimal_decoder_o07_final
+ 8648 shell        20   0  10G 6.9M 3.6M R 59.3   0.1   0:00.29 top             top
+ 1489 u0_a159      20   0  18G 164M  99M S 10.9   4.3  58:12.85 ndroid.systemui com.android.systemui
+  142 root         20   0    0    0    0 S 10.9   0.0  81:45.76 kswapd0         [kswapd0]
+ 1127 system       30  10  23G 435M 394M S  4.6  11.5  22:12.17 android.bg      system_server
+ 5924 shell        20   0  11G  57M 2.5M S  3.1   1.5   0:31.58 minimal_decoder minimal_decoder_o07_final
+  849 system       -3   0  12G  14M 8.8M S  3.1   0.3  55:50.61 app             surfaceflinger
+ 7106 root         20   0    0    0    0 I  1.5   0.0   0:01.17 kworker/u16:4-events_power_efficient [kworker/u16:4-events_power_efficient]
+ 7105 root         20   0    0    0    0 I  1.5   0.0   0:01.13 kworker/u16:3-events_unbound [kworker/u16:3-events_unbound]
+17055 u0_a187      30  10  43G 181M 165M S  1.5   4.8  12:39.82 pool-23-thread- com.transsion.XOSLauncher
+20784 u0_a187      10 -10  43G 181M 165M S  1.5   4.8  24:19.93 ion.XOSLauncher com.transsion.XOSLauncher
+ 6517 u0_a152      20   0  16G  36M  33M S  1.5   0.9   0:07.14 Devinfo         com.transsion.trancare
+ 3233 system       20   0  23G 435M 394M S  1.5  11.5   3:23.12 binder:1095_1F  system_server
+ 1240 system       RT  -8  23G 435M 394M S  1.5  11.5  26:11.35 SensorService   system_server
+ 1089 system       20   0  10G 2.1M 2.0M S  1.5   0.0  14:40.48 android.hardwar android.hardware.sensors-service.multihal
+ 1050 radio        20   0  11G 240K 240K S  1.5   0.0   0:26.31 urild           urild
+  790 system       20   0  12G  14M 8.8M S  1.5   0.3   9:48.86 binder:747_2    surfaceflinger
+  710 nobody       20   0  10G 2.1M 2.1M S  1.5   0.0   7:45.63 vendor.sprd.har vendor.sprd.hardware.memtrack-service
+  367 logd         30  10  10G 4.4M 3.4M S  1.5   0.1  52:33.13 logd.writer     logd
+  212 root         RT   0    0    0    0 S  1.5   0.0  97:48.57 sugov:0         [sugov:0]
+ 8625 u0_a174      20   0  16G 130M 100M S  0.0   3.4   0:00.00 binder:8578_3   com.transsion.dynamicbar
+ 8626 u0_a174      20   0  16G 130M 100M S  0.0   3.4   0:00.00 WifiManagerThre com.transsion.dynamicbar
+ 8621 u0_a174      18  -2  16G 130M 100M S  0.0   3.4   0:00.00 hwuiTask0       com.transsion.dynamicbar
+ 8622 u0_a174      18  -2  16G 130M 100M S  0.0   3.4   0:00.00 hwuiTask1       com.transsion.dynamicbar
+ 8608 root          0 -20    0    0    0 I  0.0   0.0   0:00.00 kbase_event     [kbase_event]
+ 8615 u0_a174      16  -4  16G 130M 100M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+ 8619 u0_a174      16  -4  16G 130M 100M S  0.0   3.4   0:00.00 mali-cmar-backe com.transsion.dynamicbar
+ 8618 u0_a174      16  -4  16G 130M 100M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+ 8617 u0_a174      16  -4  16G 130M 100M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar
+ 8614 u0_a174      16  -4  16G 130M 100M S  0.0   3.4   0:00.00 mali-utility-wo com.transsion.dynamicbar

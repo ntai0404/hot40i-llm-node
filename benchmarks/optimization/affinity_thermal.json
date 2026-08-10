@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "task": "O06",
+  "device": "Infinix X6528 / Unisoc T606",
+  "transport": "192.168.100.189:5555",
+  "power_mode": {
+    "battery_saver": "off",
+    "fixed_performance_mode": "off",
+    "governor": "schedutil",
+    "reason": "Fixed-performance mode lost the short affinity screen and was not retained."
+  },
+  "sustained_runs": [
+    {
+      "threads": 6,
+      "affinity_mask": "ff",
+      "input_tokens": 40,
+      "elapsed_ms": 1005684,
+      "tokens_per_second": 0.039773925,
+      "seconds_per_token": 25.1421,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 15.9461,
+      "peak_rss_kib": 72224,
+      "dense_ms": 35367.067,
+      "moe_ms": 966175.384,
+      "lm_head_ms": 2753.821,
+      "telemetry": {
+        "samples": 17,
+        "sampled_seconds": 967,
+        "per_core_busy_percent": {
+          "0": 10.835,
+          "1": 9.822,
+          "2": 9.565,
+          "3": 9.439,
+          "4": 8.013,
+          "5": 7.493,
+          "6": 59.37,
+          "7": 50.739
+        },
+        "frequency": {
+          "little": {
+            "min_khz": 614400,
+            "median_khz": 614400,
+            "max_khz": 1612000
+          },
+          "big": {
+            "min_khz": 1612000,
+            "median_khz": 1612000,
+            "max_khz": 1612000
+          }
+        },
+        "thermal_status_max": 0,
+        "mem_available_min_kib": 1444584,
+        "swap_free_min_kib": 417180,
+        "swap_free_max_kib": 626128,
+        "pswpin_delta": 159803,
+        "pswpout_delta": 190009,
+        "major_fault_delta": 177405
+      },
+      "result_artifact": "artifacts/runs/20260810T124832Z_O06/o06_sustained_t6.json",
+      "telemetry_artifact": "artifacts/runs/20260810T124832Z_O06/o06_sustained_t6.telemetry"
+    },
+    {
+      "threads": 8,
+      "affinity_mask": "ff",
+      "input_tokens": 40,
+      "elapsed_ms": 1001632,
+      "tokens_per_second": 0.039934826,
+      "seconds_per_token": 25.0408,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 15.9461,
+      "peak_rss_kib": 72136,
+      "dense_ms": 32610.015,
+      "moe_ms": 964924.09,
+      "lm_head_ms": 2674.8,
+      "telemetry": {
+        "samples": 17,
+        "sampled_seconds": 968,
+        "per_core_busy_percent": {
+          "0": 10.459,
+          "1": 8.935,
+          "2": 8.926,
+          "3": 8.412,
+          "4": 6.906,
+          "5": 6.346,
+          "6": 43.312,
+          "7": 61.297
+        },
+        "frequency": {
+          "little": {
+            "min_khz": 614400,
+            "median_khz": 614400,
+            "max_khz": 1612000
+          },
+          "big": {
+            "min_khz": 1612000,
+            "median_khz": 1612000,
+            "max_khz": 1612000
+          }
+        },
+        "thermal_status_max": 0,
+        "mem_available_min_kib": 1402784,
+        "swap_free_min_kib": 384984,
+        "swap_free_max_kib": 512232,
+        "pswpin_delta": 118810,
+        "pswpout_delta": 157093,
+        "major_fault_delta": 128132
+      },
+      "result_artifact": "artifacts/runs/20260810T124832Z_O06/o06_sustained_t8.json",
+      "telemetry_artifact": "artifacts/runs/20260810T124832Z_O06/o06_sustained_t8.telemetry"
+    }
+  ],
+  "selected": {
+    "dense_threads": 6,
+    "affinity_mask": "ff",
+    "eight_vs_six_speedup_x": 1.004045389,
+    "reason": "Eight workers improved sustained end-to-end throughput by less than 1%; six workers retain scheduler headroom and remain the robust production default."
+  },
+  "correctness": {
+    "token_id_match": true,
+    "token_logit_match": true
+  },
+  "conclusion": "All-core scheduling with six dense workers is the sustained selection. Both runs held thermal status 0; the marginal eight-worker gain does not justify occupying every CPU. MoE remains effectively serial and dominates end-to-end latency."
+}
