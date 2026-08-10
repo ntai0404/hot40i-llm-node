@@ -41,7 +41,13 @@ completed_tasks:
 - P00
 - P01
 in_progress: null
-blocked_tasks: {}
+blocked_tasks:
+  P02:
+    reason: ADB USB transport disappeared during healthy 1024-token run. Canonical server restart with trusted key,
+      reconnect, Windows PnP recovery, and permitted Wi-Fi discovery/TCP/mDNS alternatives all failed; Wi-Fi ADB
+      was not enabled before USB loss. Physical cable reconnect/USB-debug authorization is now required, and operator
+      explicitly will not perform physical actions.
+    at: '2026-08-10T02:22:59.883781+00:00'
 task_evidence:
   R00: artifacts/runs/20260807T140229Z_R00/evidence.json
   R01: artifacts/runs/20260807T142448Z_R01/evidence.json
@@ -127,3 +133,4 @@ task_started_at:
   P00: '2026-08-09T15:22:12.281148+00:00'
   P00D: '2026-08-09T13:16:46.412847+00:00'
   P01: '2026-08-09T15:24:16.921197+00:00'
+  P02: '2026-08-09T18:26:59.848230+00:00'

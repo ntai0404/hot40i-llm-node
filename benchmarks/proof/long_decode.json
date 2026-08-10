@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "blocked",
+  "task": "P02",
+  "device": "112193741U000563",
+  "completed_512": {
+    "input_tokens": 512,
+    "layers_run": 24,
+    "emitted_token_id": 11,
+    "emitted_token_logit": 13.5359,
+    "elapsed_ms": 14250219,
+    "peak_rss_kib": 97176,
+    "dense_flash_bytes": 655724969088,
+    "expert_flash_bytes": 554542329600,
+    "cache_hits": 7257,
+    "cache_misses": 41895,
+    "trace_events": 280519,
+    "trace": "artifacts/runs/20260809T182659Z_P02/p02_512.trace",
+    "analysis": "artifacts/runs/20260809T182659Z_P02/p02_512_analysis.json"
+  },
+  "interrupted_observability_1024": {
+    "process_last_known_healthy": true,
+    "last_trace_events": 259449,
+    "last_position": 1022,
+    "last_layer": 10,
+    "last_rss_kib": 108320,
+    "thermal_status": 0,
+    "output_not_retrievable": true
+  },
+  "blocked_reason": "ADB USB transport disappeared during the healthy 1024-token run. Canonical server restart, explicit trusted ADB_VENDOR_KEYS, reconnect, Windows PnP restart/disable-enable, local subnet discovery, TCP/5555 probes, and ADB mDNS discovery did not restore a transport. ADB-over-WiFi had not been enabled before USB disappeared. Recovering device access now requires a physical cable reconnect and possibly accepting the USB-debugging prompt, which the operator explicitly will not perform."
+}

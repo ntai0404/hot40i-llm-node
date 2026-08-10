@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "task_id": "P02",
+  "started_at": "2026-08-09T18:26:59.983260+00:00",
+  "finished_at": "2026-08-10T02:22:50.115104+00:00",
+  "status": "blocked",
+  "git_commit": "307bb172228a5336260efb22f93fa4724c5bd897",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell 'cat /proc/meminfo; cat /sys/block/zram0/mm_stat 2>/dev/null; cat /proc/vmstat | grep -E '\"'\"'pswpin|pswpout|pgmajfault'\"'\"'; dumpsys thermalservice 2>/dev/null | grep '\"'\"'Thermal Status'\"'\"''",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T182659Z_P02\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260809T182659Z_P02\\stderr\\001.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell 'sleep 45; ps -A -o PID,STAT,RSS,VSZ,NAME | grep minimal_decoder_probe; wc -l /data/local/tmp/h40m/p02_512.trace; cat /proc/meminfo | grep -E '\"'\"'MemAvailable|SwapTotal|SwapFree'\"'\"'; cat /proc/vmstat | grep -E '\"'\"'pswpin|pswpout|pgmajfault'\"'\"'; dumpsys thermalservice 2>/dev/null | grep '\"'\"'Thermal Status'\"'\"''",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T182659Z_P02\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260809T182659Z_P02\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 112193741U000563 shell 'cat /proc/meminfo | grep -E '\"'\"'MemAvailable|SwapTotal|SwapFree'\"'\"'; cat /proc/vmstat | grep -E '\"'\"'pswpin|pswpout|pgmajfault'\"'\"'; dumpsys thermalservice 2>/dev/null | grep '\"'\"'Thermal Status'\"'\"'; getprop ro.build.fingerprint'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260809T182659Z_P02\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260809T182659Z_P02\\stderr\\003.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_70tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_refactor.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_70tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_refactor.json",
+    "artifacts/runs/20260809T182659Z_P02/",
+    "benchmarks/proof/long_decode.json",
+    "tools/trace/analyze_long_decode.py"
+  ],
+  "verification": [],
+  "metrics": {},
+  "artifacts": [
+    "benchmarks\\proof\\long_decode.json",
+    "artifacts\\runs\\20260809T182659Z_P02\\p02_512.json",
+    "artifacts\\runs\\20260809T182659Z_P02\\p02_512.trace",
+    "artifacts\\runs\\20260809T182659Z_P02\\p02_512_analysis.json"
+  ],
+  "limitations": [
+    "1024-token final artifacts cannot be pulled because USB ADB disappeared and Wi-Fi ADB was not enabled before transport loss."
+  ],
+  "notes": [
+    "Completed 512-token official H40M characterization: token=11, elapsed_ms=14250219, peak_rss_kib=97176, trace_events=280519. The 1024 run remained healthy through last observation at token 1022/layer 10, trace_events=259449, RSS=108320 KiB, Thermal Status=0."
+  ]
+}

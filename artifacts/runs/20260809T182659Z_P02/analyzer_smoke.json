@@ -1,0 +1,553 @@
+{
+  "schema_version": 1,
+  "trace": "artifacts\\runs\\20260809T152502Z_P01\\run1.trace",
+  "events": 70115,
+  "tokens_seen": 128,
+  "layers_seen": 24,
+  "event_counts": {
+    "attention_end": 24,
+    "cache_hit": 1867,
+    "cache_miss": 10421,
+    "compute_begin": 12288,
+    "compute_end": 12288,
+    "decoder_layer_begin": 24,
+    "decoder_layer_end": 24,
+    "layer_begin": 24,
+    "layer_end": 24,
+    "read_begin": 10421,
+    "read_end": 10421,
+    "route": 12288,
+    "streamed_lm_head_argmax": 1
+  },
+  "bytes_by_event": {
+    "attention_end": 62914560,
+    "read_begin": 137937358080,
+    "read_end": 137937358080,
+    "streamed_lm_head_argmax": 1158266880
+  },
+  "duration_ns": {
+    "read_end": {
+      "count": 10421,
+      "mean_ns": 8317941.662988197,
+      "p95_ns": 25256461
+    },
+    "compute_end": {
+      "count": 12288,
+      "mean_ns": 249643268.12736002,
+      "p95_ns": 248395693
+    }
+  },
+  "cache_by_token": {
+    "0": {
+      "cache_miss": 96
+    },
+    "1": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "2": {
+      "cache_miss": 77,
+      "cache_hit": 19
+    },
+    "3": {
+      "cache_miss": 77,
+      "cache_hit": 19
+    },
+    "4": {
+      "cache_miss": 88,
+      "cache_hit": 8
+    },
+    "5": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "6": {
+      "cache_miss": 85,
+      "cache_hit": 11
+    },
+    "7": {
+      "cache_miss": 87,
+      "cache_hit": 9
+    },
+    "8": {
+      "cache_miss": 81,
+      "cache_hit": 15
+    },
+    "9": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "10": {
+      "cache_miss": 85,
+      "cache_hit": 11
+    },
+    "11": {
+      "cache_miss": 79,
+      "cache_hit": 17
+    },
+    "12": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "13": {
+      "cache_miss": 76,
+      "cache_hit": 20
+    },
+    "14": {
+      "cache_miss": 84,
+      "cache_hit": 12
+    },
+    "15": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "16": {
+      "cache_miss": 87,
+      "cache_hit": 9
+    },
+    "17": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "18": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "19": {
+      "cache_miss": 77,
+      "cache_hit": 19
+    },
+    "20": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "21": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "22": {
+      "cache_hit": 18,
+      "cache_miss": 78
+    },
+    "23": {
+      "cache_hit": 16,
+      "cache_miss": 80
+    },
+    "24": {
+      "cache_miss": 79,
+      "cache_hit": 17
+    },
+    "25": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "26": {
+      "cache_miss": 87,
+      "cache_hit": 9
+    },
+    "27": {
+      "cache_miss": 80,
+      "cache_hit": 16
+    },
+    "28": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "29": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "30": {
+      "cache_hit": 21,
+      "cache_miss": 75
+    },
+    "31": {
+      "cache_miss": 84,
+      "cache_hit": 12
+    },
+    "32": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "33": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "34": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "35": {
+      "cache_miss": 79,
+      "cache_hit": 17
+    },
+    "36": {
+      "cache_miss": 80,
+      "cache_hit": 16
+    },
+    "37": {
+      "cache_miss": 79,
+      "cache_hit": 17
+    },
+    "38": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "39": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "40": {
+      "cache_miss": 87,
+      "cache_hit": 9
+    },
+    "41": {
+      "cache_miss": 84,
+      "cache_hit": 12
+    },
+    "42": {
+      "cache_miss": 76,
+      "cache_hit": 20
+    },
+    "43": {
+      "cache_miss": 85,
+      "cache_hit": 11
+    },
+    "44": {
+      "cache_hit": 12,
+      "cache_miss": 84
+    },
+    "45": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "46": {
+      "cache_miss": 88,
+      "cache_hit": 8
+    },
+    "47": {
+      "cache_miss": 87,
+      "cache_hit": 9
+    },
+    "48": {
+      "cache_miss": 86,
+      "cache_hit": 10
+    },
+    "49": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "50": {
+      "cache_miss": 85,
+      "cache_hit": 11
+    },
+    "51": {
+      "cache_miss": 84,
+      "cache_hit": 12
+    },
+    "52": {
+      "cache_miss": 88,
+      "cache_hit": 8
+    },
+    "53": {
+      "cache_miss": 75,
+      "cache_hit": 21
+    },
+    "54": {
+      "cache_miss": 79,
+      "cache_hit": 17
+    },
+    "55": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "56": {
+      "cache_miss": 84,
+      "cache_hit": 12
+    },
+    "57": {
+      "cache_miss": 84,
+      "cache_hit": 12
+    },
+    "58": {
+      "cache_miss": 88,
+      "cache_hit": 8
+    },
+    "59": {
+      "cache_miss": 84,
+      "cache_hit": 12
+    },
+    "60": {
+      "cache_miss": 76,
+      "cache_hit": 20
+    },
+    "61": {
+      "cache_miss": 80,
+      "cache_hit": 16
+    },
+    "62": {
+      "cache_miss": 79,
+      "cache_hit": 17
+    },
+    "63": {
+      "cache_miss": 80,
+      "cache_hit": 16
+    },
+    "64": {
+      "cache_miss": 84,
+      "cache_hit": 12
+    },
+    "65": {
+      "cache_hit": 18,
+      "cache_miss": 78
+    },
+    "66": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "67": {
+      "cache_miss": 81,
+      "cache_hit": 15
+    },
+    "68": {
+      "cache_miss": 75,
+      "cache_hit": 21
+    },
+    "69": {
+      "cache_miss": 76,
+      "cache_hit": 20
+    },
+    "70": {
+      "cache_miss": 79,
+      "cache_hit": 17
+    },
+    "71": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "72": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "73": {
+      "cache_miss": 76,
+      "cache_hit": 20
+    },
+    "74": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "75": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "76": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "77": {
+      "cache_miss": 80,
+      "cache_hit": 16
+    },
+    "78": {
+      "cache_miss": 84,
+      "cache_hit": 12
+    },
+    "79": {
+      "cache_miss": 79,
+      "cache_hit": 17
+    },
+    "80": {
+      "cache_hit": 20,
+      "cache_miss": 76
+    },
+    "81": {
+      "cache_miss": 74,
+      "cache_hit": 22
+    },
+    "82": {
+      "cache_miss": 85,
+      "cache_hit": 11
+    },
+    "83": {
+      "cache_miss": 86,
+      "cache_hit": 10
+    },
+    "84": {
+      "cache_miss": 81,
+      "cache_hit": 15
+    },
+    "85": {
+      "cache_miss": 75,
+      "cache_hit": 21
+    },
+    "86": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "87": {
+      "cache_miss": 87,
+      "cache_hit": 9
+    },
+    "88": {
+      "cache_miss": 77,
+      "cache_hit": 19
+    },
+    "89": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "90": {
+      "cache_miss": 85,
+      "cache_hit": 11
+    },
+    "91": {
+      "cache_miss": 86,
+      "cache_hit": 10
+    },
+    "92": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "93": {
+      "cache_miss": 77,
+      "cache_hit": 19
+    },
+    "94": {
+      "cache_miss": 84,
+      "cache_hit": 12
+    },
+    "95": {
+      "cache_miss": 81,
+      "cache_hit": 15
+    },
+    "96": {
+      "cache_miss": 90,
+      "cache_hit": 6
+    },
+    "97": {
+      "cache_miss": 80,
+      "cache_hit": 16
+    },
+    "98": {
+      "cache_miss": 79,
+      "cache_hit": 17
+    },
+    "99": {
+      "cache_miss": 89,
+      "cache_hit": 7
+    },
+    "100": {
+      "cache_miss": 74,
+      "cache_hit": 22
+    },
+    "101": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "102": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "103": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "104": {
+      "cache_hit": 13,
+      "cache_miss": 83
+    },
+    "105": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "106": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "107": {
+      "cache_miss": 80,
+      "cache_hit": 16
+    },
+    "108": {
+      "cache_miss": 80,
+      "cache_hit": 16
+    },
+    "109": {
+      "cache_miss": 77,
+      "cache_hit": 19
+    },
+    "110": {
+      "cache_miss": 75,
+      "cache_hit": 21
+    },
+    "111": {
+      "cache_miss": 88,
+      "cache_hit": 8
+    },
+    "112": {
+      "cache_miss": 69,
+      "cache_hit": 27
+    },
+    "113": {
+      "cache_miss": 76,
+      "cache_hit": 20
+    },
+    "114": {
+      "cache_miss": 83,
+      "cache_hit": 13
+    },
+    "115": {
+      "cache_miss": 85,
+      "cache_hit": 11
+    },
+    "116": {
+      "cache_miss": 81,
+      "cache_hit": 15
+    },
+    "117": {
+      "cache_miss": 79,
+      "cache_hit": 17
+    },
+    "118": {
+      "cache_miss": 82,
+      "cache_hit": 14
+    },
+    "119": {
+      "cache_miss": 89,
+      "cache_hit": 7
+    },
+    "120": {
+      "cache_miss": 81,
+      "cache_hit": 15
+    },
+    "121": {
+      "cache_miss": 78,
+      "cache_hit": 18
+    },
+    "122": {
+      "cache_miss": 77,
+      "cache_hit": 19
+    },
+    "123": {
+      "cache_miss": 89,
+      "cache_hit": 7
+    },
+    "124": {
+      "cache_miss": 77,
+      "cache_hit": 19
+    },
+    "125": {
+      "cache_miss": 86,
+      "cache_hit": 10
+    },
+    "126": {
+      "cache_miss": 85,
+      "cache_hit": 11
+    },
+    "127": {
+      "cache_miss": 81,
+      "cache_hit": 15
+    }
+  }
+}
