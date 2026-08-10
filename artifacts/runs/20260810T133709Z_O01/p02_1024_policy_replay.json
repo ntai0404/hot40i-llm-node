@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "trace": "artifacts/runs/20260810T030340Z_P02/p02_1024.trace",
+  "slots": 4,
+  "budget_bytes": 52945920,
+  "expert_bytes": 13236480,
+  "decay_interval": 4096,
+  "policies": [
+    {
+      "policy": "lru",
+      "requests": 98304,
+      "hits": 38030,
+      "misses": 60274,
+      "evictions": 60270,
+      "hit_rate": 0.3868611653645833,
+      "flash_bytes": 797815595520,
+      "flash_bytes_per_request": 8115799.921875,
+      "peak_slots": 4,
+      "miss_reduction_vs_lru": 0,
+      "flash_reduction_vs_lru": 0
+    },
+    {
+      "policy": "lfu_decay",
+      "requests": 98304,
+      "hits": 24656,
+      "misses": 73648,
+      "evictions": 73644,
+      "hit_rate": 0.2508138020833333,
+      "flash_bytes": 974840279040,
+      "flash_bytes_per_request": 9916588.125,
+      "peak_slots": 4,
+      "miss_reduction_vs_lru": -13374,
+      "flash_reduction_vs_lru": -177024683520
+    },
+    {
+      "policy": "per_layer_hotset",
+      "requests": 98304,
+      "hits": 45598,
+      "misses": 52706,
+      "evictions": 52702,
+      "hit_rate": 0.4638468424479167,
+      "flash_bytes": 697641914880,
+      "flash_bytes_per_request": 7096780.546875,
+      "peak_slots": 4,
+      "miss_reduction_vs_lru": 7568,
+      "flash_reduction_vs_lru": 100173680640
+    }
+  ]
+}

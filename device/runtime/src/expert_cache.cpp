@@ -21,22 +21,40 @@ std::size_t align_up(std::size_t value, std::size_t alignment) {
 
 }  // namespace
 
+const char* cache_policy_name(CachePolicy policy) noexcept {
+    switch (policy) {
+        case CachePolicy::lru: return "lru";
+        case CachePolicy::lfu_decay: return "lfu_decay";
+        case CachePolicy::per_layer_hotset: return "per_layer_hotset";
+    }
+    return "unknown";
+}
+
 ExpertCache::ExpertCache(std::size_t budget_bytes) : ExpertCache(budget_bytes, budget_bytes, 1) {}
 
 ExpertCache::ExpertCache(std::size_t budget_bytes, std::size_t slot_bytes)
     : ExpertCache(budget_bytes, slot_bytes, 1) {}
 
 ExpertCache::ExpertCache(std::size_t budget_bytes, std::size_t slot_bytes, std::size_t slot_alignment)
+    : ExpertCache(budget_bytes, slot_bytes, slot_alignment, CachePolicy::lru) {}
+
+ExpertCache::ExpertCache(
+    std::size_t budget_bytes,
+    std::size_t slot_bytes,
+    std::size_t slot_alignment,
+    CachePolicy policy)
     : owned_storage_(std::make_unique<std::byte[]>(budget_bytes)),
       storage_(owned_storage_.get(), budget_bytes),
       budget_bytes_(budget_bytes),
       slot_bytes_(slot_bytes),
       slot_stride_bytes_(align_up(slot_bytes, slot_alignment)),
-      slot_alignment_(slot_alignment) {
+      slot_alignment_(slot_alignment),
+      policy_(policy) {
     if (budget_bytes == 0) throw std::invalid_argument("cache budget must be > 0");
     if (slot_bytes == 0) throw std::invalid_argument("cache slot bytes must be > 0");
     slot_count_ = budget_bytes_ / slot_stride_bytes_;
     if (slot_count_ == 0) throw std::invalid_argument("cache budget must contain at least one slot");
+    initialize_metadata();
     free_slots_.reserve(slot_count_);
     for (std::size_t i = 0; i < slot_count_; ++i) free_slots_.push_back(slot_count_ - i - 1);
 }
@@ -45,17 +63,64 @@ ExpertCache::ExpertCache(std::span<std::byte> storage, std::size_t slot_bytes)
     : ExpertCache(storage, slot_bytes, 1) {}
 
 ExpertCache::ExpertCache(std::span<std::byte> storage, std::size_t slot_bytes, std::size_t slot_alignment)
+    : ExpertCache(storage, slot_bytes, slot_alignment, CachePolicy::lru) {}
+
+ExpertCache::ExpertCache(
+    std::span<std::byte> storage,
+    std::size_t slot_bytes,
+    std::size_t slot_alignment,
+    CachePolicy policy)
     : storage_(storage),
       budget_bytes_(storage.size()),
       slot_bytes_(slot_bytes),
       slot_stride_bytes_(align_up(slot_bytes, slot_alignment)),
-      slot_alignment_(slot_alignment) {
+      slot_alignment_(slot_alignment),
+      policy_(policy) {
     if (storage.empty()) throw std::invalid_argument("cache storage must be non-empty");
     if (slot_bytes == 0) throw std::invalid_argument("cache slot bytes must be > 0");
     slot_count_ = budget_bytes_ / slot_stride_bytes_;
     if (slot_count_ == 0) throw std::invalid_argument("cache storage must contain at least one slot");
+    initialize_metadata();
     free_slots_.reserve(slot_count_);
     for (std::size_t i = 0; i < slot_count_; ++i) free_slots_.push_back(slot_count_ - i - 1);
+}
+
+void ExpertCache::initialize_metadata() {
+    entries_.reserve(slot_count_);
+    if (policy_ != CachePolicy::lru) {
+        frequencies_.reserve(kMaxPolicyHistoryEntries);
+        layer_requests_.reserve(kMaxPolicyLayers);
+    }
+}
+
+void ExpertCache::record_access(ExpertKey key) {
+    ++requests_;
+    if (policy_ == CachePolicy::lru) return;
+    auto frequency = frequencies_.find(key);
+    if (frequency == frequencies_.end()) {
+        if (frequencies_.size() == kMaxPolicyHistoryEntries) {
+            throw std::length_error("cache policy expert history capacity exceeded");
+        }
+        frequency = frequencies_.emplace(key, 0).first;
+    }
+    ++frequency->second;
+    auto layer = layer_requests_.find(key.layer);
+    if (layer == layer_requests_.end()) {
+        if (layer_requests_.size() == kMaxPolicyLayers) {
+            throw std::length_error("cache policy layer history capacity exceeded");
+        }
+        layer = layer_requests_.emplace(key.layer, 0).first;
+    }
+    ++layer->second;
+    if (requests_ % 4096 != 0) return;
+    for (auto& [unused, frequency] : frequencies_) {
+        (void)unused;
+        frequency = std::max<std::uint64_t>(1, frequency / 2);
+    }
+    for (auto& [unused, requests] : layer_requests_) {
+        (void)unused;
+        requests = std::max<std::uint64_t>(1, requests / 2);
+    }
 }
 
 void ExpertCache::touch(ExpertKey key, Entry& entry) {
@@ -66,8 +131,31 @@ void ExpertCache::touch(ExpertKey key, Entry& entry) {
 
 void ExpertCache::evict_one() {
     if (lru_.empty()) throw std::logic_error("cache accounting mismatch");
-    const auto key = lru_.back();
-    lru_.pop_back();
+    auto victim = std::prev(lru_.end());
+    if (policy_ == CachePolicy::lfu_decay) {
+        auto best_frequency = frequencies_.at(*victim);
+        for (auto it = lru_.rbegin(); it != lru_.rend(); ++it) {
+            const auto frequency = frequencies_.at(*it);
+            if (frequency < best_frequency) {
+                best_frequency = frequency;
+                victim = std::prev(it.base());
+            }
+        }
+    } else if (policy_ == CachePolicy::per_layer_hotset) {
+        const auto initial = *victim;
+        double best_score = static_cast<double>(frequencies_.at(initial)) /
+                            static_cast<double>(layer_requests_.at(initial.layer));
+        for (auto it = lru_.rbegin(); it != lru_.rend(); ++it) {
+            const double score = static_cast<double>(frequencies_.at(*it)) /
+                                 static_cast<double>(layer_requests_.at(it->layer));
+            if (score < best_score) {
+                best_score = score;
+                victim = std::prev(it.base());
+            }
+        }
+    }
+    const auto key = *victim;
+    lru_.erase(victim);
     const auto it = entries_.find(key);
     if (it == entries_.end()) throw std::logic_error("LRU key missing from cache");
     used_bytes_ -= it->second.bytes;
@@ -96,6 +184,7 @@ std::span<const std::byte> ExpertCache::get_or_load(
     ExpertKey key,
     const TensorSlice& slice,
     TensorProvider& provider) {
+    record_access(key);
     if (auto it = entries_.find(key); it != entries_.end()) {
         ++stats_.hits;
         touch(key, it->second);
@@ -130,6 +219,7 @@ CacheLoadResult ExpertCache::get_or_load(
     ExpertKey key,
     const ExpertLoader& loader,
     bool verify_checksum) {
+    record_access(key);
     if (auto it = entries_.find(key); it != entries_.end()) {
         ++stats_.hits;
         touch(key, it->second);
@@ -167,6 +257,7 @@ CacheLoadResult ExpertCache::get_or_load(
 CacheLoadResult ExpertCache::insert_loaded(
     ExpertKey key,
     std::span<const std::byte> bytes) {
+    record_access(key);
     if (entries_.find(key) != entries_.end()) {
         throw std::logic_error("cannot insert an expert that is already cached");
     }

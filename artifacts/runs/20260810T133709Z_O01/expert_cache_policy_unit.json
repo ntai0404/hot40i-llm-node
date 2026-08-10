@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "policy": "lru",
+  "deterministic_hits": 1,
+  "deterministic_misses": 5,
+  "deterministic_evictions": 2,
+  "churn_requests": 1000,
+  "churn_hits": 224,
+  "churn_misses": 776,
+  "churn_evictions": 772,
+  "churn_bytes_loaded": 794624,
+  "churn_budget_bytes": 4096,
+  "churn_peak_used_bytes": 4096,
+  "h40m_expert_bytes": 13236480,
+  "h40m_slot_stride_bytes": 13631488,
+  "h40m_slot_alignment": 1048576,
+  "h40m_slot_count": 3,
+  "h40m_peak_used_bytes": 39709440
+}

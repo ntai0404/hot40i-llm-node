@@ -63,6 +63,7 @@ struct Metrics {
     std::uint64_t moe_ns{};
     std::uint64_t lm_head_ns{};
     std::size_t dense_threads{1};
+    std::string cache_policy{"lru"};
     bool io_overlap_enabled{};
 };
 
@@ -274,6 +275,7 @@ void write_json(const std::filesystem::path& path, const Metrics& metrics, std::
     out << "  \"expert_flash_bytes\": " << metrics.expert_flash_bytes << ",\n";
     out << "  \"cache_hits\": " << metrics.expert_cache_hits << ",\n";
     out << "  \"cache_misses\": " << metrics.expert_cache_misses << ",\n";
+    out << "  \"cache_policy\": \"" << metrics.cache_policy << "\",\n";
     out << "  \"peak_rss_kib\": " << metrics.peak_rss_kib << ",\n";
     out << "  \"io_overlap_enabled\": " << (metrics.io_overlap_enabled ? "true" : "false") << ",\n";
     out << "  \"prefetched_experts\": " << metrics.prefetched_experts << ",\n";
@@ -329,7 +331,19 @@ int main(int argc, char** argv) {
     h40::FlashTensorProvider expert_provider(expert_arena);
     const auto model_index = build_expert_index();
     h40::ExpertLoader loader(model_index, expert_provider);
-    h40::ExpertCache cache(kExpertPayloadBytes * kTopK, kExpertPayloadBytes, 1048576);
+    h40::CachePolicy cache_policy = h40::CachePolicy::per_layer_hotset;
+    if (const char* setting = std::getenv("H40_CACHE_POLICY")) {
+        const std::string_view name(setting);
+        if (name == "lfu_decay") {
+            cache_policy = h40::CachePolicy::lfu_decay;
+        } else if (name == "per_layer_hotset") {
+            cache_policy = h40::CachePolicy::per_layer_hotset;
+        } else if (name != "lru") {
+            throw std::invalid_argument("H40_CACHE_POLICY must be lru, lfu_decay, or per_layer_hotset");
+        }
+    }
+    metrics.cache_policy = h40::cache_policy_name(cache_policy);
+    h40::ExpertCache cache(kExpertPayloadBytes * kTopK, kExpertPayloadBytes, 1048576, cache_policy);
     const char* overlap_setting = std::getenv("H40_IO_OVERLAP");
     const bool io_overlap_enabled = overlap_setting == nullptr || std::string_view(overlap_setting) != "0";
     std::vector<std::byte> prefetch_storage;

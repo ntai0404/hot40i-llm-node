@@ -131,6 +131,23 @@ int main(int argc, char** argv) {
     assert(h40m_cache.used_bytes() == kH40MExpertBytes * 3);
     assert(h40m_cache.used_bytes() <= h40m_cache.budget_bytes());
 
+    const std::vector<std::uint32_t> hot_requests{0, 1, 0, 2, 3, 0};
+    h40::ExpertCache hot_lru(32, 16, 1, h40::CachePolicy::lru);
+    h40::ExpertCache hot_lfu(32, 16, 1, h40::CachePolicy::lfu_decay);
+    h40::ExpertCache hot_layer(32, 16, 1, h40::CachePolicy::per_layer_hotset);
+    for (const auto expert : hot_requests) {
+        const h40::ExpertKey key{0, expert};
+        const h40::TensorSlice slice{expert * 16, 16};
+        (void)hot_lru.get_or_load(key, slice, provider);
+        (void)hot_lfu.get_or_load(key, slice, provider);
+        (void)hot_layer.get_or_load(key, slice, provider);
+    }
+    assert(hot_lru.stats().hits == 1);
+    assert(hot_lfu.stats().hits == 2);
+    assert(hot_layer.stats().hits == 2);
+    assert(hot_lru.used_bytes() == hot_lfu.used_bytes());
+    assert(hot_lru.used_bytes() == hot_layer.used_bytes());
+
     if (argc > 1) {
         std::filesystem::create_directories(std::filesystem::path(argv[1]).parent_path());
         std::ofstream out(argv[1]);

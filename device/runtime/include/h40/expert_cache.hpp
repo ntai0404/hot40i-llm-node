@@ -29,15 +29,29 @@ struct CacheLoadResult {
 
 enum class CachePolicy {
     lru,
+    lfu_decay,
+    per_layer_hotset,
 };
+
+[[nodiscard]] const char* cache_policy_name(CachePolicy policy) noexcept;
 
 class ExpertCache {
 public:
     explicit ExpertCache(std::size_t budget_bytes);
     ExpertCache(std::size_t budget_bytes, std::size_t slot_bytes);
     ExpertCache(std::size_t budget_bytes, std::size_t slot_bytes, std::size_t slot_alignment);
+    ExpertCache(
+        std::size_t budget_bytes,
+        std::size_t slot_bytes,
+        std::size_t slot_alignment,
+        CachePolicy policy);
     ExpertCache(std::span<std::byte> storage, std::size_t slot_bytes);
     ExpertCache(std::span<std::byte> storage, std::size_t slot_bytes, std::size_t slot_alignment);
+    ExpertCache(
+        std::span<std::byte> storage,
+        std::size_t slot_bytes,
+        std::size_t slot_alignment,
+        CachePolicy policy);
 
     [[nodiscard]] std::span<const std::byte> get_or_load(
         ExpertKey key,
@@ -59,15 +73,20 @@ public:
     [[nodiscard]] std::size_t slot_stride_bytes() const noexcept { return slot_stride_bytes_; }
     [[nodiscard]] std::size_t slot_alignment() const noexcept { return slot_alignment_; }
     [[nodiscard]] std::size_t slot_count() const noexcept { return slot_count_; }
-    [[nodiscard]] CachePolicy policy() const noexcept { return CachePolicy::lru; }
+    [[nodiscard]] CachePolicy policy() const noexcept { return policy_; }
 
 private:
+    static constexpr std::size_t kMaxPolicyHistoryEntries = 4096;
+    static constexpr std::size_t kMaxPolicyLayers = 256;
+
     struct Entry {
         std::size_t slot{};
         std::size_t bytes{};
         std::list<ExpertKey>::iterator lru_it;
     };
 
+    void initialize_metadata();
+    void record_access(ExpertKey key);
     void touch(ExpertKey key, Entry& entry);
     void evict_one();
     [[nodiscard]] std::span<std::byte> slot_span(std::size_t slot, std::size_t bytes);
@@ -84,6 +103,10 @@ private:
     std::vector<std::size_t> free_slots_;
     std::list<ExpertKey> lru_;
     std::unordered_map<ExpertKey, Entry, ExpertKeyHash> entries_;
+    std::unordered_map<ExpertKey, std::uint64_t, ExpertKeyHash> frequencies_;
+    std::unordered_map<std::uint32_t, std::uint64_t> layer_requests_;
+    std::uint64_t requests_{};
+    CachePolicy policy_{CachePolicy::lru};
     CacheStats stats_{};
 };
 

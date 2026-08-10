@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "task": "O01",
+  "device": "Infinix X6528 / Unisoc T606",
+  "transport": "192.168.100.189:5555",
+  "model": "openai/gpt-oss-20b",
+  "fixed_budget": {
+    "expert_slots": 4,
+    "expert_payload_bytes": 13236480,
+    "cache_payload_budget_bytes": 52945920,
+    "policy_history_entry_cap": 4096,
+    "policy_layer_cap": 256
+  },
+  "recorded_trace_replay": {
+    "trace": "artifacts/runs/20260810T030340Z_P02/p02_1024.trace",
+    "route_requests": 98304,
+    "lru": {
+      "hits": 38030,
+      "misses": 60274,
+      "modeled_flash_bytes": 797815595520
+    },
+    "lfu_decay": {
+      "hits": 24656,
+      "misses": 73648,
+      "miss_delta_vs_lru": 13374,
+      "interpretation": "rejected: more misses and modeled flash bytes"
+    },
+    "per_layer_hotset": {
+      "hits": 45598,
+      "misses": 52706,
+      "miss_reduction_vs_lru": 7568,
+      "modeled_flash_reduction_bytes": 100173680640
+    },
+    "artifact": "artifacts/runs/20260810T133709Z_O01/p02_1024_policy_replay.json"
+  },
+  "device_screen_2_tokens": [
+    {
+      "policy": "lru",
+      "elapsed_ms": 56282,
+      "cache_hits": 14,
+      "cache_misses": 178,
+      "expert_flash_bytes": 2356093440
+    },
+    {
+      "policy": "lfu_decay",
+      "elapsed_ms": 56433,
+      "cache_hits": 1,
+      "cache_misses": 191,
+      "expert_flash_bytes": 2528167680
+    },
+    {
+      "policy": "per_layer_hotset",
+      "elapsed_ms": 56256,
+      "cache_hits": 14,
+      "cache_misses": 178,
+      "expert_flash_bytes": 2356093440
+    }
+  ],
+  "device_live_16_tokens": {
+    "runtime_mode": "production_minimal_trace",
+    "common": {
+      "dense_threads": 6,
+      "affinity_mask": "ff",
+      "io_overlap": true,
+      "input_token_id": 12194,
+      "input_tokens": 16
+    },
+    "lru": {
+      "elapsed_ms": 405700,
+      "tokens_per_second": 0.039438008,
+      "expert_flash_bytes": 18133977600,
+      "expert_flash_bytes_per_token": 1133373600,
+      "cache_hits": 166,
+      "cache_misses": 1370,
+      "cache_hit_rate": 0.108072917,
+      "peak_rss_kib": 70164,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 13.8495,
+      "artifact": "artifacts/runs/20260810T133709Z_O01/o01_lru_16.json"
+    },
+    "per_layer_hotset": {
+      "elapsed_ms": 403725,
+      "tokens_per_second": 0.039630937,
+      "speedup_x": 1.004891944,
+      "expert_flash_bytes": 11595156480,
+      "expert_flash_bytes_per_token": 724697280,
+      "expert_flash_reduction_fraction": 0.360583942,
+      "cache_hits": 660,
+      "cache_misses": 876,
+      "cache_hit_rate": 0.4296875,
+      "peak_rss_kib": 70112,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 13.8495,
+      "artifact": "artifacts/runs/20260810T133709Z_O01/o01_per_layer_hotset_16.json"
+    }
+  },
+  "selected": {
+    "policy": "per_layer_hotset",
+    "reason": "The live same-binary run reduced expert flash traffic by 36.06%, improved end-to-end throughput by 0.49%, preserved RSS, and emitted identical output. The latency gain is small because expert compute remains dominant, but the flash reduction is material and has no measured regression.",
+    "production_default_verified": true,
+    "production_smoke_artifact": "artifacts/runs/20260810T133709Z_O01/o01_final_default_2.json"
+  },
+  "correctness": {
+    "all_device_candidates_token_id": 11,
+    "two_token_logit": 13.5247,
+    "sixteen_token_logit": 13.8495,
+    "policy_changes_only_eviction_selection": true
+  }
+}
