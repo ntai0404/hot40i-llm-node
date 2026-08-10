@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "task_id": "O02",
+  "started_at": "2026-08-10T14:10:51.461116+00:00",
+  "finished_at": "2026-08-10T14:25:56.940445+00:00",
+  "status": "pass",
+  "git_commit": "0fd2b669de46551e005052fcb7f9998f15f2233f",
+  "sources": [
+    {
+      "url": "https://machinelearning.apple.com/research/efficient-large-language",
+      "ref": "R01 checked 2026-08-07",
+      "note": "Windowing/reuse cost-model reference only; not gpt-oss semantic authority."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "python -m pytest tests/python/test_windowing_analysis.py -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\001.log"
+    },
+    {
+      "argv": "python research/analyze_windowing.py artifacts/runs/20260810T030340Z_P02/p02_1024.trace --windows 1,2,4 --output artifacts/runs/20260810T141051Z_O02/p02_window_upper_bound.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android26-clang++.cmd' -std=c++20 -O3 -DNDEBUG -Wall -Wextra -Wpedantic -pthread -static-libstdc++ -I device/runtime/include tests/minimal_decoder_probe.cpp device/runtime/src/attention.cpp device/runtime/src/expert_cache.cpp device/runtime/src/expert_read_pipeline.cpp device/runtime/src/flash_tensor_provider.cpp device/runtime/src/gptoss_expert.cpp device/runtime/src/h40m_tensor_catalog.cpp device/runtime/src/model_index.cpp device/runtime/src/mxfp4.cpp device/runtime/src/parallel_bf16.cpp device/runtime/src/router.cpp device/runtime/src/ram_arena.cpp -o artifacts/runs/20260810T141051Z_O02/minimal_decoder_window_android",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\003.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 push artifacts/runs/20260810T141051Z_O02/minimal_decoder_window_android /data/local/tmp/h40m/minimal_decoder_window_android",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\004.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 push artifacts/runs/20260810T141051Z_O02/o02_device4.sh /data/local/tmp/h40m/o02_device4.sh",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\005.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'cd /data/local/tmp/h40m; chmod 755 minimal_decoder_window_android o02_device4.sh; setsid ./o02_device4.sh > o02_device4.log 2>&1 < /dev/null & sleep 3; cat o02_device4.active; ps -A -o PID,PPID,STAT,ETIME,TIME,RSS,NAME | grep minimal_decoder_window_android'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\006.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_off_4.json artifacts/runs/20260810T141051Z_O02/o02_off_4.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\007.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_off_4.stdout artifacts/runs/20260810T141051Z_O02/o02_off_4.stdout",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\008.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_off_4.stderr artifacts/runs/20260810T141051Z_O02/o02_off_4.stderr",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\009.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_off_4.exit artifacts/runs/20260810T141051Z_O02/o02_off_4.exit",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\010.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_exact_w1_4.json artifacts/runs/20260810T141051Z_O02/o02_exact_w1_4.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\011.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_exact_w1_4.stdout artifacts/runs/20260810T141051Z_O02/o02_exact_w1_4.stdout",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\012.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\012.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_exact_w1_4.stderr artifacts/runs/20260810T141051Z_O02/o02_exact_w1_4.stderr",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\013.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\013.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_exact_w1_4.exit artifacts/runs/20260810T141051Z_O02/o02_exact_w1_4.exit",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\014.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\014.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_approximate_w1_4.json artifacts/runs/20260810T141051Z_O02/o02_approximate_w1_4.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\015.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\015.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_approximate_w1_4.stdout artifacts/runs/20260810T141051Z_O02/o02_approximate_w1_4.stdout",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\016.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\016.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_approximate_w1_4.stderr artifacts/runs/20260810T141051Z_O02/o02_approximate_w1_4.stderr",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\017.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\017.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_approximate_w1_4.exit artifacts/runs/20260810T141051Z_O02/o02_approximate_w1_4.exit",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\018.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\018.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_approximate_w4_4.json artifacts/runs/20260810T141051Z_O02/o02_approximate_w4_4.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\019.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\019.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_approximate_w4_4.stdout artifacts/runs/20260810T141051Z_O02/o02_approximate_w4_4.stdout",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\020.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\020.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_approximate_w4_4.stderr artifacts/runs/20260810T141051Z_O02/o02_approximate_w4_4.stderr",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\021.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\021.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_approximate_w4_4.exit artifacts/runs/20260810T141051Z_O02/o02_approximate_w4_4.exit",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\022.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\022.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_device4.done artifacts/runs/20260810T141051Z_O02/o02_device4.done",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\023.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\023.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_device4.log artifacts/runs/20260810T141051Z_O02/o02_device4.log",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\024.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\024.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'H40_THREADS=6 H40_IO_OVERLAP=1 taskset ff /data/local/tmp/h40m/minimal_decoder_window_android /data/local/tmp/h40m/source /data/local/tmp/h40m/h40m/tensor_catalog.tsv /data/local/tmp/h40m/h40m/expert_arena.bin 12194,12194 /data/local/tmp/h40m/o02_final_default_2.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\025.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\025.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o02_final_default_2.json artifacts/runs/20260810T141051Z_O02/o02_final_default_2.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\026.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\026.log"
+    },
+    {
+      "argv": "python -c 'import json,pathlib; p=json.loads(pathlib.Path('\"'\"'benchmarks/optimization/windowing.json'\"'\"').read_text()); d=p['\"'\"'device_quality_screen'\"'\"']; assert d['\"'\"'off_control'\"'\"']['\"'\"'emitted_token_logit'\"'\"']==d['\"'\"'exact_window_1'\"'\"']['\"'\"'emitted_token_logit'\"'\"']; assert d['\"'\"'exact_window_1'\"'\"']['\"'\"'expert_reuse_hits'\"'\"']==0; assert not d['\"'\"'approximate_window_1'\"'\"']['\"'\"'quality_pass'\"'\"']; assert not d['\"'\"'approximate_window_4'\"'\"']['\"'\"'quality_pass'\"'\"']; assert p['\"'\"'selected'\"'\"']['\"'\"'policy'\"'\"']=='\"'\"'off'\"'\"'; f=json.loads(pathlib.Path('\"'\"'artifacts/runs/20260810T141051Z_O02/o02_final_default_2.json'\"'\"').read_text()); assert f['\"'\"'expert_reuse_mode'\"'\"']=='\"'\"'off'\"'\"'; print('\"'\"'O02 windowing decision PASS'\"'\"')'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T141051Z_O02\\stdout\\027.log",
+      "stderr_file": "artifacts\\runs\\20260810T141051Z_O02\\stderr\\027.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260810T141051Z_O02/",
+    "benchmarks/optimization/windowing.json",
+    "research/analyze_windowing.py",
+    "tests/minimal_decoder_probe.cpp",
+    "tests/python/test_windowing_analysis.py"
+  ],
+  "verification": [
+    {
+      "name": "Correctness/quality proxy and I/O metrics.",
+      "passed": true,
+      "detail": "Exact w1 matched control logit 14.7737 but produced 0/384 reuse hits and identical expert bytes. Approximate w1/w4 changed logits by 2.9220/4.5823 and increased actual expert bytes, so both failed quality and I/O gates; production remains off."
+    }
+  ],
+  "metrics": {
+    "exact_reuse_hits": 0,
+    "approximate_w1_reuse_hits": 228,
+    "approximate_w4_reuse_hits": 237,
+    "approximate_w1_logit_abs_error": 2.922,
+    "approximate_w4_logit_abs_error": 4.5823,
+    "route_window1_upper_bound_rate": 0.475646973,
+    "route_window4_upper_bound_rate": 0.723856608,
+    "selected_policy": "off"
+  },
+  "artifacts": [
+    "benchmarks\\optimization\\windowing.json",
+    "artifacts\\runs\\20260810T141051Z_O02\\p02_window_upper_bound.json",
+    "artifacts\\runs\\20260810T141051Z_O02\\o02_off_4.json",
+    "artifacts\\runs\\20260810T141051Z_O02\\o02_exact_w1_4.json",
+    "artifacts\\runs\\20260810T141051Z_O02\\o02_approximate_w1_4.json",
+    "artifacts\\runs\\20260810T141051Z_O02\\o02_approximate_w4_4.json",
+    "artifacts\\runs\\20260810T141051Z_O02\\o02_final_default_2.json",
+    "artifacts\\runs\\20260810T141051Z_O02\\minimal_decoder_window_android"
+  ],
+  "limitations": [
+    "A monitoring-only adb shell command had a quoting error after sleeping; the background device benchmark was unaffected and completed all four candidates with exit 0."
+  ],
+  "notes": [
+    "No Apple-style expert-output reuse policy was retained. The diagnostic mode is test-only and allocates its bounded history only when explicitly enabled.",
+    "The official alternating 128-token sliding attention window was not changed because it is model semantics, not an optional activation-reuse optimization."
+  ]
+}

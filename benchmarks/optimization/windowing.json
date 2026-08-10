@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "task": "O02",
+  "device": "Infinix X6528 / Unisoc T606",
+  "transport": "192.168.100.189:5555",
+  "model": "openai/gpt-oss-20b",
+  "applicability": {
+    "apple_reference": "https://machinelearning.apple.com/research/efficient-large-language",
+    "applicable_concept": "bounded history/window cost model",
+    "non_transferable_assumption": "ReLU-neuron activation reuse does not imply that a routed gpt-oss MoE expert output is reusable for a different hidden vector.",
+    "official_attention_window": "The model's alternating 128-token sliding attention window is exact model semantics and remains unchanged."
+  },
+  "bounded_history": {
+    "entries": 32,
+    "latest_inputs_per_expert": 1,
+    "latest_outputs_per_expert": 1,
+    "floats_per_input_or_output": 2880,
+    "allocated_only_in_test_mode": true,
+    "production_default": "off"
+  },
+  "route_trace_upper_bound": {
+    "trace": "artifacts/runs/20260810T030340Z_P02/p02_1024.trace",
+    "requests": 98304,
+    "window_1_potential_reuse_rate": 0.475646973,
+    "window_2_potential_reuse_rate": 0.604003906,
+    "window_4_potential_reuse_rate": 0.723856608,
+    "interpretation": "These are route recurrences only and are not exact-reuse opportunities.",
+    "artifact": "artifacts/runs/20260810T141051Z_O02/p02_window_upper_bound.json"
+  },
+  "device_quality_screen": {
+    "common": {
+      "input_tokens": 4,
+      "input_token_id": 12194,
+      "dense_threads": 6,
+      "affinity_mask": "ff",
+      "cache_policy": "per_layer_hotset",
+      "io_overlap": true
+    },
+    "off_control": {
+      "elapsed_ms": 105799,
+      "expert_reuse_hits": 0,
+      "expert_flash_bytes": 3865052160,
+      "cache_misses": 292,
+      "peak_rss_kib": 69324,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 14.7737,
+      "artifact": "artifacts/runs/20260810T141051Z_O02/o02_off_4.json"
+    },
+    "exact_window_1": {
+      "elapsed_ms": 105582,
+      "speedup_x": 1.002055275,
+      "expert_reuse_hits": 0,
+      "expert_reuse_misses": 384,
+      "expert_flash_bytes": 3865052160,
+      "cache_misses": 292,
+      "peak_rss_kib": 69996,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 14.7737,
+      "quality_pass": true,
+      "net_benefit_pass": false,
+      "artifact": "artifacts/runs/20260810T141051Z_O02/o02_exact_w1_4.json"
+    },
+    "approximate_window_1": {
+      "elapsed_ms": 52778,
+      "speedup_x": 2.004604191,
+      "expert_reuse_hits": 228,
+      "expert_reuse_misses": 156,
+      "expert_flash_bytes": 3970944000,
+      "cache_misses": 300,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 11.8517,
+      "absolute_logit_error": 2.922,
+      "quality_pass": false,
+      "net_io_pass": false,
+      "artifact": "artifacts/runs/20260810T141051Z_O02/o02_approximate_w1_4.json"
+    },
+    "approximate_window_4": {
+      "elapsed_ms": 49935,
+      "speedup_x": 2.118734355,
+      "expert_reuse_hits": 237,
+      "expert_reuse_misses": 147,
+      "expert_flash_bytes": 3891525120,
+      "cache_misses": 294,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 10.1914,
+      "absolute_logit_error": 4.5823,
+      "quality_pass": false,
+      "net_io_pass": false,
+      "artifact": "artifacts/runs/20260810T141051Z_O02/o02_approximate_w4_4.json"
+    }
+  },
+  "selected": {
+    "policy": "off",
+    "reason": "Exact bounded reuse found no identical-input opportunity and provided no traffic benefit. Approximate reuse changed official logits materially and did not reduce actual expert flash traffic, so it is rejected even though it skipped compute.",
+    "production_default_verified": true,
+    "production_smoke_artifact": "artifacts/runs/20260810T141051Z_O02/o02_final_default_2.json"
+  }
+}

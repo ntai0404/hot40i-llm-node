@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "trace": "artifacts/runs/20260810T030340Z_P02/p02_1024.trace",
+  "requests": 98304,
+  "tokens_seen": 1024,
+  "windows": [
+    {
+      "window_tokens": 1,
+      "potential_reuses": 46758,
+      "potential_reuse_rate": 0.47564697265625,
+      "upper_bound_flash_bytes_saved": 618911331840
+    },
+    {
+      "window_tokens": 2,
+      "potential_reuses": 59376,
+      "potential_reuse_rate": 0.60400390625,
+      "upper_bound_flash_bytes_saved": 785929236480
+    },
+    {
+      "window_tokens": 4,
+      "potential_reuses": 71158,
+      "potential_reuse_rate": 0.7238566080729166,
+      "upper_bound_flash_bytes_saved": 941881443840
+    }
+  ],
+  "quality_caveat": "A route recurrence proves only that the same expert was selected; exact output reuse also requires an identical normalized hidden input. Savings are therefore an upper bound."
+}

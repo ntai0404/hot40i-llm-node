@@ -45,6 +45,21 @@ constexpr std::size_t kLmHeadChunkRows = 8192;
 constexpr std::size_t kMaxDenseThreads = 8;
 constexpr std::size_t kDefaultDenseThreads = 6;
 
+enum class ExpertReuseMode {
+    off,
+    exact,
+    approximate,
+};
+
+const char* reuse_mode_name(ExpertReuseMode mode) {
+    switch (mode) {
+        case ExpertReuseMode::off: return "off";
+        case ExpertReuseMode::exact: return "exact";
+        case ExpertReuseMode::approximate: return "approximate";
+    }
+    return "unknown";
+}
+
 struct Metrics {
     std::uint64_t dense_bytes{};
     std::uint64_t expert_flash_bytes{};
@@ -62,8 +77,12 @@ struct Metrics {
     std::uint64_t attention_ns{};
     std::uint64_t moe_ns{};
     std::uint64_t lm_head_ns{};
+    std::uint64_t expert_reuse_hits{};
+    std::uint64_t expert_reuse_misses{};
     std::size_t dense_threads{1};
+    std::size_t expert_reuse_window{};
     std::string cache_policy{"lru"};
+    std::string expert_reuse_mode{"off"};
     bool io_overlap_enabled{};
 };
 
@@ -276,6 +295,10 @@ void write_json(const std::filesystem::path& path, const Metrics& metrics, std::
     out << "  \"cache_hits\": " << metrics.expert_cache_hits << ",\n";
     out << "  \"cache_misses\": " << metrics.expert_cache_misses << ",\n";
     out << "  \"cache_policy\": \"" << metrics.cache_policy << "\",\n";
+    out << "  \"expert_reuse_mode\": \"" << metrics.expert_reuse_mode << "\",\n";
+    out << "  \"expert_reuse_window\": " << metrics.expert_reuse_window << ",\n";
+    out << "  \"expert_reuse_hits\": " << metrics.expert_reuse_hits << ",\n";
+    out << "  \"expert_reuse_misses\": " << metrics.expert_reuse_misses << ",\n";
     out << "  \"peak_rss_kib\": " << metrics.peak_rss_kib << ",\n";
     out << "  \"io_overlap_enabled\": " << (metrics.io_overlap_enabled ? "true" : "false") << ",\n";
     out << "  \"prefetched_experts\": " << metrics.prefetched_experts << ",\n";
@@ -353,6 +376,27 @@ int main(int argc, char** argv) {
         read_pipeline = std::make_unique<h40::ExpertReadPipeline>(loader, prefetch_storage);
     }
     metrics.io_overlap_enabled = io_overlap_enabled;
+    ExpertReuseMode reuse_mode = ExpertReuseMode::off;
+    if (const char* setting = std::getenv("H40_EXPERT_REUSE")) {
+        const std::string_view name(setting);
+        if (name == "exact") {
+            reuse_mode = ExpertReuseMode::exact;
+        } else if (name == "approximate") {
+            reuse_mode = ExpertReuseMode::approximate;
+        } else if (name != "off") {
+            throw std::invalid_argument("H40_EXPERT_REUSE must be off, exact, or approximate");
+        }
+    }
+    std::size_t reuse_window = 0;
+    if (reuse_mode != ExpertReuseMode::off) {
+        const char* setting = std::getenv("H40_REUSE_WINDOW");
+        reuse_window = setting == nullptr ? 1 : static_cast<std::size_t>(std::stoul(setting));
+        if (reuse_window == 0 || reuse_window > 64) {
+            throw std::invalid_argument("H40_REUSE_WINDOW must be in [1, 64]");
+        }
+    }
+    metrics.expert_reuse_mode = reuse_mode_name(reuse_mode);
+    metrics.expert_reuse_window = reuse_window;
 
     std::vector<float> hidden(seq_len * kHidden);
     std::vector<float> normed(seq_len * kHidden);
@@ -375,6 +419,14 @@ int main(int argc, char** argv) {
     std::vector<float> expert_hidden(kIntermediate);
     std::vector<std::uint32_t> expert_ids(kTopK);
     std::vector<float> expert_weights(kTopK);
+    std::vector<float> reuse_inputs;
+    std::vector<float> reuse_outputs;
+    std::vector<std::size_t> reuse_tokens(kExperts);
+    std::vector<bool> reuse_valid(kExperts);
+    if (reuse_mode != ExpertReuseMode::off) {
+        reuse_inputs.resize(kExperts * kHidden);
+        reuse_outputs.resize(kExperts * kHidden);
+    }
 
     std::vector<float> rope_cos(seq_len * (kHeadDim / 2));
     std::vector<float> rope_sin(seq_len * (kHeadDim / 2));
@@ -480,6 +532,7 @@ int main(int argc, char** argv) {
         }
 
         const auto moe_start = std::chrono::steady_clock::now();
+        std::fill(reuse_valid.begin(), reuse_valid.end(), false);
         h40::run_moe_layer_streaming(
             {layer, seq_len, kExperts, kTopK, kHidden},
             router_logits,
@@ -487,12 +540,35 @@ int main(int argc, char** argv) {
             loader,
             moe_out,
             {expert_ids, expert_weights, expert_out},
-            [&](std::size_t token, std::uint32_t, std::span<const std::byte> packed, std::span<float> out) {
+            [&](std::size_t token, std::uint32_t expert, std::span<const std::byte> packed, std::span<float> out) {
+                const auto input = std::span<const float>(normed).subspan(token * kHidden, kHidden);
+                if (reuse_mode != ExpertReuseMode::off) {
+                    const auto cached_input = std::span<const float>(reuse_inputs).subspan(expert * kHidden, kHidden);
+                    const auto cached_output = std::span<const float>(reuse_outputs).subspan(expert * kHidden, kHidden);
+                    const bool in_window = reuse_valid[expert] && token > reuse_tokens[expert] &&
+                                           token - reuse_tokens[expert] <= reuse_window;
+                    const bool exact_match = in_window && std::equal(input.begin(), input.end(), cached_input.begin());
+                    const bool reuse = in_window &&
+                                       (reuse_mode == ExpertReuseMode::approximate || exact_match);
+                    if (reuse) {
+                        std::copy(cached_output.begin(), cached_output.end(), out.begin());
+                        reuse_tokens[expert] = token;
+                        ++metrics.expert_reuse_hits;
+                        return;
+                    }
+                    ++metrics.expert_reuse_misses;
+                }
                 h40::run_gptoss_expert(
                     expert_view(packed),
-                    std::span<const float>(normed).subspan(token * kHidden, kHidden),
+                    input,
                     out,
                     {gate_up, expert_hidden});
+                if (reuse_mode != ExpertReuseMode::off) {
+                    std::copy(input.begin(), input.end(), reuse_inputs.begin() + expert * kHidden);
+                    std::copy(out.begin(), out.end(), reuse_outputs.begin() + expert * kHidden);
+                    reuse_tokens[expert] = token;
+                    reuse_valid[expert] = true;
+                }
             },
             trace,
             false,
