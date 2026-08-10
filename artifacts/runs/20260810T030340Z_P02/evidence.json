@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "task_id": "P02",
+  "started_at": "2026-08-10T03:03:40.650498+00:00",
+  "finished_at": "2026-08-10T11:09:37.843516+00:00",
+  "status": "pass",
+  "git_commit": "ce32bf7fb09b58215e06152c7894ca548acf8fbd",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'echo wifi-adb-ok; getprop ro.product.model; ip -4 addr show wlan0'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T030340Z_P02\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260810T030340Z_P02\\stderr\\001.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 push PROJECT_STATE.yaml /data/local/tmp/h40m/wifi_adb_probe.yaml",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T030340Z_P02\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260810T030340Z_P02\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/wifi_adb_probe.yaml artifacts/runs/20260810T030340Z_P02/wifi_adb_probe.yaml",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T030340Z_P02\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260810T030340Z_P02\\stderr\\003.log"
+    },
+    {
+      "argv": "python -c 'import hashlib,pathlib; a=hashlib.sha256(pathlib.Path('\"'\"'PROJECT_STATE.yaml'\"'\"').read_bytes()).hexdigest(); b=hashlib.sha256(pathlib.Path('\"'\"'artifacts/runs/20260810T030340Z_P02/wifi_adb_probe.yaml'\"'\"').read_bytes()).hexdigest(); assert a==b; print(a)'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T030340Z_P02\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260810T030340Z_P02\\stderr\\004.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'echo transport=wifi; getprop ro.product.model; cat /data/local/tmp/h40m/p02_1024_fresh.exit; cat /proc/meminfo | grep MemAvailable; cat /proc/meminfo | grep SwapTotal; cat /proc/meminfo | grep SwapFree; grep pswpin /proc/vmstat; grep pswpout /proc/vmstat; grep pgmajfault /proc/vmstat; dumpsys thermalservice | grep '\"'\"'Thermal Status'\"'\"''",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T030340Z_P02\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260810T030340Z_P02\\stderr\\005.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_70tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_refactor.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_70tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_refactor.json",
+    "artifacts/runs/20260810T030340Z_P02/",
+    "benchmarks/proof/long_decode.json"
+  ],
+  "verification": [
+    {
+      "name": "Full trace analyzer report.",
+      "passed": true,
+      "detail": "512 and fresh 1024 traces analyzed: 1024 saw 561365 events across 24 layers and 1024 tokens; exit 0; CPU expert compute is primary, aggregate flash traffic/low cache-hit rate secondary; no OOM or thermal throttling."
+    }
+  ],
+  "metrics": {
+    "baseline_512_tokens_per_second": 0.035929,
+    "baseline_1024_tokens_per_second": 0.035506,
+    "baseline_1024_seconds_per_token": 28.164,
+    "baseline_1024_peak_rss_kib": 138868,
+    "baseline_1024_flash_bytes_per_token": 2365567023,
+    "baseline_1024_cache_hit_rate": 0.145365,
+    "baseline_1024_expert_compute_mean_ms": 248.472,
+    "baseline_1024_expert_read_mean_ms": 7.037,
+    "thermal_status_after_1024": 0,
+    "mem_available_kib_after_1024": 1365976,
+    "swap_used_kib_after_1024": 1422552
+  },
+  "artifacts": [
+    "benchmarks\\proof\\long_decode.json",
+    "artifacts\\runs\\20260809T182659Z_P02\\p02_512.json",
+    "artifacts\\runs\\20260809T182659Z_P02\\p02_512.trace",
+    "artifacts\\runs\\20260809T182659Z_P02\\p02_512_analysis.json",
+    "artifacts\\runs\\20260810T030340Z_P02\\p02_1024.json",
+    "artifacts\\runs\\20260810T030340Z_P02\\p02_1024.trace",
+    "artifacts\\runs\\20260810T030340Z_P02\\p02_1024_analysis.json",
+    "artifacts\\runs\\20260810T030340Z_P02\\p02_1024.stdout",
+    "artifacts\\runs\\20260810T030340Z_P02\\p02_1024.stderr",
+    "artifacts\\runs\\20260810T030340Z_P02\\p02_1024.exit"
+  ],
+  "limitations": [
+    "Baseline full tracing is intentionally high-overhead and is not a production throughput claim; post-P02 optimization uses short screening runs and production minimal-trace validation."
+  ],
+  "notes": [
+    "Fresh 1024 run used detached execution and verified Wi-Fi ADB transport, preserving the device process across monitoring disconnects."
+  ]
+}

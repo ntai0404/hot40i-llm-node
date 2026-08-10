@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "mode": "multi_token_full_24_layer_h40m_prefill_decode",
+  "input_tokens": 1024,
+  "layers_run": 24,
+  "emitted_token_id": 11,
+  "emitted_token_text": null,
+  "emitted_token_logit": 13.3552,
+  "dense_flash_bytes": 1310291000448,
+  "expert_flash_bytes": 1112049630720,
+  "cache_hits": 14290,
+  "cache_misses": 84014,
+  "peak_rss_kib": 138868,
+  "elapsed_ms": 28840222
+}
