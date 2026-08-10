@@ -12,6 +12,7 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -50,6 +51,10 @@ struct Metrics {
     std::uint32_t token_id{};
     float token_logit{-std::numeric_limits<float>::infinity()};
     std::uint64_t peak_rss_kib{};
+    std::uint64_t prefetched_experts{};
+    std::uint64_t prefetch_read_ns{};
+    std::uint64_t prefetch_wait_ns{};
+    bool io_overlap_enabled{};
 };
 
 std::uint64_t elapsed_ms(std::chrono::steady_clock::time_point start) {
@@ -256,6 +261,10 @@ void write_json(const std::filesystem::path& path, const Metrics& metrics, std::
     out << "  \"cache_hits\": " << metrics.expert_cache_hits << ",\n";
     out << "  \"cache_misses\": " << metrics.expert_cache_misses << ",\n";
     out << "  \"peak_rss_kib\": " << metrics.peak_rss_kib << ",\n";
+    out << "  \"io_overlap_enabled\": " << (metrics.io_overlap_enabled ? "true" : "false") << ",\n";
+    out << "  \"prefetched_experts\": " << metrics.prefetched_experts << ",\n";
+    out << "  \"prefetch_read_ns\": " << metrics.prefetch_read_ns << ",\n";
+    out << "  \"prefetch_wait_ns\": " << metrics.prefetch_wait_ns << ",\n";
     out << "  \"elapsed_ms\": " << elapsed << "\n";
     out << "}\n";
 }
@@ -291,6 +300,15 @@ int main(int argc, char** argv) {
     const auto model_index = build_expert_index();
     h40::ExpertLoader loader(model_index, expert_provider);
     h40::ExpertCache cache(kExpertPayloadBytes * kTopK, kExpertPayloadBytes, 1048576);
+    const char* overlap_setting = std::getenv("H40_IO_OVERLAP");
+    const bool io_overlap_enabled = overlap_setting == nullptr || std::string_view(overlap_setting) != "0";
+    std::vector<std::byte> prefetch_storage;
+    std::unique_ptr<h40::ExpertReadPipeline> read_pipeline;
+    if (io_overlap_enabled) {
+        prefetch_storage.resize(kExpertPayloadBytes);
+        read_pipeline = std::make_unique<h40::ExpertReadPipeline>(loader, prefetch_storage);
+    }
+    metrics.io_overlap_enabled = io_overlap_enabled;
 
     std::vector<float> hidden(seq_len * kHidden);
     std::vector<float> normed(seq_len * kHidden);
@@ -422,7 +440,9 @@ int main(int argc, char** argv) {
                     out,
                     {gate_up, expert_hidden});
             },
-            trace);
+            trace,
+            false,
+            read_pipeline.get());
         add_inplace(hidden, moe_out);
         ++metrics.layers_run;
         if (trace) {
@@ -460,6 +480,12 @@ int main(int argc, char** argv) {
     metrics.expert_cache_hits = stats.hits;
     metrics.expert_cache_misses = stats.misses;
     metrics.expert_flash_bytes = stats.bytes_loaded;
+    if (read_pipeline) {
+        const auto prefetch_stats = read_pipeline->stats();
+        metrics.prefetched_experts = prefetch_stats.completed;
+        metrics.prefetch_read_ns = prefetch_stats.read_nanoseconds;
+        metrics.prefetch_wait_ns = prefetch_stats.wait_nanoseconds;
+    }
     struct rusage usage {};
     if (getrusage(RUSAGE_SELF, &usage) == 0) {
         metrics.peak_rss_kib = static_cast<std::uint64_t>(usage.ru_maxrss);

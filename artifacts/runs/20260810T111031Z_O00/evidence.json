@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "task_id": "O00",
+  "started_at": "2026-08-10T11:10:31.508869+00:00",
+  "finished_at": "2026-08-10T11:42:32.641930+00:00",
+  "status": "pass",
+  "git_commit": "cf6b4bc04545f2c3831beafb111bb159c9bbe37a",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'echo ===CPU_ONLINE===; cat /sys/devices/system/cpu/online; echo ===CPU_POLICIES===; for p in /sys/devices/system/cpu/cpufreq/policy*; do echo POLICY=; cat /related_cpus 2>/dev/null; cat /scaling_available_frequencies 2>/dev/null; cat /scaling_available_governors 2>/dev/null; cat /scaling_governor 2>/dev/null; cat /cpuinfo_min_freq 2>/dev/null; cat /cpuinfo_max_freq 2>/dev/null; cat /scaling_cur_freq 2>/dev/null; done; echo ===CPUINFO===; cat /proc/cpuinfo; echo ===TOP===; top -b -n 1 -m 20; echo ===SWAP===; cat /proc/swaps; cat /sys/block/zram0/mm_stat 2>/dev/null; cat /sys/block/zram0/bd_stat 2>/dev/null; echo ===MEM===; cat /proc/meminfo; echo ===PSI===; cat /proc/pressure/cpu 2>/dev/null; cat /proc/pressure/memory 2>/dev/null; cat /proc/pressure/io 2>/dev/null; echo ===THERMAL===; dumpsys thermalservice; echo ===POWER===; settings get global low_power; dumpsys power | grep -E '\"'\"'mWakefulness|mIsPowered|mBatteryLevel|mStayOn'\"'\"''",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\001.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'cd /data/local/tmp/h40m; cp minimal_decoder_probe minimal_decoder_probe_o00_baseline; chmod 755 minimal_decoder_probe_o00_baseline; rm -f o00_before16.json o00_before16.stdout o00_before16.stderr o00_before16.exit; setsid sh -c '\"'\"'./minimal_decoder_probe_o00_baseline /data/local/tmp/h40m/source /data/local/tmp/h40m/h40m/tensor_catalog.tsv /data/local/tmp/h40m/h40m/expert_arena.bin 12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194 /data/local/tmp/h40m/o00_before16.json > /data/local/tmp/h40m/o00_before16.stdout 2> /data/local/tmp/h40m/o00_before16.stderr; echo $? > /data/local/tmp/h40m/o00_before16.exit'\"'\"' < /dev/null > /dev/null 2>&1 & sleep 2; ps -A -o PID,PPID,STAT,RSS,VSZ,TIME,NAME | grep minimal_decoder_probe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -O2 -Wall -Wextra -Wpedantic -pthread -I 'device\\runtime\\include' 'tests\\expert_read_pipeline_test.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\expert_read_pipeline.cpp' 'device\\runtime\\src\\model_index.cpp' -o 'artifacts\\runs\\20260810T111031Z_O00\\expert_read_pipeline_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\003.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260810T111031Z_O00\\expert_read_pipeline_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\004.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -O2 -Wall -Wextra -Wpedantic -pthread -I 'device\\runtime\\include' 'tests\\tiny_parity_test.cpp' 'device\\runtime\\src\\attention.cpp' 'device\\runtime\\src\\router.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\expert_read_pipeline.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' 'device\\runtime\\src\\model_index.cpp' -o 'artifacts\\runs\\20260810T111031Z_O00\\tiny_parity_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\005.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260810T111031Z_O00\\tiny_parity_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\006.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -O2 -Wall -Wextra -Wpedantic -pthread -I 'device\\runtime\\include' 'tests\\bounded_runtime_graph_test.cpp' 'device\\runtime\\src\\router.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\expert_read_pipeline.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' 'device\\runtime\\src\\model_index.cpp' 'device\\runtime\\src\\ram_arena.cpp' -o 'artifacts\\runs\\20260810T111031Z_O00\\bounded_runtime_graph_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\007.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260810T111031Z_O00\\bounded_runtime_graph_test.exe' 'artifacts\\runs\\20260810T111031Z_O00\\bounded_graph.json' 'artifacts\\runs\\20260810T111031Z_O00\\bounded_graph.trace'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\008.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android26-clang++.cmd' -std=c++20 -O3 -DNDEBUG -Wall -Wextra -Wpedantic -pthread -static-libstdc++ -I 'device\\runtime\\include' 'tests\\minimal_decoder_probe.cpp' 'device\\runtime\\src\\attention.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\expert_read_pipeline.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' 'device\\runtime\\src\\gptoss_expert.cpp' 'device\\runtime\\src\\h40m_tensor_catalog.cpp' 'device\\runtime\\src\\model_index.cpp' 'device\\runtime\\src\\mxfp4.cpp' 'device\\runtime\\src\\router.cpp' 'device\\runtime\\src\\ram_arena.cpp' -o 'artifacts\\runs\\20260810T111031Z_O00\\minimal_decoder_probe_android'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\009.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -O2 -Wall -Wextra -Wpedantic -pthread -I 'device\\runtime\\include' 'tests\\expert_read_pipeline_test.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\expert_read_pipeline.cpp' 'device\\runtime\\src\\model_index.cpp' -o 'artifacts\\runs\\20260810T111031Z_O00\\expert_read_pipeline_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\010.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260810T111031Z_O00\\expert_read_pipeline_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\011.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android26-clang++.cmd' -std=c++20 -O3 -DNDEBUG -Wall -Wextra -Wpedantic -pthread -static-libstdc++ -I 'device\\runtime\\include' 'tests\\minimal_decoder_probe.cpp' 'device\\runtime\\src\\attention.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\expert_read_pipeline.cpp' 'device\\runtime\\src\\flash_tensor_provider.cpp' 'device\\runtime\\src\\gptoss_expert.cpp' 'device\\runtime\\src\\h40m_tensor_catalog.cpp' 'device\\runtime\\src\\model_index.cpp' 'device\\runtime\\src\\mxfp4.cpp' 'device\\runtime\\src\\router.cpp' 'device\\runtime\\src\\ram_arena.cpp' -o 'artifacts\\runs\\20260810T111031Z_O00\\minimal_decoder_probe_android'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\012.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\012.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_before16.json 'artifacts\\runs\\20260810T111031Z_O00\\o00_before16.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\013.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\013.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_before16.stdout 'artifacts\\runs\\20260810T111031Z_O00\\o00_before16.stdout'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\014.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\014.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_before16.stderr 'artifacts\\runs\\20260810T111031Z_O00\\o00_before16.stderr'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\015.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\015.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_before16.exit 'artifacts\\runs\\20260810T111031Z_O00\\o00_before16.exit'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\016.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\016.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 push 'artifacts\\runs\\20260810T111031Z_O00\\minimal_decoder_probe_android' /data/local/tmp/h40m/minimal_decoder_probe_o00",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\017.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\017.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'cd /data/local/tmp/h40m; chmod 755 minimal_decoder_probe_o00; rm -f o00_after16.json o00_after16.stdout o00_after16.stderr o00_after16.exit; setsid sh -c '\"'\"'./minimal_decoder_probe_o00 /data/local/tmp/h40m/source /data/local/tmp/h40m/h40m/tensor_catalog.tsv /data/local/tmp/h40m/h40m/expert_arena.bin 12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194,12194 /data/local/tmp/h40m/o00_after16.json > /data/local/tmp/h40m/o00_after16.stdout 2> /data/local/tmp/h40m/o00_after16.stderr; echo $? > /data/local/tmp/h40m/o00_after16.exit'\"'\"' < /dev/null > /dev/null 2>&1 & sleep 2; ps -A -o PID,PPID,STAT,RSS,VSZ,TIME,NAME | grep minimal_decoder_probe_o00'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\018.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\018.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'echo ===CPU_POLICIES===; for p in /sys/devices/system/cpu/cpufreq/policy*; do echo POLICY=$p; cat $p/related_cpus 2>/dev/null; cat $p/scaling_available_frequencies 2>/dev/null; cat $p/scaling_available_governors 2>/dev/null; cat $p/scaling_governor 2>/dev/null; cat $p/cpuinfo_min_freq 2>/dev/null; cat $p/cpuinfo_max_freq 2>/dev/null; cat $p/scaling_cur_freq 2>/dev/null; done; echo ===PER_CPU_FREQ===; for c in /sys/devices/system/cpu/cpu[0-9]*; do echo CPU=$c; cat $c/cpufreq/scaling_cur_freq 2>/dev/null; done; echo ===RUN_SAMPLE===; top -b -n 1 -m 12 | head -n 16; cat /proc/meminfo | grep MemAvailable; cat /sys/block/zram0/mm_stat 2>/dev/null; cat /sys/block/zram0/bd_stat 2>/dev/null; dumpsys thermalservice | grep '\"'\"'Thermal Status'\"'\"''",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\019.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\019.log"
+    },
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -O2 -Wall -Wextra -Wpedantic -pthread -I 'device\\runtime\\include' 'tests\\expert_read_pipeline_test.cpp' 'device\\runtime\\src\\expert_cache.cpp' 'device\\runtime\\src\\expert_read_pipeline.cpp' 'device\\runtime\\src\\model_index.cpp' -o 'artifacts\\runs\\20260810T111031Z_O00\\expert_read_pipeline_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\020.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\020.log"
+    },
+    {
+      "argv": "'artifacts\\runs\\20260810T111031Z_O00\\expert_read_pipeline_test.exe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\021.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\021.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_after16.json 'artifacts\\runs\\20260810T111031Z_O00\\o00_after16.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\022.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\022.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_after16.stdout 'artifacts\\runs\\20260810T111031Z_O00\\o00_after16.stdout'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\023.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\023.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_after16.json 'artifacts\\runs\\20260810T111031Z_O00\\o00_after16.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\024.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\024.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_after16.stdout 'artifacts\\runs\\20260810T111031Z_O00\\o00_after16.stdout'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\025.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\025.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_after16.exit 'artifacts\\runs\\20260810T111031Z_O00\\o00_after16.exit'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\026.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\026.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_after16.exit 'artifacts\\runs\\20260810T111031Z_O00\\o00_after16.exit'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\027.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\027.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'cd /data/local/tmp/h40m; rm -f o00_trace2.json o00_trace2.trace o00_trace2.stdout o00_trace2.stderr o00_trace2.exit; setsid sh -c '\"'\"'./minimal_decoder_probe_o00 /data/local/tmp/h40m/source /data/local/tmp/h40m/h40m/tensor_catalog.tsv /data/local/tmp/h40m/h40m/expert_arena.bin 12194,12194 /data/local/tmp/h40m/o00_trace2.json /data/local/tmp/h40m/o00_trace2.trace > /data/local/tmp/h40m/o00_trace2.stdout 2> /data/local/tmp/h40m/o00_trace2.stderr; echo $? > /data/local/tmp/h40m/o00_trace2.exit'\"'\"' < /dev/null > /dev/null 2>&1 & sleep 2; ps -A -o PID,PPID,STAT,RSS,VSZ,TIME,NAME | grep minimal_decoder_probe_o00'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\028.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\028.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_trace2.trace 'artifacts\\runs\\20260810T111031Z_O00\\o00_trace2_interrupted.trace'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\029.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\029.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_trace2.stderr 'artifacts\\runs\\20260810T111031Z_O00\\o00_trace2_interrupted.stderr'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\030.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\030.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_trace2_fresh.json 'artifacts\\runs\\20260810T111031Z_O00\\o00_trace2.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\031.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\031.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_trace2_fresh.trace 'artifacts\\runs\\20260810T111031Z_O00\\o00_trace2.trace'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\032.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\032.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_trace2_fresh.stdout 'artifacts\\runs\\20260810T111031Z_O00\\o00_trace2.stdout'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\033.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\033.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_trace2_fresh.stderr 'artifacts\\runs\\20260810T111031Z_O00\\o00_trace2.stderr'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\034.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\034.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_trace2_fresh.exit 'artifacts\\runs\\20260810T111031Z_O00\\o00_trace2.exit'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\035.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\035.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'cd /data/local/tmp/h40m && rm -f o00_trace2.json o00_trace2.trace && ./minimal_decoder_probe_o00 /data/local/tmp/h40m/source /data/local/tmp/h40m/h40m/tensor_catalog.tsv /data/local/tmp/h40m/h40m/expert_arena.bin 12194,12194 /data/local/tmp/h40m/o00_trace2.json /data/local/tmp/h40m/o00_trace2.trace'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\036.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\036.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_trace2.json 'artifacts\\runs\\20260810T111031Z_O00\\o00_trace2.json'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\037.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\037.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 pull /data/local/tmp/h40m/o00_trace2.trace 'artifacts\\runs\\20260810T111031Z_O00\\o00_trace2.trace'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\038.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\038.log"
+    },
+    {
+      "argv": "'C:\\mobile-remote-tools\\platform-tools\\adb.exe' -s 192.168.100.189:5555 shell 'cd /data/local/tmp/h40m; sha256sum minimal_decoder_probe_o00_baseline minimal_decoder_probe_o00; cat o00_before16.exit; cat o00_after16.exit; cat /proc/meminfo | grep MemAvailable; cat /proc/meminfo | grep SwapTotal; cat /proc/meminfo | grep SwapFree; dumpsys thermalservice | grep '\"'\"'Thermal Status'\"'\"'; ps -A -o PID,STAT,RSS,VSZ,NAME | grep minimal_decoder_probe'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T111031Z_O00\\stdout\\039.log",
+      "stderr_file": "artifacts\\runs\\20260810T111031Z_O00\\stderr\\039.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_70tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_refactor.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_70tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_refactor.json",
+    "artifacts/runs/20260810T111031Z_O00/",
+    "benchmarks/optimization/",
+    "device/runtime/include/h40/expert_cache.hpp",
+    "device/runtime/include/h40/expert_read_pipeline.hpp",
+    "device/runtime/include/h40/moe_scheduler.hpp",
+    "device/runtime/src/expert_cache.cpp",
+    "device/runtime/src/expert_read_pipeline.cpp",
+    "tests/expert_read_pipeline_test.cpp",
+    "tests/minimal_decoder_probe.cpp"
+  ],
+  "verification": [
+    {
+      "name": "Same correctness regression.",
+      "passed": true,
+      "detail": "Host expert pipeline, tiny parity, and bounded runtime graph tests passed. Same-device 16-token baseline and O00 runs emitted identical token 11 and logit 13.8495 with identical cache hits/misses."
+    },
+    {
+      "name": "Before/after same device/config.",
+      "passed": true,
+      "detail": "Hot 40i production no-trace A/B used the same H40M artifacts and 16-token input: 0.034789491 to 0.036030274 tok/s, 1.035665468x. A fresh 2-token full trace measured 99.99701% prefetch overlap."
+    }
+  ],
+  "metrics": {
+    "baseline_tokens_per_second": 0.034789491,
+    "optimized_tokens_per_second": 0.036030274,
+    "speedup_x": 1.035665468,
+    "optimized_peak_rss_kib": 69668,
+    "production_prefetch_overlap_ratio": 0.999935211,
+    "trace_prefetch_overlap_ratio": 0.9999701,
+    "trace_prefetched_experts": 135,
+    "sampled_decoder_cpu_percent": 100,
+    "sampled_system_idle_percent_of_800": 657,
+    "thermal_status": 0
+  },
+  "artifacts": [
+    "benchmarks\\optimization\\double_buffer.json",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_before16.json",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_before16.exit",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_after16.json",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_after16.exit",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_trace2.json",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_trace2.trace",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_trace2_interrupted.trace",
+    "artifacts\\runs\\20260810T111031Z_O00\\o00_trace2_interrupted.stderr",
+    "artifacts\\runs\\20260810T111031Z_O00\\minimal_decoder_probe_android",
+    "artifacts\\runs\\20260810T111031Z_O00\\bounded_graph.json",
+    "artifacts\\runs\\20260810T111031Z_O00\\bounded_graph.trace"
+  ],
+  "limitations": [
+    "One detached 2-token trace process received SIGTERM near the end without LMKD/OOM/thermal evidence. Its partial trace and stderr are retained; a fresh foreground run with the same binary/config completed and is the pass evidence."
+  ],
+  "notes": [
+    "CPU topology probe found six Cortex-A55 CPUs (0-5) and two Cortex-A75 CPUs (6-7), all online under schedutil; the decoder sampled at about 100% CPU while 657% of 800% remained idle."
+  ]
+}

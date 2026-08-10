@@ -164,4 +164,33 @@ CacheLoadResult ExpertCache::get_or_load(
     return {slot_span(it->second.slot, it->second.bytes), false};
 }
 
+CacheLoadResult ExpertCache::insert_loaded(
+    ExpertKey key,
+    std::span<const std::byte> bytes) {
+    if (entries_.find(key) != entries_.end()) {
+        throw std::logic_error("cannot insert an expert that is already cached");
+    }
+    if (bytes.empty() || bytes.size() > slot_bytes_) throw std::bad_alloc();
+    while (free_slots_.empty()) evict_one();
+    const auto slot = free_slots_.back();
+    free_slots_.pop_back();
+
+    auto destination = slot_span(slot, bytes.size());
+    std::copy(bytes.begin(), bytes.end(), destination.begin());
+    Entry entry;
+    entry.slot = slot;
+    entry.bytes = bytes.size();
+    ++stats_.misses;
+    stats_.bytes_loaded += bytes.size();
+    used_bytes_ += bytes.size();
+    stats_.peak_used_bytes = std::max<std::uint64_t>(
+        stats_.peak_used_bytes,
+        static_cast<std::uint64_t>(used_bytes_));
+    lru_.push_front(key);
+    entry.lru_it = lru_.begin();
+    const auto [it, inserted] = entries_.emplace(key, std::move(entry));
+    if (!inserted) throw std::logic_error("cache insertion failed");
+    return {slot_span(it->second.slot, it->second.bytes), false};
+}
+
 } // namespace h40

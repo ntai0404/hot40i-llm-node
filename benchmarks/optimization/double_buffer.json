@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "task": "O00",
+  "device": "112193741U000563",
+  "model": "openai/gpt-oss-20b",
+  "comparison": {
+    "input_tokens": 16,
+    "runtime_mode": "production_minimal_trace",
+    "same_device_and_input": true,
+    "baseline": {
+      "io_overlap_enabled": false,
+      "elapsed_ms": 459909,
+      "tokens_per_second": 0.034789491,
+      "peak_rss_kib": 57172,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 13.8495,
+      "cache_hits": 166,
+      "cache_misses": 1370
+    },
+    "double_buffered": {
+      "io_overlap_enabled": true,
+      "elapsed_ms": 444071,
+      "tokens_per_second": 0.036030274,
+      "peak_rss_kib": 69668,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 13.8495,
+      "cache_hits": 166,
+      "cache_misses": 1370,
+      "prefetched_experts": 1034,
+      "prefetch_read_ns": 19022646936,
+      "prefetch_wait_ns": 1232465,
+      "measured_overlap_ratio": 0.999935211
+    },
+    "speedup_x": 1.035665468,
+    "latency_reduction_fraction": 0.034437247
+  },
+  "trace_validation": {
+    "input_tokens": 2,
+    "events": 1650,
+    "prefetched_experts": 135,
+    "prefetch_read_ns": 6158431614,
+    "prefetch_wait_ns": 184114,
+    "measured_overlap_ratio": 0.9999701,
+    "emitted_token_id": 11,
+    "emitted_token_logit": 13.5247,
+    "elapsed_ms": 61469,
+    "trace": "artifacts/runs/20260810T111031Z_O00/o00_trace2.trace"
+  },
+  "device_profile": {
+    "online_cpus": "0-7",
+    "little_cluster": "cpu0-5 Cortex-A55, 614400-1612000 kHz",
+    "big_cluster": "cpu6-7 Cortex-A75, 768000-1612000 kHz",
+    "governor": "schedutil",
+    "available_governors": [
+      "userspace",
+      "conservative",
+      "powersave",
+      "performance",
+      "schedutil"
+    ],
+    "sampled_decoder_cpu_percent": 100,
+    "sampled_system_idle_percent_of_800": 657,
+    "sampled_io_wait_percent": 0,
+    "thermal_status": 0
+  },
+  "conclusion": "Retain bounded read/compute overlap: same-device production throughput improved 3.57% with identical token/logit and cache behavior. Prefetch wait was nearly eliminated. CPU compute remains the dominant target because the decoder still saturates approximately one core while most cores are idle."
+}

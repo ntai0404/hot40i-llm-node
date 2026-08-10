@@ -2,6 +2,7 @@
 
 #include "h40/expert_cache.hpp"
 #include "h40/expert_loader.hpp"
+#include "h40/expert_read_pipeline.hpp"
 #include "h40/trace.hpp"
 
 #include <algorithm>
@@ -105,7 +106,8 @@ void run_moe_layer_streaming(
     MoESchedulerScratch scratch,
     ComputeExpert&& compute_expert,
     JsonlTraceWriter* trace = nullptr,
-    bool verify_checksum = false) {
+    bool verify_checksum = false,
+    ExpertReadPipeline* read_pipeline = nullptr) {
     if (router_logits.size() != config.token_count * config.expert_count) {
         throw std::invalid_argument("router logits shape mismatch");
     }
@@ -131,6 +133,8 @@ void run_moe_layer_streaming(
     const auto ids = scratch.expert_ids.first(config.top_k);
     const auto weights = scratch.expert_weights.first(config.top_k);
     const auto expert_output = scratch.expert_output.first(config.model_dim);
+    bool prefetch_pending = false;
+    ExpertKey prefetched_key{};
 
     for (std::size_t token = 0; token < config.token_count; ++token) {
         detail::select_top_k_noalloc(
@@ -142,17 +146,34 @@ void run_moe_layer_streaming(
             if (trace) trace->emit(detail::moe_event("route", token, config.layer, expert_id));
 
             const ExpertKey key{config.layer, expert_id};
-            const bool will_hit = cache.contains(key);
             const auto before_cache = cache.stats();
-            auto read_start = std::chrono::steady_clock::now();
-            if (trace && !will_hit) {
-                auto row = detail::moe_event("read_begin", token, config.layer, expert_id);
-                row.bytes = loader.index().find_record(key).value().slice.length;
-                row.has_bytes = true;
-                trace->emit(row);
+            CacheLoadResult loaded;
+            std::uint64_t read_ns = 0;
+            std::uint64_t prefetch_wait_ns = 0;
+            bool was_prefetched = false;
+            if (prefetch_pending) {
+                if (!(key == prefetched_key) || read_pipeline == nullptr) {
+                    throw std::logic_error("expert prefetch order mismatch");
+                }
+                const auto prefetched = read_pipeline->wait();
+                if (!(prefetched.key == key)) throw std::logic_error("expert prefetch key mismatch");
+                loaded = cache.insert_loaded(key, prefetched.bytes);
+                read_ns = prefetched.read_nanoseconds;
+                prefetch_wait_ns = prefetched.wait_nanoseconds;
+                prefetch_pending = false;
+                was_prefetched = true;
+            } else {
+                const bool will_hit = cache.contains(key);
+                const auto read_start = std::chrono::steady_clock::now();
+                if (trace && !will_hit) {
+                    auto row = detail::moe_event("read_begin", token, config.layer, expert_id);
+                    row.bytes = loader.index().find_record(key).value().slice.length;
+                    row.has_bytes = true;
+                    trace->emit(row);
+                }
+                loaded = cache.get_or_load(key, loader, verify_checksum);
+                read_ns = detail::elapsed_ns(read_start);
             }
-            const auto loaded = cache.get_or_load(key, loader, verify_checksum);
-            const auto read_ns = detail::elapsed_ns(read_start);
             if (trace) {
                 auto cache_row = detail::moe_event(loaded.hit ? "cache_hit" : "cache_miss", token, config.layer, expert_id);
                 cache_row.cache_hit = loaded.hit;
@@ -165,11 +186,38 @@ void run_moe_layer_streaming(
                     row.has_bytes = true;
                     row.has_duration = true;
                     trace->emit(row);
+                    if (was_prefetched) {
+                        row.event = "prefetch_end";
+                        trace->emit(row);
+                        row.event = "prefetch_wait_end";
+                        row.duration_ns = prefetch_wait_ns;
+                        row.has_bytes = false;
+                        trace->emit(row);
+                    }
                 }
             }
             const auto after_cache = cache.stats();
             if (!loaded.hit && after_cache.bytes_loaded <= before_cache.bytes_loaded) {
                 throw std::logic_error("cache miss did not load expert bytes");
+            }
+
+            if (read_pipeline && choice + 1 < config.top_k) {
+                const ExpertKey next_key{config.layer, ids[choice + 1]};
+                if (!cache.contains(next_key)) {
+                    const auto record = loader.index().find_record(next_key);
+                    if (!record.has_value()) throw std::out_of_range("expert key missing from model index");
+                    read_pipeline->submit(next_key, verify_checksum);
+                    prefetch_pending = true;
+                    prefetched_key = next_key;
+                    if (trace) {
+                        auto row = detail::moe_event("prefetch_begin", token, config.layer, next_key.expert);
+                        row.bytes = record->slice.length;
+                        row.has_bytes = true;
+                        trace->emit(row);
+                        row.event = "read_begin";
+                        trace->emit(row);
+                    }
+                }
             }
 
             std::fill(expert_output.begin(), expert_output.end(), 0.0F);
@@ -189,6 +237,9 @@ void run_moe_layer_streaming(
                 token_output[i] += weights[choice] * expert_output[i];
             }
         }
+    }
+    if (prefetch_pending || (read_pipeline && read_pipeline->busy())) {
+        throw std::logic_error("expert prefetch remained pending after layer completion");
     }
 
     if (trace) {

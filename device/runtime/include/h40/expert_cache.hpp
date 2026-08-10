@@ -47,6 +47,9 @@ public:
         ExpertKey key,
         const ExpertLoader& loader,
         bool verify_checksum);
+    [[nodiscard]] CacheLoadResult insert_loaded(
+        ExpertKey key,
+        std::span<const std::byte> bytes);
 
     [[nodiscard]] CacheStats stats() const noexcept { return stats_; }
     [[nodiscard]] bool contains(ExpertKey key) const noexcept;
