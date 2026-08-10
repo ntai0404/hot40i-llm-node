@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "task_id": "A00",
+  "started_at": "2026-08-10T02:25:03.249471+00:00",
+  "finished_at": "2026-08-10T02:26:32.776026+00:00",
+  "status": "blocked",
+  "git_commit": "fcbbde080117d1fa397a6f59301c20e306fe5ed9",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "'C:\\msys64\\ucrt64\\bin\\g++.exe' -std=c++20 -Wall -Wextra -Wpedantic -I device/service/include tests/service_protocol_test.cpp -o artifacts/runs/20260810T022503Z_A00/service_protocol_test.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T022503Z_A00\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260810T022503Z_A00\\stderr\\001.log"
+    },
+    {
+      "argv": "artifacts/runs/20260810T022503Z_A00/service_protocol_test.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T022503Z_A00\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260810T022503Z_A00\\stderr\\002.log"
+    },
+    {
+      "argv": "'C:\\tmp\\android-ndk-r27d\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android26-clang++.cmd' -std=c++20 -O2 -DNDEBUG -Wall -Wextra -Wpedantic -static-libstdc++ -I device/service/include device/service/src/inference_service.cpp -o artifacts/runs/20260810T022503Z_A00/inference_service_android",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T022503Z_A00\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260810T022503Z_A00\\stderr\\003.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_70tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_2tok.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/decoder_trace_host_refactor.jsonl",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_device_70tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_2tok.json",
+    "artifacts/runs/20260809T132026Z_P00D/minimal_decoder_host_refactor.json",
+    "artifacts/runs/20260810T022503Z_A00/",
+    "benchmarks/service/",
+    "device/service/",
+    "tests/service_protocol_test.cpp"
+  ],
+  "verification": [],
+  "metrics": {},
+  "artifacts": [
+    "benchmarks\\service\\device_service.json",
+    "artifacts\\runs\\20260810T022503Z_A00\\inference_service_android"
+  ],
+  "limitations": [
+    "Device-local restart, health, metrics, inference, repeated-request RSS, push/pull, and localhost tests are impossible while all ADB transports are absent."
+  ],
+  "notes": [
+    "Host protocol tests pass and Android ARM64 service cross-build passes. Final device verification remains mandatory and was not waived."
+  ]
+}

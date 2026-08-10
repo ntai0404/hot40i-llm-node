@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "status": "blocked",
+  "task": "A00",
+  "implementation": {
+    "bind_address": "127.0.0.1",
+    "endpoints": ["GET /health", "GET /metrics", "POST /infer"],
+    "bounded_request_body": true,
+    "rss_budget_configuration": true,
+    "clean_signal_shutdown": true,
+    "decoder_runner": "official H40M minimal_decoder_probe"
+  },
+  "host_protocol_test": "pass",
+  "android_arm64_cross_build": "pass",
+  "device_verification": "blocked",
+  "blocked_reason": "USB ADB disappeared during P02 and could not be recovered through canonical server restart, trusted key reconnect, Windows PnP recovery, or permitted Wi-Fi ADB discovery. Device-local health/metrics/inference and RSS-growth tests cannot be executed without a transport."
+}

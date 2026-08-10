@@ -48,6 +48,12 @@ blocked_tasks:
       was not enabled before USB loss. Physical cable reconnect/USB-debug authorization is now required, and operator
       explicitly will not perform physical actions.
     at: '2026-08-10T02:22:59.883781+00:00'
+  A00:
+    reason: Android ARM64 service implementation and host protocol tests pass, but USB ADB disappeared and canonical-server/key
+      reconnect, Windows PnP recovery, LAN TCP/5555 scan, and ADB mDNS discovery all failed. Device-local restart/health/metrics/inference/RSS
+      verification now requires physical USB reconnection and possibly USB-debug authorization, which the operator
+      explicitly refuses.
+    at: '2026-08-10T02:26:39.141665+00:00'
 task_evidence:
   R00: artifacts/runs/20260807T140229Z_R00/evidence.json
   R01: artifacts/runs/20260807T142448Z_R01/evidence.json
@@ -134,3 +140,4 @@ task_started_at:
   P00D: '2026-08-09T13:16:46.412847+00:00'
   P01: '2026-08-09T15:24:16.921197+00:00'
   P02: '2026-08-09T18:26:59.848230+00:00'
+  A00: '2026-08-10T02:23:31.897078+00:00'
