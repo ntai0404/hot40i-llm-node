@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "task_id": "A02",
+  "started_at": "2026-08-23T20:28:33.306922+00:00",
+  "finished_at": "2026-08-23T20:34:36.9717229+00:00",
+  "status": "pass",
+  "git_commit": "207e38b2ca6965d9b23fc29ba99682a4789be9d1",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python -m pytest -q tests/python/test_adb_forward.py tests/python/test_gateway.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T202833Z_A02/stdout/001_focused.log",
+      "stderr_file": "artifacts/runs/20260823T202833Z_A02/stderr/001_focused.log"
+    },
+    {
+      "argv": "python scripts/usb_transport_probe.py --serial 112193741U000563 --requests 100 --drop-forward-at 34 --restart-server-at 67 --events usb_events.jsonl --output benchmarks/service/usb_transport.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T202833Z_A02/stdout/002_live_100.log",
+      "stderr_file": "artifacts/runs/20260823T202833Z_A02/stderr/002_live_100.log"
+    },
+    {
+      "argv": "restart managed gateway; GET /transport/health; adb forward --remove tcp:18080; verify transport HTTP 503; GET /device/health; verify transport HTTP 200",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T202833Z_A02/transport_recovered.json",
+      "stderr_file": "artifacts/runs/20260823T202833Z_A02/gateway.stderr.log"
+    },
+    {
+      "argv": "python -m pytest -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T202833Z_A02/stdout/003_full.log",
+      "stderr_file": "artifacts/runs/20260823T202833Z_A02/stderr/003_full.log"
+    },
+    {
+      "argv": "python -m py_compile host/transport/adb_forward.py host/gateway/device_client.py host/gateway/app.py scripts/usb_transport_probe.py tests/python/test_adb_forward.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T202833Z_A02/stdout/004_pycompile.log",
+      "stderr_file": "artifacts/runs/20260823T202833Z_A02/stderr/004_pycompile.log"
+    },
+    {
+      "argv": "python -c <verify modified Python sources contain no line over 110 columns>",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T202833Z_A02/stdout/005_line_length.log",
+      "stderr_file": "artifacts/runs/20260823T202833Z_A02/stderr/005_line_length.log"
+    }
+  ],
+  "files_changed": [
+    "host/transport/__init__.py",
+    "host/transport/adb_forward.py",
+    "host/gateway/device_client.py",
+    "host/gateway/app.py",
+    "scripts/usb_transport_probe.py",
+    "tests/python/test_adb_forward.py",
+    "benchmarks/service/usb_transport.json",
+    "artifacts/runs/20260823T202833Z_A02/"
+  ],
+  "verification": [
+    {
+      "name": "100 request loop; reconnect scenario.",
+      "passed": true,
+      "detail": "All 100 host-localhost requests reached A00 over USB with zero failures. Removing tcp:18080 before request 34 and restarting the canonical ADB server before request 67 each produced an explicit forward_missing state, automatically restored the same pinned serial, and completed the remaining loop. The managed gateway independently returned HTTP 503 while the forward was absent and repaired it on the next /device/health call."
+    }
+  ],
+  "metrics": {
+    "requests_attempted": 100,
+    "requests_successful": 100,
+    "requests_failed": 0,
+    "latency_ms_median": 15.249600000000001,
+    "latency_ms_p95": 26.014,
+    "latency_ms_max": 59.8306,
+    "forward_removal_detected": true,
+    "forward_removal_recovered": true,
+    "adb_server_restart_detected": true,
+    "adb_server_restart_recovered": true,
+    "gateway_missing_forward_http_status": 503,
+    "gateway_missing_forward_code": "forward_missing",
+    "gateway_managed_recovery_status": "ok",
+    "focused_tests_passed": 12,
+    "full_tests_passed": 40,
+    "final_serial": "112193741U000563",
+    "final_device_state": "device",
+    "final_transport_id": 1,
+    "final_forward": "112193741U000563 tcp:18080 tcp:8080",
+    "final_service_pid": 19570,
+    "wifi_used": false
+  },
+  "artifacts": [
+    "benchmarks/service/usb_transport.json",
+    "artifacts/runs/20260823T202833Z_A02/evidence.json",
+    "artifacts/runs/20260823T202833Z_A02/usb_events.jsonl",
+    "artifacts/runs/20260823T202833Z_A02/final_state.txt",
+    "artifacts/runs/20260823T202833Z_A02/transport_initial.json",
+    "artifacts/runs/20260823T202833Z_A02/transport_missing.status",
+    "artifacts/runs/20260823T202833Z_A02/transport_missing.json",
+    "artifacts/runs/20260823T202833Z_A02/device_recovered.json",
+    "artifacts/runs/20260823T202833Z_A02/transport_recovered.json",
+    "artifacts/runs/20260823T202833Z_A02/gateway.pid",
+    "artifacts/runs/20260823T202833Z_A02/gateway.stdout.log",
+    "artifacts/runs/20260823T202833Z_A02/gateway.stderr.log",
+    "artifacts/runs/20260823T202833Z_A02/gateway_clean_stop.txt",
+    "artifacts/runs/20260823T202833Z_A02/stdout/001_focused.log",
+    "artifacts/runs/20260823T202833Z_A02/stdout/002_live_100.log",
+    "artifacts/runs/20260823T202833Z_A02/stdout/003_full.log"
+  ],
+  "limitations": [
+    "The reconnect scenarios are software-controlled forward removal and canonical ADB server restart; no physical cable removal was required or claimed.",
+    "The 100-request reliability loop uses the lightweight health endpoint so it measures USB/ADB/HTTP transport rather than repeating expensive model inference.",
+    "Starlette emits its existing TestClient/httpx deprecation warning; live Uvicorn, curl, ADB and urllib verification are unaffected."
+  ],
+  "notes": [
+    "The supervisor pins the first authorized serial and refuses to silently switch devices; serial_changed, unauthorized/offline, no-device, missing-forward and endpoint failures have distinct codes.",
+    "If no device is unexpectedly visible on Windows, recovery kills stale adb.exe processes and starts the canonical server before retrying, matching the operator policy.",
+    "The A00 service stayed alive as PID 19570 through both reconnect scenarios, proving that transport recovery did not restart the inference runtime.",
+    "The final path is USB-only: host 127.0.0.1:18080 forwards to device 127.0.0.1:8080, with no Wi-Fi dependency."
+  ]
+}

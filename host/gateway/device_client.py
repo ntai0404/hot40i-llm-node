@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from collections.abc import AsyncIterator, Collection, Sequence
 from typing import Protocol
 
@@ -17,6 +18,12 @@ class DeviceTokenSource(Protocol):
     ) -> AsyncIterator[int]: ...
 
 
+class TransportGuard(Protocol):
+    def ensure(self) -> object: ...
+
+    def recover(self) -> object: ...
+
+
 class HttpDeviceTokenClient:
     """Iterate A00's deterministic one-token endpoint into a token stream."""
 
@@ -25,16 +32,29 @@ class HttpDeviceTokenClient:
         base_url: str,
         *,
         transport: httpx.AsyncBaseTransport | None = None,
+        transport_guard: TransportGuard | None = None,
     ) -> None:
         self.base_url = base_url.rstrip("/")
         self.transport = transport
+        self.transport_guard = transport_guard
 
     def _client(self, timeout: float | None) -> httpx.AsyncClient:
         return httpx.AsyncClient(timeout=timeout, transport=self.transport)
 
+    async def _prepare_transport(self, *, recover: bool = False) -> None:
+        if self.transport_guard is None:
+            return
+        action = self.transport_guard.recover if recover else self.transport_guard.ensure
+        await asyncio.to_thread(action)
+
     async def health(self) -> dict:
+        await self._prepare_transport()
         async with self._client(3.0) as client:
-            response = await client.get(f"{self.base_url}/health")
+            try:
+                response = await client.get(f"{self.base_url}/health")
+            except httpx.TransportError:
+                await self._prepare_transport(recover=True)
+                response = await client.get(f"{self.base_url}/health")
             response.raise_for_status()
             return response.json()
 
@@ -46,14 +66,23 @@ class HttpDeviceTokenClient:
     ) -> AsyncIterator[int]:
         context = list(prompt_tokens)
         stop = set(stop_tokens)
+        await self._prepare_transport()
         async with self._client(None) as client:
             for _ in range(max_output_tokens):
                 body = ",".join(str(token) for token in context)
-                response = await client.post(
-                    f"{self.base_url}/infer",
-                    content=body.encode("ascii"),
-                    headers={"content-type": "text/plain"},
-                )
+                try:
+                    response = await client.post(
+                        f"{self.base_url}/infer",
+                        content=body.encode("ascii"),
+                        headers={"content-type": "text/plain"},
+                    )
+                except httpx.TransportError:
+                    await self._prepare_transport(recover=True)
+                    response = await client.post(
+                        f"{self.base_url}/infer",
+                        content=body.encode("ascii"),
+                        headers={"content-type": "text/plain"},
+                    )
                 response.raise_for_status()
                 payload = response.json()
                 if payload.get("status") != "pass" or "emitted_token_id" not in payload:

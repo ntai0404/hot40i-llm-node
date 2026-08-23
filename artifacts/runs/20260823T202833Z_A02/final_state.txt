@@ -1,0 +1,7 @@
+﻿List of devices attached
+112193741U000563       device product:X6528-OP model:Infinix_X6528 device:Infinix-X6528 transport_id:1
+
+112193741U000563 tcp:18080 tcp:8080
+
+service_pid=19570
+host_health={"status":"ok"}

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import time
@@ -9,12 +10,13 @@ from importlib.metadata import version
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from openai_harmony import Role, StreamableParser
 from pydantic import BaseModel, ConfigDict, Field
 
 from host.gateway.device_client import DeviceTokenSource, HttpDeviceTokenClient
 from host.gateway.harmony_adapter import HarmonyAdapter
+from host.transport.adb_forward import AdbForwardSupervisor, TransportUnavailable
 
 DEVICE_URL = os.getenv("HOT40_DEVICE_URL", "http://127.0.0.1:18080")
 LOCAL_MODEL = "openai/gpt-oss-20b"
@@ -243,7 +245,22 @@ def create_app(
     adapter: HarmonyAdapter | None = None,
 ) -> FastAPI:
     app = FastAPI(title="Hot40i Harmony gateway", version="0.2.0")
-    app.state.device_client = device_client or HttpDeviceTokenClient(DEVICE_URL)
+    supervisor = None
+    if device_client is None:
+        manage_forward = os.getenv("HOT40_MANAGE_ADB_FORWARD", "1").lower() not in {
+            "0",
+            "false",
+            "no",
+        }
+        if manage_forward and DEVICE_URL == "http://127.0.0.1:18080":
+            supervisor = AdbForwardSupervisor(
+                expected_serial=os.getenv("HOT40_DEVICE_SERIAL"),
+                host_port=18080,
+                device_port=8080,
+            )
+        device_client = HttpDeviceTokenClient(DEVICE_URL, transport_guard=supervisor)
+    app.state.device_client = device_client
+    app.state.transport_supervisor = supervisor
     app.state.harmony = adapter or HarmonyAdapter()
 
     @app.get("/health")
@@ -252,8 +269,19 @@ def create_app(
             "status": "ok",
             "device_url": DEVICE_URL,
             "model": LOCAL_MODEL,
+            "transport_managed": app.state.transport_supervisor is not None,
             "harmony": {"package": "openai-harmony", "version": version("openai-harmony")},
         }
+
+    @app.get("/transport/health")
+    async def transport_health():
+        if app.state.transport_supervisor is None:
+            return {"status": "unmanaged", "device_url": DEVICE_URL}
+        try:
+            status = await asyncio.to_thread(app.state.transport_supervisor.inspect)
+            return {"status": "ok", **status.to_dict()}
+        except TransportUnavailable as exc:
+            return JSONResponse(status_code=503, content=exc.to_dict())
 
     @app.get("/device/health")
     async def device_health() -> dict:

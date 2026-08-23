@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "task_id": "A02",
+  "status": "pass",
+  "started_at": "2026-08-23T20:32:18.506504+00:00",
+  "finished_at": "2026-08-23T20:32:25.653429+00:00",
+  "transport": {
+    "kind": "USB ADB forward",
+    "adb_path": "C:\\mobile-remote-tools\\platform-tools\\adb.exe",
+    "serial": "112193741U000563",
+    "host_port": 18080,
+    "device_port": 8080,
+    "endpoint": "http://127.0.0.1:18080/health",
+    "initial": {
+      "serial": "112193741U000563",
+      "host_port": 18080,
+      "device_port": 8080,
+      "endpoint": "http://127.0.0.1:18080/health",
+      "endpoint_payload": {
+        "status": "ok"
+      }
+    },
+    "final": {
+      "serial": "112193741U000563",
+      "host_port": 18080,
+      "device_port": 8080,
+      "endpoint": "http://127.0.0.1:18080/health",
+      "endpoint_payload": {
+        "status": "ok"
+      }
+    }
+  },
+  "requests": {
+    "attempted": 100,
+    "successful": 100,
+    "failed": 0,
+    "latency_ms_median": 15.249600000000001,
+    "latency_ms_p95": 26.014,
+    "latency_ms_max": 59.8306
+  },
+  "reconnect_scenarios": [
+    {
+      "type": "forward_removed_and_recovered",
+      "before_request": 34,
+      "detected": {
+        "status": "error",
+        "code": "forward_missing",
+        "message": "missing 112193741U000563 tcp:18080 tcp:8080",
+        "serial": "112193741U000563",
+        "forwards": []
+      },
+      "recovered": {
+        "serial": "112193741U000563",
+        "host_port": 18080,
+        "device_port": 8080,
+        "endpoint": "http://127.0.0.1:18080/health",
+        "endpoint_payload": {
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "type": "adb_server_restarted_and_recovered",
+      "before_request": 67,
+      "detected": {
+        "status": "error",
+        "code": "forward_missing",
+        "message": "missing 112193741U000563 tcp:18080 tcp:8080",
+        "serial": "112193741U000563",
+        "forwards": []
+      },
+      "recovered": {
+        "serial": "112193741U000563",
+        "host_port": 18080,
+        "device_port": 8080,
+        "endpoint": "http://127.0.0.1:18080/health",
+        "endpoint_payload": {
+          "status": "ok"
+        }
+      }
+    }
+  ],
+  "failures": [],
+  "events_artifact": "artifacts\\runs\\20260823T202833Z_A02\\usb_events.jsonl"
+}
