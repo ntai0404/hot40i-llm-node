@@ -1,0 +1,6 @@
+Command: python tests/analyze_context_kv.py ...
+Exit code: 1
+Failure: UnicodeDecodeError while reading PowerShell-redirected native test output as UTF-8.
+Resolution: The analyzer now recognizes UTF-16 BOM output from Windows PowerShell and UTF-8/UTF-8-SIG logs.
+Retry failure: decoded UTF-16 lines retained Windows line endings that the strict regex did not accept.
+Final resolution: metric parsing uses splitlines and exact key prefixes, independent of host line-ending convention.

@@ -1,0 +1,159 @@
+{
+  "artifacts": {
+    "device_correctness_log": "artifacts/runs/20260823T194646Z_O05/device_test_default.log",
+    "device_sweeps": [
+      "artifacts/runs/20260823T194646Z_O05/device_context_sweep.json",
+      "artifacts/runs/20260823T194646Z_O05/device_context_sweep_final.json"
+    ],
+    "host_correctness_log": "artifacts/runs/20260823T194646Z_O05/stdout/host_test_default.log",
+    "host_sweep": "artifacts/runs/20260823T194646Z_O05/host_context_sweep_final.json"
+  },
+  "candidates": [
+    {
+      "context_tokens": 512,
+      "device_append_ms_median": 56.80625,
+      "device_append_samples_ns": [
+        56626961,
+        56985539
+      ],
+      "device_attention_samples_ns": [
+        171488308,
+        169949461
+      ],
+      "device_last_token_24_layer_attention_ms": 170.7188845,
+      "device_peak_rss_kib": 18460,
+      "device_repetitions": 2,
+      "exact_sliding_window_savings_bytes": 9437184,
+      "host_last_token_24_layer_attention_ms": 75.3517,
+      "kv_storage_bytes": 15728640,
+      "naive_all_layers_full_bf16_bytes": 25165824,
+      "planned_headroom_bytes": 349377408,
+      "planned_total_rss_bytes": 296703104,
+      "projected_composite_seconds_per_token": 25.303190470175,
+      "projected_composite_tokens_per_second": 0.03952070791937108,
+      "projected_throughput_fraction_vs_512": 1.0,
+      "within_safe_rss_budget": true
+    },
+    {
+      "context_tokens": 1024,
+      "device_append_ms_median": 111.858923,
+      "device_append_samples_ns": [
+        111907384,
+        111810462
+      ],
+      "device_attention_samples_ns": [
+        392052154,
+        392697846
+      ],
+      "device_last_token_24_layer_attention_ms": 392.375,
+      "device_peak_rss_kib": 30768,
+      "device_repetitions": 2,
+      "exact_sliding_window_savings_bytes": 22020096,
+      "host_last_token_24_layer_attention_ms": 104.6854,
+      "kv_storage_bytes": 28311552,
+      "naive_all_layers_full_bf16_bytes": 50331648,
+      "planned_headroom_bytes": 336794496,
+      "planned_total_rss_bytes": 309286016,
+      "projected_composite_seconds_per_token": 25.524846585675,
+      "projected_composite_tokens_per_second": 0.039177512650016,
+      "projected_throughput_fraction_vs_512": 0.9913160647310453,
+      "within_safe_rss_budget": true
+    },
+    {
+      "context_tokens": 2048,
+      "device_append_ms_median": 222.766269,
+      "device_append_samples_ns": [
+        222908115,
+        222624423
+      ],
+      "device_attention_samples_ns": [
+        764261846,
+        768084692
+      ],
+      "device_last_token_24_layer_attention_ms": 766.173269,
+      "device_peak_rss_kib": 55332,
+      "device_repetitions": 2,
+      "exact_sliding_window_savings_bytes": 47185920,
+      "host_last_token_24_layer_attention_ms": 227.1409,
+      "kv_storage_bytes": 53477376,
+      "naive_all_layers_full_bf16_bytes": 100663296,
+      "planned_headroom_bytes": 311628672,
+      "planned_total_rss_bytes": 334451840,
+      "projected_composite_seconds_per_token": 25.898644854675,
+      "projected_composite_tokens_per_second": 0.038612058878419994,
+      "projected_throughput_fraction_vs_512": 0.9770082802462728,
+      "within_safe_rss_budget": true
+    },
+    {
+      "context_tokens": 4096,
+      "device_append_ms_median": 442.4635965,
+      "device_append_samples_ns": [
+        440943039,
+        443984154
+      ],
+      "device_attention_samples_ns": [
+        1493323191,
+        1505898153
+      ],
+      "device_last_token_24_layer_attention_ms": 1499.610672,
+      "device_peak_rss_kib": 104712,
+      "device_repetitions": 2,
+      "exact_sliding_window_savings_bytes": 97517568,
+      "host_last_token_24_layer_attention_ms": 714.6575,
+      "kv_storage_bytes": 103809024,
+      "naive_all_layers_full_bf16_bytes": 201326592,
+      "planned_headroom_bytes": 261297024,
+      "planned_total_rss_bytes": 384783488,
+      "projected_composite_seconds_per_token": 26.632082257675,
+      "projected_composite_tokens_per_second": 0.037548697481655374,
+      "projected_throughput_fraction_vs_512": 0.9501018442853063,
+      "within_safe_rss_budget": true
+    }
+  ],
+  "correctness": {
+    "device_bf16_cache_vs_fp32_max_abs_diff": 0.000699818,
+    "device_bf16_cache_vs_quantized_oracle_max_abs_diff": 0.0,
+    "host_bf16_cache_vs_fp32_max_abs_diff": 0.000699818,
+    "host_bf16_cache_vs_quantized_oracle_max_abs_diff": 0.0,
+    "sequential_append_and_bounds_regression": true,
+    "sliding_ring_wrap_regression": true
+  },
+  "memory_plan": {
+    "non_kv_planned_bytes": 280974464,
+    "previous_1024_all_layer_kv_bytes": 50331648,
+    "safe_rss_budget_bytes": 646080512,
+    "selection_min_headroom_fraction": 0.25,
+    "selection_min_projected_throughput_fraction_vs_512": 0.95
+  },
+  "model_semantics": {
+    "full_attention_layers": "odd layer indices",
+    "head_dim": 64,
+    "key_value_heads": 8,
+    "layers": 24,
+    "policy": "Full layers retain max context; sliding layers use an exact 128-token ring. No model window is shortened.",
+    "sliding_layers": "even layer indices",
+    "sliding_window_tokens": 128,
+    "storage_dtype": "BF16"
+  },
+  "production_basis": {
+    "artifact": "artifacts/runs/20260810T124832Z_O06/o06_sustained_t6.json",
+    "composition_note": "Projected composite throughput adds each measured last-token KV-attention cost to the same-device sustained non-attention cost. It is a context-selection estimate, not a full 4K generation claim.",
+    "device": "Infinix X6528 / Hot 40i",
+    "input_tokens": 40,
+    "measured_non_attention_seconds_per_token": 25.132471585675,
+    "measured_seconds_per_token": 25.1421
+  },
+  "schema_version": 1,
+  "selected": {
+    "default_context_tokens": 4096,
+    "device_last_token_24_layer_attention_ms": 1499.610672,
+    "device_peak_rss_kib": 104712,
+    "kv_storage_bytes": 103809024,
+    "planned_headroom_bytes": 261297024,
+    "planned_total_rss_bytes": 384783488,
+    "projected_throughput_fraction_vs_512": 0.9501018442853063,
+    "reason": "4096 is the largest measured candidate that keeps at least 25% safe-RSS headroom and at least 95% of the 512-token projected throughput. Exact 128-token rings reduce sliding-layer KV storage without changing attention semantics."
+  },
+  "status": "pass",
+  "task": "O05"
+}

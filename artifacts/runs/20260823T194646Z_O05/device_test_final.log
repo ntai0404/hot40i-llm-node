@@ -1,0 +1,3 @@
+kv_cache_bf16_reference_max_abs_diff=0
+kv_cache_fp32_reference_max_abs_diff=0.000699818
+kv_cache_roundtrip_max_abs_diff=0.00243747

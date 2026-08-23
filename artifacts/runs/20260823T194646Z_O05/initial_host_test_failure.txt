@@ -1,0 +1,4 @@
+Command: kv_cache_test.exe
+Exit code: 1
+Failure: Assertion failed: roundtrip_error <= 1.0e-3F at tests/kv_cache_test.cpp:135
+Resolution: BF16 storage has a half-ULP absolute error up to roughly 0.0039 near magnitude 1. The storage-only bound was corrected to 0.004; attention output keeps its independent 1e-6 quantized-oracle and 1e-3 FP32-reference bounds.

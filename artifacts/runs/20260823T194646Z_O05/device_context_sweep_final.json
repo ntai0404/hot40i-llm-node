@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "device_config": {
+    "layers": 24, "key_value_heads": 8, "head_dim": 64, "sliding_window": 128,
+    "first_layer_sliding": true, "storage_dtype": "BF16"
+  },
+  "contexts": [
+    {"tokens": 512, "storage_bytes": 15728640, "append_ns": 56985539, "last_token_24_layer_attention_ns": 169949461, "peak_rss_kib": 18412, "checksum": 1.02352},
+    {"tokens": 1024, "storage_bytes": 28311552, "append_ns": 111810462, "last_token_24_layer_attention_ns": 392697846, "peak_rss_kib": 30704, "checksum": 1.48313},
+    {"tokens": 2048, "storage_bytes": 53477376, "append_ns": 222624423, "last_token_24_layer_attention_ns": 768084692, "peak_rss_kib": 55268, "checksum": 1.5431},
+    {"tokens": 4096, "storage_bytes": 103809024, "append_ns": 443984154, "last_token_24_layer_attention_ns": 1505898153, "peak_rss_kib": 104648, "checksum": 0.839067}
+  ]
+}

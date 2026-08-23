@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "task_id": "O05",
+  "started_at": "2026-08-23T19:46:46.115594+00:00",
+  "finished_at": "2026-08-23T19:57:48.8806597+00:00",
+  "status": "pass",
+  "git_commit": "740484281b8e783dde3073d040ae15e14921c51c",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "g++.exe -std=c++20 -O2 -Wall -Wextra -Wpedantic -I device/runtime/include tests/kv_cache_test.cpp device/runtime/src/kv_cache.cpp -o kv_cache_test.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T194646Z_O05/stdout/host_compile_default.log",
+      "stderr_file": "artifacts/runs/20260823T194646Z_O05/stderr/host_compile_default.log"
+    },
+    {
+      "argv": "artifacts/runs/20260823T194646Z_O05/kv_cache_test.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T194646Z_O05/stdout/host_test_default.log",
+      "stderr_file": "artifacts/runs/20260823T194646Z_O05/stderr/host_test_default.log"
+    },
+    {
+      "argv": "g++.exe -std=c++20 -O3 -DNDEBUG -I device/runtime/include tests/kv_cache_probe.cpp device/runtime/src/kv_cache.cpp -o kv_cache_probe_host.exe",
+      "exit_code": 1,
+      "stdout_file": "artifacts/runs/20260823T194646Z_O05/stdout/host_probe_compile.log",
+      "stderr_file": "artifacts/runs/20260823T194646Z_O05/stderr/host_probe_compile.log"
+    },
+    {
+      "argv": "g++.exe -std=c++20 -O3 -DNDEBUG -Wall -Wextra -Wpedantic -I device/runtime/include tests/kv_cache_probe.cpp device/runtime/src/kv_cache.cpp -o kv_cache_probe_host.exe && kv_cache_probe_host.exe host_context_sweep_final.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T194646Z_O05/stdout/host_probe_final.log",
+      "stderr_file": "artifacts/runs/20260823T194646Z_O05/stderr/host_probe_final.log"
+    },
+    {
+      "argv": "aarch64-linux-android26-clang++.cmd -std=c++20 -O2 -Wall -Wextra -Wpedantic -static-libstdc++ -I device/runtime/include tests/kv_cache_test.cpp device/runtime/src/kv_cache.cpp -o kv_cache_test_android",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T194646Z_O05/stdout/android_default_compile.log",
+      "stderr_file": "artifacts/runs/20260823T194646Z_O05/stderr/android_default_compile.log"
+    },
+    {
+      "argv": "aarch64-linux-android26-clang++.cmd -std=c++20 -O3 -DNDEBUG -Wall -Wextra -Wpedantic -static-libstdc++ -I device/runtime/include tests/kv_cache_probe.cpp device/runtime/src/kv_cache.cpp -o kv_cache_probe_android",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T194646Z_O05/stdout/android_probe_compile_final.log",
+      "stderr_file": "artifacts/runs/20260823T194646Z_O05/stderr/android_probe_compile_final.log"
+    },
+    {
+      "argv": "adb -s 112193741U000563 push/reload kv_cache_probe_android; kv_cache_probe_o05 device_context_sweep.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T194646Z_O05/device_probe.stdout",
+      "stderr_file": "artifacts/runs/20260823T194646Z_O05/device_probe.stderr"
+    },
+    {
+      "argv": "adb -s 112193741U000563 push/reload final KV test/probe; run host-equivalent regression and 512,1024,2048,4096 sweep; collect meminfo/vmstat/thermal",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T194646Z_O05/stdout/device_final_command.log",
+      "stderr_file": "artifacts/runs/20260823T194646Z_O05/stderr/device_final_command.log"
+    },
+    {
+      "argv": "python tests/analyze_context_kv.py <two device sweeps> <final host sweep> --output benchmarks/optimization/context_kv.json",
+      "exit_code": 1,
+      "stdout_file": null,
+      "stderr_file": "artifacts/runs/20260823T194646Z_O05/initial_analyzer_failure.txt"
+    },
+    {
+      "argv": "python tests/analyze_context_kv.py --device-sweep device_context_sweep.json --device-sweep device_context_sweep_final.json --host-sweep host_context_sweep_final.json --memory-plan artifacts/model/memory_plan.json --production-baseline o06_sustained_t6.json --output benchmarks/optimization/context_kv.json",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "python -m py_compile tests/analyze_context_kv.py",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    }
+  ],
+  "files_changed": [
+    "device/runtime/include/h40/kv_cache.hpp",
+    "device/runtime/src/kv_cache.cpp",
+    "tests/kv_cache_test.cpp",
+    "tests/kv_cache_probe.cpp",
+    "tests/analyze_context_kv.py",
+    "benchmarks/optimization/context_kv.json",
+    "artifacts/runs/20260823T194646Z_O05/"
+  ],
+  "verification": [
+    {
+      "name": "Correctness regression for accepted context path.",
+      "passed": true,
+      "detail": "Final host and freshly reloaded ARM64 regressions both matched the independent BF16-cache attention oracle at max_abs_diff=0 and the FP32 reference at max_abs_diff=0.000699818. Tests cover alternating exact 128-token sliding rings, full-attention retention, ring wrap, sequential append, max-context bounds and the selected 4096-token runtime constant."
+    }
+  ],
+  "metrics": {
+    "selected_default_context_tokens": 4096,
+    "selected_kv_storage_bytes": 103809024,
+    "selected_device_peak_rss_kib": 104712,
+    "selected_planned_total_rss_bytes": 384783488,
+    "safe_rss_budget_bytes": 646080512,
+    "selected_planned_headroom_bytes": 261297024,
+    "selected_attention_ms_median": 1499.610672,
+    "selected_projected_throughput_fraction_vs_512": 0.9501018442853063,
+    "device_sweep_repetitions": 2,
+    "bf16_cache_vs_oracle_max_abs_diff": 0.0,
+    "bf16_cache_vs_fp32_max_abs_diff": 0.000699818,
+    "bf16_roundtrip_max_abs_diff": 0.00243747,
+    "mem_available_kib_after_final_sweep": 1606420,
+    "swap_free_kib_after_final_sweep": 1098788,
+    "thermal_status_after_final_sweep": 0,
+    "adb_transport": "112193741U000563 USB state=device"
+  },
+  "artifacts": [
+    "benchmarks/optimization/context_kv.json",
+    "artifacts/runs/20260823T194646Z_O05/evidence.json",
+    "artifacts/runs/20260823T194646Z_O05/device_context_sweep.json",
+    "artifacts/runs/20260823T194646Z_O05/device_context_sweep_final.json",
+    "artifacts/runs/20260823T194646Z_O05/host_context_sweep_final.json",
+    "artifacts/runs/20260823T194646Z_O05/device_test_default.log",
+    "artifacts/runs/20260823T194646Z_O05/stdout/host_test_default.log",
+    "artifacts/runs/20260823T194646Z_O05/stdout/device_final_command.log",
+    "artifacts/runs/20260823T194646Z_O05/initial_host_test_failure.txt",
+    "artifacts/runs/20260823T194646Z_O05/initial_analyzer_failure.txt",
+    "artifacts/runs/20260823T194646Z_O05/kv_cache_probe_android",
+    "artifacts/runs/20260823T194646Z_O05/kv_cache_test_android"
+  ],
+  "limitations": [
+    "The 4096-token throughput value is a transparent composition of same-device sustained non-attention time and measured 24-layer last-token cached-attention time; no full official 4096-token generation run is claimed.",
+    "The two 4096-token component runs straddled the 95% guardrail individually (95.0355% and 94.9849%); the predeclared median aggregation yields 95.0102%, so 4096 is selected narrowly rather than treated as a large performance margin.",
+    "BF16 KV storage introduces a measured 0.000699818 max absolute difference versus the FP32 fixture while matching the independent BF16 oracle exactly."
+  ],
+  "notes": [
+    "Exact 128-token rings are used only for official sliding-attention layers; full-attention layers retain the full configured context.",
+    "The first host test exposed an invalid 0.001 BF16 round-trip bound and the first analyzer attempts exposed Windows log encoding/line-ending assumptions. All failures and fixes are retained in raw artifacts."
+  ]
+}
