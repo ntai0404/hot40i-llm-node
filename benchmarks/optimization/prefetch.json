@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "task": "O03",
+  "model": "openai/gpt-oss-20b",
+  "device": "Infinix X6528 / Unisoc T606",
+  "current_runtime": {
+    "cache_policy": "per_layer_hotset",
+    "known_top_k_overlap": true,
+    "o00_trace_overlap_ratio": 0.99997954,
+    "o01_live_16_token_elapsed_ms": 403725,
+    "o01_live_16_token_prefetch_wait_ns": 717770,
+    "interpretation": "After routing, O00 already hides essentially all later top-k read latency behind current expert compute. O03 therefore evaluated only earlier cross-layer prediction."
+  },
+  "bounded_predictors": {
+    "simple_baselines": [
+      "previous_token_same_layer",
+      "per_layer_frequency"
+    ],
+    "small_learned_candidate": "cross_layer_transition_counts",
+    "transition_counter_entries_max": 23552,
+    "transition_counter_bytes_max": 94208,
+    "prediction_width_sweep": [1, 2, 3, 4],
+    "fixed_expert_bytes": 13236480
+  },
+  "p02_disjoint_512_512": {
+    "trace": "artifacts/runs/20260810T030340Z_P02/p02_1024.trace",
+    "width_1": {
+      "top4_inclusion_precision": 0.845618207,
+      "top4_recall": 0.211404552,
+      "first_choice_accuracy": 0.403787364,
+      "useful_predictions": 9958,
+      "wasted_predictions": 1818,
+      "useful_prefetch_bytes": 131808867840,
+      "wasted_prefetch_bytes": 24063920640
+    },
+    "width_4": {
+      "precision": 0.611965014,
+      "recall": 0.611965014,
+      "useful_prefetch_bytes": 381554772480,
+      "wasted_prefetch_bytes": 241936381440
+    },
+    "artifact_width_1": "artifacts/runs/20260810T142706Z_O03/p02_prefetch_w1_final.json",
+    "artifact_width_4": "artifacts/runs/20260810T142706Z_O03/p02_prefetch_w4.json"
+  },
+  "p01_disjoint_64_64": {
+    "trace": "artifacts/runs/20260809T152502Z_P01/run1.trace",
+    "width_1": {
+      "top4_inclusion_precision": 0.765625,
+      "top4_recall": 0.19140625,
+      "first_choice_accuracy": 0.358695652,
+      "useful_predictions": 1127,
+      "wasted_predictions": 345,
+      "useful_prefetch_bytes": 14917512960,
+      "wasted_prefetch_bytes": 4566585600
+    },
+    "width_4": {
+      "precision": 0.535665761,
+      "recall": 0.535665761,
+      "useful_prefetch_bytes": 41747857920,
+      "wasted_prefetch_bytes": 36188536320
+    },
+    "measured_first_expert_reads": {
+      "first_routes": 3072,
+      "first_read_misses": 2296,
+      "mean_read_ms": 7.725168,
+      "median_read_ms": 6.315808,
+      "total_read_ms": 17736.986419
+    },
+    "artifact_width_1": "artifacts/runs/20260810T142706Z_O03/p01_prefetch_w1_final.json",
+    "artifact_width_4": "artifacts/runs/20260810T142706Z_O03/p01_prefetch_w4.json"
+  },
+  "decision": {
+    "accepted_predictor": null,
+    "production_cross_layer_prefetch": "off",
+    "reason": "The fixed 94,208-byte transition model improves top-4 inclusion, but first-choice accuracy is only 40.38% on P02 and 35.87% on P01. Later top-k reads are already hidden by O00. Speculating the latency-critical first read would therefore issue more wrong than correct reads, add flash traffic, and target only milliseconds inside 25-28 second/token CPU-dominated execution. No candidate meets the required end-to-end latency/traffic gate.",
+    "correctness_effect": "none; no predictor was retained and expert selection remains entirely router-authoritative"
+  }
+}

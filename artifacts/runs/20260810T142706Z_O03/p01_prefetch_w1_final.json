@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "trace": "artifacts/runs/20260809T152502Z_P01/run1.trace",
+  "train_tokens": 64,
+  "evaluation_tokens": 64,
+  "layers": 24,
+  "prediction_width": 1,
+  "transition_counter_entries_max": 23552,
+  "transition_counter_bytes_max": 94208,
+  "predictors": [
+    {
+      "predictor": "previous_token",
+      "precision": 0.7241847826086957,
+      "recall": 0.18104619565217392,
+      "first_choice_accuracy": 0.45108695652173914,
+      "first_choice_hits": 664,
+      "opportunities": 1472,
+      "useful_predictions": 1066,
+      "wasted_predictions": 406,
+      "useful_prefetch_bytes": 14110087680,
+      "wasted_prefetch_bytes": 5374010880,
+      "useful_to_wasted_ratio": 2.625615763546798
+    },
+    {
+      "predictor": "layer_frequency",
+      "precision": 0.7302989130434783,
+      "recall": 0.18257472826086957,
+      "first_choice_accuracy": 0.31997282608695654,
+      "first_choice_hits": 471,
+      "opportunities": 1472,
+      "useful_predictions": 1075,
+      "wasted_predictions": 397,
+      "useful_prefetch_bytes": 14229216000,
+      "wasted_prefetch_bytes": 5254882560,
+      "useful_to_wasted_ratio": 2.707808564231738
+    },
+    {
+      "predictor": "cross_layer_transition",
+      "precision": 0.765625,
+      "recall": 0.19140625,
+      "first_choice_accuracy": 0.358695652173913,
+      "first_choice_hits": 528,
+      "opportunities": 1472,
+      "useful_predictions": 1127,
+      "wasted_predictions": 345,
+      "useful_prefetch_bytes": 14917512960,
+      "wasted_prefetch_bytes": 4566585600,
+      "useful_to_wasted_ratio": 3.2666666666666666
+    }
+  ],
+  "best_predictor": "cross_layer_transition"
+}

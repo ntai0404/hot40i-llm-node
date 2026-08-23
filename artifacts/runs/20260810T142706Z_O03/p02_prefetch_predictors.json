@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "trace": "artifacts/runs/20260810T030340Z_P02/p02_1024.trace",
+  "train_tokens": 512,
+  "evaluation_tokens": 512,
+  "layers": 24,
+  "prediction_width": 4,
+  "transition_counter_entries_max": 23552,
+  "transition_counter_bytes_max": 94208,
+  "predictors": [
+    {
+      "predictor": "previous_token",
+      "precision": 0.47896144701086957,
+      "recall": 0.47896144701086957,
+      "useful_predictions": 22561,
+      "wasted_predictions": 24543,
+      "useful_prefetch_bytes": 298628225280,
+      "wasted_prefetch_bytes": 324862928640,
+      "useful_to_wasted_ratio": 0.9192437762294748
+    },
+    {
+      "predictor": "layer_frequency",
+      "precision": 0.5064325747282609,
+      "recall": 0.5064325747282609,
+      "useful_predictions": 23855,
+      "wasted_predictions": 23249,
+      "useful_prefetch_bytes": 315756230400,
+      "wasted_prefetch_bytes": 307734923520,
+      "useful_to_wasted_ratio": 1.026065637231709
+    },
+    {
+      "predictor": "cross_layer_transition",
+      "precision": 0.6119650135869565,
+      "recall": 0.6119650135869565,
+      "useful_predictions": 28826,
+      "wasted_predictions": 18278,
+      "useful_prefetch_bytes": 381554772480,
+      "wasted_prefetch_bytes": 241936381440,
+      "useful_to_wasted_ratio": 1.577087208666156
+    }
+  ],
+  "best_predictor": "cross_layer_transition"
+}

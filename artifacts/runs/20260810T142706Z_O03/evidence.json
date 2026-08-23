@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "task_id": "O03",
+  "started_at": "2026-08-10T14:27:06.230482+00:00",
+  "finished_at": "2026-08-23T19:00:05.893695+00:00",
+  "status": "pass",
+  "git_commit": "6d93d335a8c3a588ba701d976fd32d0dc3ce23a4",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python -m pytest tests/python/test_prefetch_predictor.py -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\001.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\001.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260810T030340Z_P02/p02_1024.trace --train-tokens 512 --width 4 --output artifacts/runs/20260810T142706Z_O03/p02_prefetch_predictors.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\002.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\002.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260810T030340Z_P02/p02_1024.trace --train-tokens 512 --width 1 --output artifacts/runs/20260810T142706Z_O03/p02_prefetch_w1.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\003.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\003.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260810T030340Z_P02/p02_1024.trace --train-tokens 512 --width 2 --output artifacts/runs/20260810T142706Z_O03/p02_prefetch_w2.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\004.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\004.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260810T030340Z_P02/p02_1024.trace --train-tokens 512 --width 3 --output artifacts/runs/20260810T142706Z_O03/p02_prefetch_w3.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\005.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\005.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260810T030340Z_P02/p02_1024.trace --train-tokens 512 --width 4 --output artifacts/runs/20260810T142706Z_O03/p02_prefetch_w4.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\006.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\006.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260809T152502Z_P01/run1.trace --train-tokens 64 --width 1 --output artifacts/runs/20260810T142706Z_O03/p01_prefetch_w1.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\007.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\007.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260809T152502Z_P01/run1.trace --train-tokens 64 --width 2 --output artifacts/runs/20260810T142706Z_O03/p01_prefetch_w2.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\008.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\008.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260809T152502Z_P01/run1.trace --train-tokens 64 --width 3 --output artifacts/runs/20260810T142706Z_O03/p01_prefetch_w3.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\009.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\009.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260809T152502Z_P01/run1.trace --train-tokens 64 --width 4 --output artifacts/runs/20260810T142706Z_O03/p01_prefetch_w4.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\010.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\010.log"
+    },
+    {
+      "argv": "python -m pytest tests/python/test_prefetch_predictor.py -q",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\011.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\011.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260810T030340Z_P02/p02_1024.trace --train-tokens 512 --width 1 --output artifacts/runs/20260810T142706Z_O03/p02_prefetch_w1_final.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\012.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\012.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260809T152502Z_P01/run1.trace --train-tokens 64 --width 1 --output artifacts/runs/20260810T142706Z_O03/p01_prefetch_w1_final.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\013.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\013.log"
+    },
+    {
+      "argv": "python -m pytest tests/python/test_prefetch_predictor.py -q",
+      "exit_code": 1,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\014.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\014.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260810T030340Z_P02/p02_1024.trace --train-tokens 512 --width 1 --output artifacts/runs/20260810T142706Z_O03/p02_prefetch_w1_final.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\015.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\015.log"
+    },
+    {
+      "argv": "python tools/trace/evaluate_prefetch_predictor.py artifacts/runs/20260809T152502Z_P01/run1.trace --train-tokens 64 --width 1 --output artifacts/runs/20260810T142706Z_O03/p01_prefetch_w1_final.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\016.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\016.log"
+    },
+    {
+      "argv": "python -m pytest tests/python/test_prefetch_predictor.py -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\017.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\017.log"
+    },
+    {
+      "argv": "python -c 'import json,pathlib; p=json.loads(pathlib.Path('\"'\"'benchmarks/optimization/prefetch.json'\"'\"').read_text()); assert p['\"'\"'decision'\"'\"']['\"'\"'accepted_predictor'\"'\"'] is None; assert p['\"'\"'decision'\"'\"']['\"'\"'production_cross_layer_prefetch'\"'\"']=='\"'\"'off'\"'\"'; assert p['\"'\"'p02_disjoint_512_512'\"'\"']['\"'\"'width_1'\"'\"']['\"'\"'first_choice_accuracy'\"'\"']<0.5; assert p['\"'\"'p01_disjoint_64_64'\"'\"']['\"'\"'width_1'\"'\"']['\"'\"'first_choice_accuracy'\"'\"']<0.5; assert p['\"'\"'current_runtime'\"'\"']['\"'\"'o00_trace_overlap_ratio'\"'\"']>0.999; print('\"'\"'O03 predictor decision PASS'\"'\"')'",
+      "exit_code": 0,
+      "stdout_file": "artifacts\\runs\\20260810T142706Z_O03\\stdout\\018.log",
+      "stderr_file": "artifacts\\runs\\20260810T142706Z_O03\\stderr\\018.log"
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260810T142706Z_O03/",
+    "benchmarks/optimization/prefetch.json",
+    "tests/python/test_prefetch_predictor.py",
+    "tools/trace/evaluate_prefetch_predictor.py"
+  ],
+  "verification": [
+    {
+      "name": "Correctness unaffected because prediction changes timing, not selected-expert semantics.",
+      "passed": true,
+      "detail": "No predictor met the latency/traffic gate, so cross-layer speculative prefetch remains off. The retained O00 pipeline only fetches router-selected experts and O01 production token/logit behavior is unchanged."
+    }
+  ],
+  "metrics": {
+    "p02_width1_precision": 0.845618207,
+    "p02_first_choice_accuracy": 0.403787364,
+    "p01_width1_precision": 0.765625,
+    "p01_first_choice_accuracy": 0.358695652,
+    "predictor_bytes_max": 94208,
+    "accepted_predictor": null
+  },
+  "artifacts": [
+    "benchmarks\\optimization\\prefetch.json",
+    "artifacts\\runs\\20260810T142706Z_O03\\p02_prefetch_predictors.json",
+    "artifacts\\runs\\20260810T142706Z_O03\\p02_prefetch_w1_final.json",
+    "artifacts\\runs\\20260810T142706Z_O03\\p02_prefetch_w2.json",
+    "artifacts\\runs\\20260810T142706Z_O03\\p02_prefetch_w3.json",
+    "artifacts\\runs\\20260810T142706Z_O03\\p02_prefetch_w4.json",
+    "artifacts\\runs\\20260810T142706Z_O03\\p01_prefetch_w1_final.json",
+    "artifacts\\runs\\20260810T142706Z_O03\\p01_prefetch_w2.json",
+    "artifacts\\runs\\20260810T142706Z_O03\\p01_prefetch_w3.json",
+    "artifacts\\runs\\20260810T142706Z_O03\\p01_prefetch_w4.json"
+  ],
+  "limitations": [
+    "The first resumed pytest exposed an ambiguous synthetic first-choice tie; its failure is preserved. The fixture was made deterministic and the rerun passed."
+  ],
+  "notes": [
+    "A bounded cross-layer transition-count model was evaluated as the small learned candidate after previous-token and layer-frequency baselines; no larger learned model was justified by the latency ceiling.",
+    "Negative result retained: O00 already hides known top-k reads and expert CPU compute dominates, so speculative first reads with below-50% first-choice accuracy would add traffic without a credible end-to-end win."
+  ]
+}
