@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "task_id": "A01",
+  "started_at": "2026-08-23T20:11:39.874590+00:00",
+  "finished_at": "2026-08-23T20:27:19.4251650+00:00",
+  "status": "pass",
+  "git_commit": "ef2d3ffb65fc3eedc36abff7e4557cb3a048e36a",
+  "sources": [
+    {
+      "url": "https://github.com/openai/harmony.git",
+      "ref": "abd677f7ac962629c808197caa1feb9e3e95d2b0 / openai-harmony==0.0.8",
+      "note": "Pinned official renderer, tokenizer, strict parser and streaming parser used as the Harmony semantics authority."
+    },
+    {
+      "url": "https://developers.openai.com/api/reference/typescript/resources/beta/subresources/responses/methods/create",
+      "ref": "accessed 2026-08-24",
+      "note": "Official Responses request, output-item and SSE event shapes used for the minimal compatible localhost surface."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "python -m ruff check host/gateway tests/python/test_gateway.py tests/analyze_gateway.py",
+      "exit_code": 1,
+      "stdout_file": "artifacts/runs/20260823T201139Z_A01/stdout/000_ruff_unavailable.log",
+      "stderr_file": "artifacts/runs/20260823T201139Z_A01/stderr/000_ruff_unavailable.log"
+    },
+    {
+      "argv": "python -m pytest -q tests/python/test_gateway.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T201139Z_A01/stdout/007_focused_tool_roundtrip.log",
+      "stderr_file": "artifacts/runs/20260823T201139Z_A01/stderr/007_focused_tool_roundtrip.log"
+    },
+    {
+      "argv": "adb -s 112193741U000563 forward tcp:18080 tcp:8080; restart uvicorn host.gateway.app:app on 127.0.0.1:18081; GET /health and /device/health",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T201139Z_A01/gateway_health.json",
+      "stderr_file": "artifacts/runs/20260823T201139Z_A01/gateway_verified.stderr.log"
+    },
+    {
+      "argv": "python tests/analyze_gateway.py --fixture tests/fixtures/harmony_gateway_golden.json --gateway-health gateway_health.json --device-health device_health.json --output benchmarks/service/gateway.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T201139Z_A01/stdout/013_analyzer_final.log",
+      "stderr_file": "artifacts/runs/20260823T201139Z_A01/stderr/013_analyzer_final.log"
+    },
+    {
+      "argv": "python -m pytest -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T201139Z_A01/stdout/009_full_verified.log",
+      "stderr_file": "artifacts/runs/20260823T201139Z_A01/stderr/009_full_verified.log"
+    },
+    {
+      "argv": "python -m py_compile host/gateway/app.py host/gateway/device_client.py host/gateway/harmony_adapter.py tests/analyze_gateway.py tests/python/test_gateway.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T201139Z_A01/stdout/010_pycompile.log",
+      "stderr_file": "artifacts/runs/20260823T201139Z_A01/stderr/010_pycompile.log"
+    },
+    {
+      "argv": "python -m pip check",
+      "exit_code": 1,
+      "stdout_file": "artifacts/runs/20260823T201139Z_A01/stdout/011_pip_check.log",
+      "stderr_file": "artifacts/runs/20260823T201139Z_A01/stderr/011_pip_check.log"
+    },
+    {
+      "argv": "python -c <assert project gateway dependency versions and imports>",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T201139Z_A01/stdout/012_project_dependency_check.log",
+      "stderr_file": "artifacts/runs/20260823T201139Z_A01/stderr/012_project_dependency_check.log"
+    }
+  ],
+  "files_changed": [
+    "host/gateway/app.py",
+    "host/gateway/device_client.py",
+    "host/gateway/harmony_adapter.py",
+    "pyproject.toml",
+    "tests/python/test_gateway.py",
+    "tests/fixtures/harmony_gateway_golden.json",
+    "tests/analyze_gateway.py",
+    "benchmarks/service/gateway.json",
+    "artifacts/runs/20260823T201139Z_A01/"
+  ],
+  "verification": [
+    {
+      "name": "Golden Harmony render/parse fixtures.",
+      "passed": true,
+      "detail": "The pinned official 0.0.8 package rendered the fixed system/developer/function-tool/user fixture to the exact 129-token sequence and token-CSV SHA-256 681b6d9781e15070c87ed4d468b58986f515e537c7694430fbfe6e15fa6c77f3. Strict completion parsing recovered final text, analysis-channel function calls, JSON arguments and function-call-output author mapping."
+    },
+    {
+      "name": "Gateway tests.",
+      "passed": true,
+      "detail": "Seven focused tests and all 35 repository tests passed. Non-stream and SSE Responses fixtures returned HTTP 200; SSE emitted the documented created/in_progress/item/content/delta/done/completed lifecycle with exact text reconstruction. A freshly restarted Uvicorn process also proxied live A00 health through adb forward before stopping cleanly."
+    }
+  ],
+  "metrics": {
+    "focused_tests_passed": 7,
+    "full_tests_passed": 35,
+    "harmony_package_version": "0.0.8",
+    "harmony_encoding": "HarmonyGptOss",
+    "golden_prompt_tokens": 129,
+    "golden_token_csv_sha256": "681b6d9781e15070c87ed4d468b58986f515e537c7694430fbfe6e15fa6c77f3",
+    "golden_render_ms_median": 0.5276,
+    "non_stream_fixture_latency_ms": 16.598,
+    "stream_fixture_latency_ms": 5.461,
+    "stream_event_count": 11,
+    "streamed_text_match": true,
+    "strict_tool_call_parse": true,
+    "function_output_name_roundtrip": true,
+    "live_gateway_health_status": "ok",
+    "live_device_health_status": "ok",
+    "verified_gateway_pid": 7772,
+    "verified_gateway_clean_stop": true,
+    "adb_transport": "112193741U000563 USB; tcp:18080 forwarded to device tcp:8080"
+  },
+  "artifacts": [
+    "benchmarks/service/gateway.json",
+    "tests/fixtures/harmony_gateway_golden.json",
+    "tests/python/test_gateway.py",
+    "artifacts/runs/20260823T201139Z_A01/evidence.json",
+    "artifacts/runs/20260823T201139Z_A01/gateway_health.json",
+    "artifacts/runs/20260823T201139Z_A01/device_health.json",
+    "artifacts/runs/20260823T201139Z_A01/gateway_verified.pid",
+    "artifacts/runs/20260823T201139Z_A01/gateway_verified.stdout.log",
+    "artifacts/runs/20260823T201139Z_A01/gateway_verified.stderr.log",
+    "artifacts/runs/20260823T201139Z_A01/gateway_clean_stop.txt",
+    "artifacts/runs/20260823T201139Z_A01/stdout/007_focused_tool_roundtrip.log",
+    "artifacts/runs/20260823T201139Z_A01/stdout/009_full_verified.log",
+    "artifacts/runs/20260823T201139Z_A01/stdout/013_analyzer_final.log",
+    "artifacts/runs/20260823T201139Z_A01/stderr/000_ruff_unavailable.log",
+    "artifacts/runs/20260823T201139Z_A01/stdout/011_pip_check.log",
+    "artifacts/runs/20260823T201139Z_A01/stdout/012_project_dependency_check.log"
+  ],
+  "limitations": [
+    "The live restart verifies gateway and device health over the actual USB forward; deterministic fixture tokens cover streaming so A01 does not repeat the already-evidenced multi-hour full Harmony prompt decode.",
+    "The shared global Python installation has unrelated dependency conflicts reported verbatim by pip check. A targeted project dependency/import check passed for openai-harmony 0.0.8, FastAPI 0.136.3 and httpx 0.28.1.",
+    "Ruff is not installed in the shared interpreter. PyCompile, a 110-column source scan, seven focused tests and all 35 repository tests passed instead.",
+    "Starlette emits a deprecation warning for its TestClient/httpx integration; this does not affect the live Uvicorn checks or test outcomes."
+  ],
+  "notes": [
+    "The phone remains responsible only for bounded token inference; official Harmony rendering, channel parsing, tool formatting and Responses SSE framing stay on the laptop.",
+    "The device client sends raw comma-separated token IDs to A00, appends each deterministic result, and stops on the official Harmony stop-token set.",
+    "ADB forward tcp:18080 remains configured for A02; Uvicorn was stopped cleanly so the transport supervisor task can take ownership of port 18081."
+  ]
+}

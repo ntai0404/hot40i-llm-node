@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "task_id": "A01",
+  "status": "pass",
+  "harmony": {
+    "package": "openai-harmony",
+    "version": "0.0.8",
+    "encoding": "HarmonyGptOss",
+    "upstream_commit": "abd677f7ac962629c808197caa1feb9e3e95d2b0",
+    "golden_prompt_tokens": 129,
+    "golden_token_csv_sha256": "681b6d9781e15070c87ed4d468b58986f515e537c7694430fbfe6e15fa6c77f3",
+    "render_ms_median": 0.5276,
+    "render_ms_max": 1.4753
+  },
+  "responses_api": {
+    "non_stream_status": 200,
+    "non_stream_fixture_latency_ms": 16.598,
+    "stream_status": 200,
+    "stream_fixture_latency_ms": 5.461,
+    "stream_event_count": 11,
+    "stream_event_types": [
+      "response.created",
+      "response.in_progress",
+      "response.output_item.added",
+      "response.content_part.added",
+      "response.output_text.delta",
+      "response.output_text.delta",
+      "response.output_text.delta",
+      "response.output_text.done",
+      "response.content_part.done",
+      "response.output_item.done",
+      "response.completed"
+    ],
+    "streamed_text_match": true
+  },
+  "live_restart": {
+    "gateway_health": {
+      "status": "ok",
+      "device_url": "http://127.0.0.1:18080",
+      "model": "openai/gpt-oss-20b",
+      "harmony": {
+        "package": "openai-harmony",
+        "version": "0.0.8"
+      }
+    },
+    "device_health": {
+      "status": "ok"
+    },
+    "device_transport": "adb forward tcp:18080 -> tcp:8080 over USB"
+  },
+  "limitations": [
+    "Gateway latency uses an in-process deterministic device token fixture; official device decode latency is recorded by A00/P01/P02.",
+    "Live A01 verification proxies A00 health but deliberately does not repeat the multi-hour full Harmony prompt decode."
+  ]
+}
