@@ -1,0 +1,44 @@
+snapshot=before
+utc=2026-08-23T20:04:16Z
+VmHWM:	    2812 kB
+VmRSS:	    2812 kB
+Threads:	1
+MemAvailable:    1592628 kB
+SwapTotal:       2114396 kB
+SwapFree:        1161252 kB
+pswpin 922874
+pswpout 1718630
+pgmajfault 1092073
+snapshot=after_1
+utc=2026-08-23T20:04:47Z
+VmHWM:	    3428 kB
+VmRSS:	    3428 kB
+Threads:	1
+MemAvailable:    1655052 kB
+SwapTotal:       2114396 kB
+SwapFree:        1080908 kB
+pswpin 924283
+pswpout 1740226
+pgmajfault 1093673
+snapshot=after_2
+utc=2026-08-23T20:05:18Z
+VmHWM:	    3428 kB
+VmRSS:	    3424 kB
+Threads:	1
+MemAvailable:    1644532 kB
+SwapTotal:       2114396 kB
+SwapFree:        1087512 kB
+pswpin 925871
+pswpout 1740239
+pgmajfault 1095763
+snapshot=after_3
+utc=2026-08-23T20:05:48Z
+VmHWM:	    3432 kB
+VmRSS:	    3432 kB
+Threads:	1
+MemAvailable:    1672496 kB
+SwapTotal:       2114396 kB
+SwapFree:        1093308 kB
+pswpin 929741
+pswpout 1742694
+pgmajfault 1099929

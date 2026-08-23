@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "task_id": "A00",
+  "started_at": "2026-08-23T19:59:05.361548+00:00",
+  "finished_at": "2026-08-23T20:10:00.7255236+00:00",
+  "status": "pass",
+  "git_commit": "9b972dd91510b726f3379c93f8ba0b95bb89d5e5",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "g++.exe -std=c++20 -O2 -Wall -Wextra -Wpedantic -I device/service/include tests/service_protocol_test.cpp -o service_protocol_test.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T195905Z_A00/stdout/001.log",
+      "stderr_file": "artifacts/runs/20260823T195905Z_A00/stderr/001.log"
+    },
+    {
+      "argv": "artifacts/runs/20260823T195905Z_A00/service_protocol_test.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T195905Z_A00/stdout/002.log",
+      "stderr_file": "artifacts/runs/20260823T195905Z_A00/stderr/002.log"
+    },
+    {
+      "argv": "aarch64-linux-android26-clang++.cmd -std=c++20 -O3 -DNDEBUG -Wall -Wextra -Wpedantic -pthread -static-libstdc++ -I device/service/include device/service/src/inference_service.cpp -o inference_service_android",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T195905Z_A00/stdout/003.log",
+      "stderr_file": "artifacts/runs/20260823T195905Z_A00/stderr/003.log"
+    },
+    {
+      "argv": "aarch64-linux-android26-clang++.cmd -std=c++20 -O3 -DNDEBUG -pthread -static-libstdc++ tests/minimal_decoder_probe.cpp device/runtime/src/{attention,expert_cache,expert_read_pipeline,flash_tensor_provider,gptoss_expert,h40m_tensor_catalog,model_index,mxfp4,parallel_bf16,router,ram_arena}.cpp -o minimal_decoder_android",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T195905Z_A00/stdout/004.log",
+      "stderr_file": "artifacts/runs/20260823T195905Z_A00/stderr/004.log"
+    },
+    {
+      "argv": "adb -s 112193741U000563 push fresh service/decoder; verify SHA-256; start localhost service with H40_THREADS=6 H40_IO_OVERLAP=1 and rss_budget_kib=630938",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T195905Z_A00/device/a00_final_health.http",
+      "stderr_file": "artifacts/runs/20260823T195905Z_A00/device/a00_service_final.stderr"
+    },
+    {
+      "argv": "adb shell /data/local/tmp/h40m/a00_repeated_requests.sh (three POST /infer requests through 127.0.0.1:8080)",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T195905Z_A00/device/a00_repeat.log",
+      "stderr_file": "artifacts/runs/20260823T195905Z_A00/device/a00_repeat.stderr"
+    },
+    {
+      "argv": "adb shell SIGTERM service; verify stopped; restart fresh; GET /health and /metrics through device localhost",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T195905Z_A00/device/a00_final_metrics.http",
+      "stderr_file": "artifacts/runs/20260823T195905Z_A00/device/a00_service_final.stderr"
+    },
+    {
+      "argv": "python tests/analyze_device_service.py artifacts/runs/20260823T195905Z_A00 benchmarks/service/device_service.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T195905Z_A00/stdout/006.log",
+      "stderr_file": "artifacts/runs/20260823T195905Z_A00/stderr/006.log"
+    },
+    {
+      "argv": "python -m py_compile tests/analyze_device_service.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T195905Z_A00/stdout/007.log",
+      "stderr_file": "artifacts/runs/20260823T195905Z_A00/stderr/007.log"
+    }
+  ],
+  "files_changed": [
+    "device/service/src/inference_service.cpp",
+    "tests/analyze_device_service.py",
+    "benchmarks/service/device_service.json",
+    "artifacts/runs/20260823T195905Z_A00/"
+  ],
+  "verification": [
+    {
+      "name": "Restart service after changes.",
+      "passed": true,
+      "detail": "Fresh ARM64 binaries were SHA-256 verified on the phone. Service PID 19202 completed three requests, exited on SIGTERM, and was restarted twice; the final fresh PID 19570 returned HTTP 200 with zero failures and 2748 KiB RSS."
+    },
+    {
+      "name": "Health/metrics and inference tests via device localhost.",
+      "passed": true,
+      "detail": "Android nc connected directly to 127.0.0.1:8080. Health and metrics returned HTTP 200. Three official H40M 24-layer requests all emitted token 366 at logit 10.402 with zero failures. Post-warmup service RSS was 3428/3424/3432 KiB (8 KiB spread), and max decoder RSS was 69072 KiB under the 630938 KiB budget."
+    }
+  ],
+  "metrics": {
+    "requests_completed": 3,
+    "request_failures": 0,
+    "input_token_id": 12194,
+    "emitted_token_id": 366,
+    "emitted_token_logit": 10.402,
+    "token_and_logit_agreement": true,
+    "median_elapsed_ms": 30758,
+    "median_tokens_per_second": 0.03251186683139346,
+    "dense_threads": 6,
+    "io_overlap_enabled": true,
+    "service_initial_rss_kib": 2812,
+    "service_post_request_rss_kib": [3428, 3424, 3432],
+    "service_post_warmup_rss_delta_kib": 4,
+    "service_post_warmup_rss_spread_kib": 8,
+    "max_child_peak_rss_kib": 69072,
+    "rss_budget_kib": 630938,
+    "mem_available_kib_after": 1639048,
+    "swap_free_kib_after": 1101180,
+    "thermal_status_after": 0,
+    "oom_events_matching_lmkd_lowmemory_oom": 0,
+    "service_sha256": "74db45d495347a3631e30b229e0ddbfb8a8c69fd99d4f33252e54d626386dca8",
+    "decoder_sha256": "b28b6c840c3101c3adde0fcabfdc90019a1e2bc1129e43d66794bc4e75685d0f",
+    "adb_transport": "112193741U000563 USB state=device"
+  },
+  "artifacts": [
+    "benchmarks/service/device_service.json",
+    "artifacts/runs/20260823T195905Z_A00/evidence.json",
+    "artifacts/runs/20260823T195905Z_A00/inference_service_android",
+    "artifacts/runs/20260823T195905Z_A00/minimal_decoder_android",
+    "artifacts/runs/20260823T195905Z_A00/a00_repeated_requests.sh",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_repeat.log",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_telemetry.log",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_infer_1.http",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_infer_2.http",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_infer_3.http",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_metrics_0.http",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_metrics_1.http",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_metrics_2.http",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_metrics_3.http",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_clean_stop.txt",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_final_health.http",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_final_metrics.http",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_final_meminfo.txt",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_final_vmstat.txt",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_final_thermal.txt",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_final_oom_scan.txt",
+    "artifacts/runs/20260823T195905Z_A00/device/a00_final_service_status.txt"
+  ],
+  "limitations": [
+    "The minimal phone service intentionally accepts token IDs and returns token/logit provenance; Harmony text rendering and decoding remain on the laptop as required by the service split.",
+    "Each request launches a fresh bounded decoder, so the measured 30.758 second median includes process startup and has no cross-request model cache reuse.",
+    "Stock shell access did not expose zram mm_stat or memory PSI; MemAvailable, swap, page-fault counters, process RSS, thermal status and a filtered LMKD/OOM scan were retained instead."
+  ],
+  "notes": [
+    "The service binds only to 127.0.0.1 and all endpoint verification was issued by Android nc on the device, not through a laptop-forwarded socket.",
+    "Service RSS rose once by about 616 KiB after the first request, then remained flat within an 8 KiB range across all completed requests.",
+    "No decoder or service stderr output was produced, thermal status remained 0, and the final filtered LMKD/OOM scan was empty."
+  ]
+}

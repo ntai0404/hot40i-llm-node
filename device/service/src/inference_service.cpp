@@ -33,13 +33,32 @@ struct Config {
 struct Metrics {
     std::uint64_t requests{};
     std::uint64_t inference_requests{};
+    std::uint64_t completed_inference_requests{};
     std::uint64_t failures{};
     std::uint64_t last_peak_rss_kib{};
 };
 
 std::atomic<bool> running{true};
+volatile std::sig_atomic_t active_child{-1};
 
-void stop_handler(int) { running = false; }
+void stop_handler(int) {
+    running = false;
+    if (active_child > 0) kill(active_child, SIGTERM);
+}
+
+std::uint64_t process_status_kib(std::string_view field) {
+    std::ifstream status("/proc/self/status");
+    std::string line;
+    const std::string prefix = std::string(field) + ":";
+    while (std::getline(status, line)) {
+        if (line.rfind(prefix, 0) != 0) continue;
+        std::istringstream value(line.substr(prefix.size()));
+        std::uint64_t kib = 0;
+        value >> kib;
+        return kib;
+    }
+    return 0;
+}
 
 std::string json_field(std::string_view text, std::string_view field) {
     const std::string needle = "\"" + std::string(field) + "\":";
@@ -122,11 +141,18 @@ std::string run_inference(const Config& config, std::string tokens, Metrics& met
               config.experts.c_str(), tokens.c_str(), output.c_str(), static_cast<char*>(nullptr));
         _exit(127);
     }
+    active_child = pid;
     int status = 0;
-    if (waitpid(pid, &status, 0) < 0 || !WIFEXITED(status) || WEXITSTATUS(status) != 0) {
+    pid_t waited = -1;
+    do {
+        waited = waitpid(pid, &status, 0);
+    } while (waited < 0 && errno == EINTR);
+    active_child = -1;
+    if (waited < 0 || !WIFEXITED(status) || WEXITSTATUS(status) != 0) {
         throw std::runtime_error("decoder runner failed");
     }
     std::ifstream stream(output);
+    if (!stream) throw std::runtime_error("decoder runner did not produce output");
     std::ostringstream json;
     json << stream.rdbuf();
     std::filesystem::remove(output);
@@ -141,8 +167,11 @@ std::string metrics_json(const Config& config, const Metrics& metrics) {
     std::ostringstream out;
     out << "{\"requests\":" << metrics.requests
         << ",\"inference_requests\":" << metrics.inference_requests
+        << ",\"completed_inference_requests\":" << metrics.completed_inference_requests
         << ",\"failures\":" << metrics.failures
         << ",\"last_peak_rss_kib\":" << metrics.last_peak_rss_kib
+        << ",\"service_rss_kib\":" << process_status_kib("VmRSS")
+        << ",\"service_peak_rss_kib\":" << process_status_kib("VmHWM")
         << ",\"rss_budget_kib\":" << config.rss_budget_kib << "}";
     return out.str();
 }
@@ -152,8 +181,17 @@ std::string metrics_json(const Config& config, const Metrics& metrics) {
 int main(int argc, char** argv) {
     try {
         const auto config = parse_config(argc, argv);
-        std::signal(SIGINT, stop_handler);
-        std::signal(SIGTERM, stop_handler);
+        if (access(config.runner.c_str(), X_OK) != 0 || !std::filesystem::exists(config.source) ||
+            !std::filesystem::is_regular_file(config.catalog) ||
+            !std::filesystem::is_regular_file(config.experts)) {
+            throw std::invalid_argument("runner or model artifact is unavailable");
+        }
+        struct sigaction action {};
+        action.sa_handler = stop_handler;
+        sigemptyset(&action.sa_mask);
+        sigaction(SIGINT, &action, nullptr);
+        sigaction(SIGTERM, &action, nullptr);
+        std::signal(SIGPIPE, SIG_IGN);
         const int server = socket(AF_INET, SOCK_STREAM, 0);
         if (server < 0) throw std::runtime_error("socket failed");
         int reuse = 1;
@@ -181,7 +219,9 @@ int main(int argc, char** argv) {
                     send_all(client, response(200, "OK", metrics_json(config, metrics)));
                 } else if (request.method == "POST" && request.target == "/infer") {
                     ++metrics.inference_requests;
-                    send_all(client, response(200, "OK", run_inference(config, request.body, metrics)));
+                    const auto payload = run_inference(config, request.body, metrics);
+                    ++metrics.completed_inference_requests;
+                    send_all(client, response(200, "OK", payload));
                 } else {
                     send_all(client, response(404, "Not Found", "{\"error\":\"not_found\"}"));
                 }

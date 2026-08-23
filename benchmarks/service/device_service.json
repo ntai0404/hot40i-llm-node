@@ -1,17 +1,64 @@
 {
   "schema_version": 1,
-  "status": "blocked",
-  "task": "A00",
-  "implementation": {
-    "bind_address": "127.0.0.1",
-    "endpoints": ["GET /health", "GET /metrics", "POST /infer"],
-    "bounded_request_body": true,
-    "rss_budget_configuration": true,
-    "clean_signal_shutdown": true,
-    "decoder_runner": "official H40M minimal_decoder_probe"
+  "task_id": "A00",
+  "status": "pass",
+  "device": {
+    "serial": "112193741U000563",
+    "model": "Infinix_X6528",
+    "adb_transport": "usb"
   },
-  "host_protocol_test": "pass",
-  "android_arm64_cross_build": "pass",
-  "device_verification": "blocked",
-  "blocked_reason": "USB ADB disappeared during P02 and could not be recovered through canonical server restart, trusted key reconnect, Windows PnP recovery, or permitted Wi-Fi ADB discovery. Device-local health/metrics/inference and RSS-growth tests cannot be executed without a transport."
+  "service": {
+    "bind": "127.0.0.1:8080",
+    "rss_budget_kib": 630938,
+    "initial_rss_kib": 2812,
+    "post_request_rss_kib": [
+      3428,
+      3424,
+      3432
+    ],
+    "post_warmup_rss_delta_kib": 4,
+    "post_warmup_rss_spread_kib": 8,
+    "clean_stop": true,
+    "clean_restart": true,
+    "final_rss_kib": 2748
+  },
+  "requests": {
+    "count": 3,
+    "successful": 3,
+    "failures": 0,
+    "input_token_id": 12194,
+    "emitted_token_id": 366,
+    "emitted_token_logit": 10.402,
+    "token_and_logit_agreement": true,
+    "elapsed_ms": [
+      30941,
+      30653,
+      30758
+    ],
+    "median_elapsed_ms": 30758,
+    "median_tokens_per_second": 0.03251186683139346,
+    "child_peak_rss_kib": [
+      68908,
+      55752,
+      69072
+    ],
+    "max_child_peak_rss_kib": 69072,
+    "dense_threads": 6,
+    "io_overlap_enabled": true,
+    "cache_policy": "per_layer_hotset"
+  },
+  "endpoints": {
+    "health_http_status": 200,
+    "metrics_http_status": 200,
+    "inference_http_statuses": [
+      200,
+      200,
+      200
+    ]
+  },
+  "artifacts": {
+    "telemetry": "artifacts\\runs\\20260823T195905Z_A00\\device\\a00_telemetry.log",
+    "thermal": "artifacts\\runs\\20260823T195905Z_A00\\device\\a00_final_thermal.txt",
+    "oom_scan": "artifacts\\runs\\20260823T195905Z_A00\\device\\a00_final_oom_scan.txt"
+  }
 }

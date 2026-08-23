@@ -49,14 +49,9 @@ completed_tasks:
 - O03
 - O04
 - O05
+- A00
 in_progress: null
-blocked_tasks:
-  A00:
-    reason: Android ARM64 service implementation and host protocol tests pass, but USB ADB disappeared and canonical-server/key
-      reconnect, Windows PnP recovery, LAN TCP/5555 scan, and ADB mDNS discovery all failed. Device-local restart/health/metrics/inference/RSS
-      verification now requires physical USB reconnection and possibly USB-debug authorization, which the operator
-      explicitly refuses.
-    at: '2026-08-10T02:26:39.141665+00:00'
+blocked_tasks: {}
 task_evidence:
   R00: artifacts/runs/20260807T140229Z_R00/evidence.json
   R01: artifacts/runs/20260807T142448Z_R01/evidence.json
@@ -104,6 +99,7 @@ task_evidence:
   O03: artifacts/runs/20260810T142706Z_O03/evidence.json
   O04: artifacts/runs/20260823T190134Z_O04/evidence.json
   O05: artifacts/runs/20260823T194646Z_O05/evidence.json
+  A00: artifacts/runs/20260823T195905Z_A00/evidence.json
 skipped_optional_tasks: []
 decisions:
   destructive_device_authorized: false
@@ -152,7 +148,7 @@ task_started_at:
   P00D: '2026-08-09T13:16:46.412847+00:00'
   P01: '2026-08-09T15:24:16.921197+00:00'
   P02: '2026-08-10T03:03:40.492234+00:00'
-  A00: '2026-08-10T02:23:31.897078+00:00'
+  A00: '2026-08-23T19:59:05.361548+00:00'
   O00: '2026-08-10T11:10:31.342567+00:00'
   O07: '2026-08-10T11:43:08.110441+00:00'
   O06: '2026-08-10T12:48:32.578083+00:00'
