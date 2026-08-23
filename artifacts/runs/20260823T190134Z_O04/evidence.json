@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "task_id": "O04",
+  "started_at": "2026-08-23T19:01:34.024106+00:00",
+  "finished_at": "2026-08-23T19:39:44.5781908+00:00",
+  "status": "pass",
+  "git_commit": "400fc0e09e8fd46267c6c3dc3a744664bb0638f2",
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python tools/trace/plan_expert_repacking.py --trace artifacts/runs/20260810T030340Z_P02/p02_1024.trace --layout artifacts/model/h40m/expert_arena.layout.json --output artifacts/model/h40m/layout_v2.json --arena-name expert_arena_v2.bin",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "python tools/model/repack_existing_arena.py --source artifacts/model/h40m/expert_arena.bin --source-layout artifacts/model/h40m/expert_arena.layout.json --target-layout artifacts/model/h40m/layout_v2.json --output artifacts/model/h40m/expert_arena_v2.bin",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T190134Z_O04/repack.stdout",
+      "stderr_file": "artifacts/runs/20260823T190134Z_O04/repack.stderr"
+    },
+    {
+      "argv": "python tools/model/generate_repacked_decoder_source.py --source tests/minimal_decoder_probe.cpp --layout artifacts/model/h40m/layout_v2.json --output artifacts/runs/20260823T190134Z_O04/minimal_decoder_repacked.cpp",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "aarch64-linux-android26-clang++.cmd -std=c++20 -O3 -DNDEBUG -pthread -static-libstdc++ -I device/runtime/include artifacts/runs/20260823T190134Z_O04/minimal_decoder_repacked.cpp device/runtime/src/{attention,expert_cache,expert_read_pipeline,flash_tensor_provider,gptoss_expert,h40m_tensor_catalog,model_index,mxfp4,parallel_bf16,router,ram_arena}.cpp -o artifacts/runs/20260823T190134Z_O04/minimal_decoder_repacked_android",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe -s 112193741U000563 push artifacts/model/h40m/expert_arena_v2.bin /data/local/tmp/h40m/h40m/expert_arena_v2.bin",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T190134Z_O04/arena_push.stdout",
+      "stderr_file": "artifacts/runs/20260823T190134Z_O04/arena_push.stderr"
+    },
+    {
+      "argv": "C:/mobile-remote-tools/platform-tools/adb.exe -s 112193741U000563 shell sha256sum /data/local/tmp/h40m/h40m/expert_arena_v2.bin",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "H40_THREADS=6 H40_IO_OVERLAP=1 taskset ff ./minimal_decoder_o04 source tensor_catalog.tsv expert_arena.bin <16 identical tokens> o04_before16.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T190134Z_O04/o04_before16.stdout",
+      "stderr_file": "artifacts/runs/20260823T190134Z_O04/o04_before16.stderr"
+    },
+    {
+      "argv": "H40_EXPERT_LAYOUT=v2 H40_THREADS=6 H40_IO_OVERLAP=1 taskset ff ./minimal_decoder_o04 source tensor_catalog.tsv expert_arena_v2.bin <16 identical tokens> o04_after16.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T190134Z_O04/o04_after16.stdout",
+      "stderr_file": "artifacts/runs/20260823T190134Z_O04/o04_after16.stderr"
+    },
+    {
+      "argv": "python tools/model/analyze_repacking.py --layout artifacts/model/h40m/layout_v2.json --before artifacts/runs/20260823T190134Z_O04/o04_before16.json --after artifacts/runs/20260823T190134Z_O04/o04_after16.json --output benchmarks/optimization/repacking.json",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "python -m py_compile tools/trace/plan_expert_repacking.py tools/model/repack_existing_arena.py tools/model/generate_repacked_decoder_source.py tools/model/analyze_repacking.py",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    }
+  ],
+  "files_changed": [
+    "artifacts/model/h40m/layout_v2.json",
+    "artifacts/runs/20260823T190134Z_O04/arena_push.stderr",
+    "artifacts/runs/20260823T190134Z_O04/arena_push.stdout",
+    "artifacts/runs/20260823T190134Z_O04/evidence.json",
+    "artifacts/runs/20260823T190134Z_O04/minimal_decoder_repacked.cpp",
+    "artifacts/runs/20260823T190134Z_O04/minimal_decoder_repacked_android",
+    "artifacts/runs/20260823T190134Z_O04/o04_after16.json",
+    "artifacts/runs/20260823T190134Z_O04/o04_after16.stderr",
+    "artifacts/runs/20260823T190134Z_O04/o04_after16.stdout",
+    "artifacts/runs/20260823T190134Z_O04/o04_before16.json",
+    "artifacts/runs/20260823T190134Z_O04/o04_before16.stderr",
+    "artifacts/runs/20260823T190134Z_O04/o04_before16.stdout",
+    "artifacts/runs/20260823T190134Z_O04/repack.stderr",
+    "artifacts/runs/20260823T190134Z_O04/repack.stdout",
+    "benchmarks/optimization/repacking.json",
+    "tools/model/analyze_repacking.py",
+    "tools/model/generate_repacked_decoder_source.py",
+    "tools/model/repack_existing_arena.py",
+    "tools/trace/plan_expert_repacking.py"
+  ],
+  "verification": [
+    {
+      "name": "Byte correctness checks.",
+      "passed": true,
+      "detail": "The streaming repacker copied all 768 expert payloads and independently re-read every target record; all per-record SHA-256 values matched the H40M/1 source layout. Device sha256sum matched the host H40M/2 arena digest 384bcb15958a6cb747cf51989735baa21d9d329d10a1cef855413bc0f791c4ae."
+    },
+    {
+      "name": "Before/after same runtime/cache policy.",
+      "passed": true,
+      "detail": "The same freshly compiled ARM64 binary ran both 16-token production-mode cases with H40_THREADS=6, taskset ff, H40_IO_OVERLAP=1 and per_layer_hotset cache. Token 11 and logit 13.8495 matched exactly; expert bytes, 660 hits, 876 misses and 767 prefetches also matched. H40M/1 produced 0.0396867 tok/s and H40M/2 produced 0.0396803 tok/s (0.999839x), so the repacked layout was correctly rejected."
+    }
+  ],
+  "metrics": {
+    "trace_route_events": 98304,
+    "pair_distance_reduction": 0.6654919072126502,
+    "sequential_seek_reduction": 0.6579340706158024,
+    "records_checksum_verified": 768,
+    "baseline_tokens_per_second": 0.03968667371105125,
+    "candidate_tokens_per_second": 0.039680276174722175,
+    "end_to_end_speedup": 0.9998387988780402,
+    "expert_read_speedup": 1.002494728576332,
+    "token_id_match": true,
+    "token_logit_max_abs_diff": 0.0,
+    "candidate_retained": false,
+    "baseline_peak_rss_kib": 70148,
+    "candidate_peak_rss_kib": 69740,
+    "thermal_status_after": 0,
+    "adb_transport": "112193741U000563 USB; Wi-Fi IP changed to 10.69.207.214 and was not reachable from the laptop"
+  },
+  "artifacts": [
+    "artifacts/model/h40m/layout_v2.json",
+    "benchmarks/optimization/repacking.json",
+    "artifacts/runs/20260823T190134Z_O04/evidence.json",
+    "artifacts/runs/20260823T190134Z_O04/arena_push.stderr",
+    "artifacts/runs/20260823T190134Z_O04/repack.stdout",
+    "artifacts/runs/20260823T190134Z_O04/o04_before16.json",
+    "artifacts/runs/20260823T190134Z_O04/o04_after16.json",
+    "artifacts/runs/20260823T190134Z_O04/minimal_decoder_repacked_android"
+  ],
+  "limitations": [
+    "Physical adjacency changed only the order within each already layer-contiguous group; flash storage has negligible seek cost and O00 overlaps nearly all expert reads.",
+    "The 10.47 GB candidate arena is a benchmark artifact and is not retained as the production layout because end-to-end throughput did not improve.",
+    "Wi-Fi ADB could not be re-established at the phone's new DHCP address; authorized USB ADB remained stable for all device evidence."
+  ],
+  "notes": [
+    "The negative result is retained: the locality proxy improved strongly and expert read time improved by 0.249%, but end-to-end decode regressed by 0.016% inside a CPU-dominated workload.",
+    "Production continues to use the original H40M_EXPERT_ARENA/1 mapping; no runtime default was changed."
+  ]
+}

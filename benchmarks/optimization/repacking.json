@@ -1,0 +1,71 @@
+{
+  "benchmark": {
+    "after": {
+      "cache_hits": 660,
+      "cache_misses": 876,
+      "cache_policy": "per_layer_hotset",
+      "dense_threads": 6,
+      "elapsed_ms": 403223,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 13.8495,
+      "expert_flash_bytes": 11595156480,
+      "expert_read_mib_per_second": 862.2608541091328,
+      "input_tokens": 16,
+      "io_overlap_enabled": true,
+      "peak_rss_kib": 69740,
+      "prefetch_read_mean_ms": 16.720246152542373,
+      "prefetch_read_ns": 12824428799,
+      "prefetched_experts": 767,
+      "tokens_per_second": 0.039680276174722175
+    },
+    "before": {
+      "cache_hits": 660,
+      "cache_misses": 876,
+      "cache_policy": "per_layer_hotset",
+      "dense_threads": 6,
+      "elapsed_ms": 403158,
+      "emitted_token_id": 11,
+      "emitted_token_logit": 13.8495,
+      "expert_flash_bytes": 11595156480,
+      "expert_read_mib_per_second": 860.1151003892571,
+      "input_tokens": 16,
+      "io_overlap_enabled": true,
+      "peak_rss_kib": 70148,
+      "prefetch_read_mean_ms": 16.761958628422423,
+      "prefetch_read_ns": 12856422268,
+      "prefetched_experts": 767,
+      "tokens_per_second": 0.03968667371105125
+    },
+    "device": "Infinix X6528 / Hot 40i",
+    "end_to_end_change_percent": -0.016120112195983083,
+    "end_to_end_speedup": 0.9998387988780402,
+    "expert_read_change_percent": 0.24947285763319282,
+    "expert_read_speedup": 1.002494728576332,
+    "runtime_mode": "production_minimal_trace",
+    "same_binary": true,
+    "same_cache_policy": true
+  },
+  "candidate": "trace_guided_physical_expert_arena_v2",
+  "correctness": {
+    "flash_and_cache_counters_match": true,
+    "token_id_match": true,
+    "token_logit_max_abs_diff": 0.0
+  },
+  "decision": {
+    "production_layout": "H40M_EXPERT_ARENA/1",
+    "reason": "Candidate was not retained because its small expert-read improvement did not improve end-to-end decode throughput. The CPU-dominated decoder remained effectively unchanged.",
+    "retained": false
+  },
+  "layout": {
+    "byte_correctness_status": "pass",
+    "candidate_arena_sha256": "384bcb15958a6cb747cf51989735baa21d9d329d10a1cef855413bc0f791c4ae",
+    "pair_distance_reduction": 0.6654919072126502,
+    "path": "artifacts/model/h40m/layout_v2.json",
+    "records_checked": 768,
+    "sequential_seek_reduction": 0.6579340706158024,
+    "source_arena_sha256": "2b1607bf3ea4f164c4df2f78f260bb6b9681c31284c103f10e999cf4cb6c3456"
+  },
+  "schema_version": 1,
+  "status": "pass",
+  "task": "O04"
+}
