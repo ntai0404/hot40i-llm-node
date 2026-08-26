@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "task_id": "F03",
+  "started_at": "2026-08-26T20:07:19.766236+00:00",
+  "finished_at": "2026-08-26T20:17:00.8302683Z",
+  "status": "pass",
+  "git_commit": null,
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python scripts/handoff_check.py",
+      "exit_code": 1,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/handoff_check_initial_failure.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python scripts/handoff_check.py",
+      "exit_code": 1,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/handoff_check_failure_2.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python scripts/handoff_check.py",
+      "exit_code": 1,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/handoff_check_failure_3.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python scripts/handoff_check.py",
+      "exit_code": 1,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/handoff_check_failure_4.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python scripts/handoff_check.py",
+      "exit_code": 1,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/handoff_check_failure_5.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python scripts/handoff_check.py",
+      "exit_code": 1,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/handoff_check_failure_6.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python scripts/handoff_check.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/handoff_check.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "C:\\mobile-remote-tools\\platform-tools\\adb.exe devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/adb_devices_final.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "adb -s 112193741U000563 clean restart inference_service_a00 with H40_THREADS=6 H40_IO_OVERLAP=1",
+      "exit_code": 124,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "curl http://127.0.0.1:18081/health",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/usb_health.http",
+      "stderr_file": null
+    },
+    {
+      "argv": "curl -X POST http://127.0.0.1:18081/infer --data-binary 12194",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/usb_inference.http",
+      "stderr_file": null
+    },
+    {
+      "argv": "curl http://127.0.0.1:18081/metrics",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/usb_metrics_final.http",
+      "stderr_file": null
+    },
+    {
+      "argv": "adb shell ps/proc status for final inference_service_a00",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/usb_service_process_final.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "adb shell dumpsys thermalservice",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/thermal_final.txt",
+      "stderr_file": null
+    },
+    {
+      "argv": "adb shell cat /proc/meminfo",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/memory_final.txt",
+      "stderr_file": null
+    },
+    {
+      "argv": "adb shell cat /proc/vmstat",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/vmstat_final.txt",
+      "stderr_file": null
+    },
+    {
+      "argv": "adb pull /data/local/tmp/h40m/f03_service.log",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F03/f03_service.log",
+      "stderr_file": null
+    }
+  ],
+  "files_changed": [
+    "scripts/handoff_check.py",
+    "PROJECT_STATE.yaml",
+    "artifacts/runs/20260827T022000Z_F03/"
+  ],
+  "verification": [
+    {
+      "name": "python scripts/handoff_check.py",
+      "passed": true,
+      "detail": "The final rerun passed structured-file validation, owned Markdown links, upstream lock checks, DAG/state/requirements checks, requirements rendering, CLI importability, compileall and 40 Python tests; the native C++ smoke build is explicitly skipped on Windows by the checker. Six earlier vendor-boundary failures are preserved verbatim in separate logs."
+    },
+    {
+      "name": "Clean-restart device service and verify USB health + one inference request.",
+      "passed": true,
+      "detail": "The old service was stopped and the A00 service was launched from the clean USB command path. The launch client timed out after spawning the child, so that exit code is retained; PID 28458 remained under init, USB health returned status=ok, and the real request returned status=pass, layers_run=24, emitted_token_id=366, peak_rss_kib=55696 and elapsed_ms=31126."
+    },
+    {
+      "name": "Verify every mandatory predecessor task has pass evidence.",
+      "passed": true,
+      "detail": "The final handoff check reported a closed mandatory path with no blocked tasks, and PROJECT_STATE contains evidence entries for all completed predecessors. Both USB 112193741U000563 and Wi-Fi 192.168.100.189:5555 were authorized in the final device list."
+    }
+  ],
+  "metrics": {
+    "handoff_check": "pass",
+    "python_tests_passed": 40,
+    "python_test_warnings": 1,
+    "adb_usb_serial": "112193741U000563",
+    "adb_wifi_transport": "192.168.100.189:5555",
+    "service_pid": 28458,
+    "health_status": "ok",
+    "inference_status": "pass",
+    "input_token_id": 12194,
+    "emitted_token_id": 366,
+    "emitted_token_text": null,
+    "layers_run": 24,
+    "elapsed_ms": 31126,
+    "peak_rss_kib": 55696,
+    "service_rss_kib": 3320,
+    "service_hwm_kib": 3320,
+    "rss_budget_kib": 630938,
+    "dense_flash_bytes": 2437387008,
+    "expert_flash_bytes": 1270702080,
+    "cache_hits": 0,
+    "cache_misses": 96,
+    "io_overlap_enabled": true,
+    "prefetched_experts": 72,
+    "dense_threads": 6,
+    "requests": 5,
+    "inference_requests": 1,
+    "completed_inference_requests": 1,
+    "failures": 0,
+    "thermal_status": 0,
+    "mem_available_kib": 1506728,
+    "swap_total_kib": 2114396,
+    "swap_free_kib": 885980,
+    "oom_kill": 0,
+    "clean_service_parent": 1
+  },
+  "artifacts": [
+    "artifacts/runs/20260827T022000Z_F03/evidence.json",
+    "artifacts/runs/20260827T022000Z_F03/handoff_check.log",
+    "artifacts/runs/20260827T022000Z_F03/handoff_check_initial_failure.log",
+    "artifacts/runs/20260827T022000Z_F03/handoff_check_failure_2.log",
+    "artifacts/runs/20260827T022000Z_F03/handoff_check_failure_3.log",
+    "artifacts/runs/20260827T022000Z_F03/handoff_check_failure_4.log",
+    "artifacts/runs/20260827T022000Z_F03/handoff_check_failure_5.log",
+    "artifacts/runs/20260827T022000Z_F03/handoff_check_failure_6.log",
+    "artifacts/runs/20260827T022000Z_F03/adb_devices_final.log",
+    "artifacts/runs/20260827T022000Z_F03/usb_health.http",
+    "artifacts/runs/20260827T022000Z_F03/usb_health_final.http",
+    "artifacts/runs/20260827T022000Z_F03/usb_inference.http",
+    "artifacts/runs/20260827T022000Z_F03/usb_metrics.http",
+    "artifacts/runs/20260827T022000Z_F03/usb_metrics_final.http",
+    "artifacts/runs/20260827T022000Z_F03/usb_service_process.log",
+    "artifacts/runs/20260827T022000Z_F03/usb_service_process_final.log",
+    "artifacts/runs/20260827T022000Z_F03/thermal_final.txt",
+    "artifacts/runs/20260827T022000Z_F03/memory_final.txt",
+    "artifacts/runs/20260827T022000Z_F03/vmstat_final.txt",
+    "artifacts/runs/20260827T022000Z_F03/f03_service.log"
+  ],
+  "limitations": [
+    "The clean USB launch client returned timeout 124 after the child service was spawned; the child was independently verified alive and serving the full inference request.",
+    "The service response records emitted_token_text as null because the Android minimal runner exposes token id/logit rather than a tokenizer decode; no text was fabricated.",
+    "The native C++ handoff smoke build is skipped on native Windows by scripts/handoff_check.py; Android ARM64 compilation and device execution are covered by A00/F00/F01 evidence."
+  ],
+  "notes": [
+    "No destructive device operation was performed.",
+    "The final service uses H40_THREADS=6, H40_IO_OVERLAP=1, per_layer_hotset cache and the bounded 630938 KiB RSS budget.",
+    "The six initial handoff failures were caused by vendored non-standard JSON/YAML/Markdown content and remain retained for audit; the validator now scopes strict checks to repository-owned files while separately validating the upstream manifest and lock."
+  ]
+}

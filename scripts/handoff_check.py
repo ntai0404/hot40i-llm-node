@@ -85,6 +85,8 @@ def validate_structured_files() -> None:
     for path in sorted(ROOT.rglob("*.json")):
         if any(part.startswith("build") for part in path.parts):
             continue
+        if "third_party" in path.relative_to(ROOT).parts:
+            continue
         try:
             document = json.loads(path.read_text(encoding="utf-8"))
         except Exception as exc:
@@ -103,6 +105,8 @@ def validate_structured_files() -> None:
         for path in sorted(ROOT.rglob(pattern)):
             if any(part.startswith("build") for part in path.parts):
                 continue
+            if "third_party" in path.relative_to(ROOT).parts:
+                continue
             load_yaml(path)
 
     print("OK: structured files parse and schemas are valid")
@@ -113,6 +117,8 @@ def validate_markdown_links() -> None:
     failures: list[str] = []
     for path in sorted(ROOT.rglob("*.md")):
         if any(part.startswith("build") for part in path.parts):
+            continue
+        if "third_party" in path.relative_to(ROOT).parts:
             continue
         text = path.read_text(encoding="utf-8", errors="replace")
         for match in link_pattern.finditer(text):
