@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "task_id": "A03",
+  "status": "pass",
+  "recorded_at": "2026-08-23T21:14:28.762493+00:00",
+  "runner_pid": 19380,
+  "active_scenario": null,
+  "client": {
+    "package": "openai",
+    "version": "2.16.0",
+    "base_url": "http://127.0.0.1:18081/v1",
+    "api_key": "local-device (non-secret placeholder)",
+    "timeout": null,
+    "max_retries": 0
+  },
+  "health": {
+    "gateway": {
+      "status": "ok",
+      "device_url": "http://127.0.0.1:18080",
+      "model": "openai/gpt-oss-20b",
+      "transport_managed": true,
+      "harmony": {
+        "package": "openai-harmony",
+        "version": "0.0.8"
+      }
+    },
+    "transport": {
+      "status": "ok",
+      "serial": "192.168.100.189:5555",
+      "host_port": 18080,
+      "device_port": 8080,
+      "endpoint": "http://127.0.0.1:18080/health",
+      "endpoint_payload": {
+        "status": "ok"
+      }
+    },
+    "device": {
+      "status": "ok"
+    }
+  },
+  "scenarios": [
+    {
+      "name": "deterministic_simple",
+      "transport": {
+        "status": "ok",
+        "serial": "112193741U000563",
+        "adb_transport": "usb"
+      },
+      "request": {
+        "input": "OK",
+        "model": "openai/gpt-oss-20b",
+        "max_output_tokens": 1,
+        "reasoning_effort": "low",
+        "tool_names": []
+      },
+      "response": {
+        "id": "resp_1d13c7abb1cf46f384d943485f588f60",
+        "status": "incomplete",
+        "incomplete_reason": "max_output_tokens",
+        "input_tokens": 68,
+        "output_tokens": 1,
+        "output": [],
+        "token_ids": [
+          25
+        ],
+        "decoded_token_text": ":"
+      },
+      "device_trace": {
+        "sha256": "ecaa9b3ecbec1a33fd6f9ef4552d2dc27a1d426463b0b5f81442b1464ca00416",
+        "steps": [
+          {
+            "schema_version": 1,
+            "status": "pass",
+            "mode": "multi_token_full_24_layer_h40m_prefill_decode",
+            "input_tokens": 68,
+            "layers_run": 24,
+            "emitted_token_id": 25,
+            "emitted_token_text": null,
+            "emitted_token_logit": 15.2614,
+            "dense_flash_bytes": 88093488768,
+            "expert_flash_bytes": 56347695360,
+            "cache_hits": 2271,
+            "cache_misses": 4257,
+            "cache_policy": "per_layer_hotset",
+            "expert_reuse_mode": "off",
+            "expert_reuse_window": 0,
+            "expert_reuse_hits": 0,
+            "expert_reuse_misses": 0,
+            "peak_rss_kib": 74176,
+            "io_overlap_enabled": true,
+            "prefetched_experts": 3539,
+            "prefetch_read_ns": 50452487598,
+            "prefetch_wait_ns": 3655833,
+            "embedding_ns": 42632269,
+            "dense_matvec_ns": 58393529058,
+            "attention_ns": 1089026462,
+            "moe_ns": 1634528266411,
+            "lm_head_ns": 2679238383,
+            "dense_threads": 6,
+            "lm_head_chunk_rows": 8192,
+            "elapsed_ms": 1697921
+          }
+        ]
+      },
+      "service_metrics_before": {
+        "requests": 12,
+        "inference_requests": 0,
+        "completed_inference_requests": 0,
+        "failures": 0,
+        "last_peak_rss_kib": 0,
+        "service_rss_kib": 2800,
+        "service_peak_rss_kib": 2800,
+        "rss_budget_kib": 630938
+      },
+      "service_metrics_after": {
+        "requests": 16,
+        "inference_requests": 1,
+        "completed_inference_requests": 1,
+        "failures": 0,
+        "last_peak_rss_kib": 74176,
+        "service_rss_kib": 2992,
+        "service_peak_rss_kib": 2992,
+        "rss_budget_kib": 630938
+      },
+      "round_trip_ms": 1699090.704,
+      "gateway_overhead_ms": 1169.704,
+      "correlation": {
+        "trace_digest_match": true,
+        "token_id_match": true,
+        "input_token_count_match": true,
+        "inference_counter_delta": 1,
+        "completion_counter_delta": 1,
+        "failure_counter_delta": 0
+      }
+    },
+    {
+      "name": "function_tool_format",
+      "transport": {
+        "status": "ok",
+        "serial": "192.168.100.189:5555",
+        "adb_transport": "wifi"
+      },
+      "request": {
+        "input": "Echo.",
+        "model": "openai/gpt-oss-20b",
+        "max_output_tokens": 1,
+        "reasoning_effort": "low",
+        "tool_names": [
+          "echo"
+        ]
+      },
+      "response": {
+        "id": "resp_71cef3c4fe9c42a6b0cd7c9522b7d7e6",
+        "status": "incomplete",
+        "incomplete_reason": "max_output_tokens",
+        "input_tokens": 110,
+        "output_tokens": 1,
+        "output": [],
+        "token_ids": [
+          364
+        ],
+        "decoded_token_text": ".\n\n"
+      },
+      "device_trace": {
+        "sha256": "bbc6606c5d4a6cdbc71c38f4e586bf6e3cd081c33db0e68274292281bdcb85f1",
+        "steps": [
+          {
+            "schema_version": 1,
+            "status": "pass",
+            "mode": "multi_token_full_24_layer_h40m_prefill_decode",
+            "input_tokens": 110,
+            "layers_run": 24,
+            "emitted_token_id": 364,
+            "emitted_token_text": null,
+            "emitted_token_logit": 16.4282,
+            "dense_flash_bytes": 141788358528,
+            "expert_flash_bytes": 90418394880,
+            "cache_hits": 3729,
+            "cache_misses": 6831,
+            "cache_policy": "per_layer_hotset",
+            "expert_reuse_mode": "off",
+            "expert_reuse_window": 0,
+            "expert_reuse_hits": 0,
+            "expert_reuse_misses": 0,
+            "peak_rss_kib": 77844,
+            "io_overlap_enabled": true,
+            "prefetched_experts": 5712,
+            "prefetch_read_ns": 85492966597,
+            "prefetch_wait_ns": 5969850,
+            "embedding_ns": 86583500,
+            "dense_matvec_ns": 98586070752,
+            "attention_ns": 2825597461,
+            "moe_ns": 2650179181567,
+            "lm_head_ns": 2757726614,
+            "dense_threads": 6,
+            "lm_head_chunk_rows": 8192,
+            "elapsed_ms": 2755647
+          }
+        ]
+      },
+      "service_metrics_before": {
+        "requests": 10,
+        "inference_requests": 0,
+        "completed_inference_requests": 0,
+        "failures": 0,
+        "last_peak_rss_kib": 0,
+        "service_rss_kib": 2824,
+        "service_peak_rss_kib": 2824,
+        "rss_budget_kib": 630938
+      },
+      "service_metrics_after": {
+        "requests": 14,
+        "inference_requests": 1,
+        "completed_inference_requests": 1,
+        "failures": 0,
+        "last_peak_rss_kib": 77844,
+        "service_rss_kib": 2792,
+        "service_peak_rss_kib": 2824,
+        "rss_budget_kib": 630938
+      },
+      "round_trip_ms": 2760014.334,
+      "gateway_overhead_ms": 4367.334,
+      "correlation": {
+        "trace_digest_match": true,
+        "token_id_match": true,
+        "input_token_count_match": true,
+        "inference_counter_delta": 1,
+        "completion_counter_delta": 1,
+        "failure_counter_delta": 0
+      }
+    }
+  ],
+  "summary": {
+    "round_trips": 2,
+    "successful_round_trips": 2,
+    "tool_format_supported": true,
+    "all_trace_correlations_passed": true
+  }
+}

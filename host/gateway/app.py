@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import os
 import time
 import uuid
+from collections import OrderedDict
 from collections.abc import AsyncIterator
 from importlib.metadata import version
 from typing import Any
@@ -45,19 +47,24 @@ def _response_payload(
     output: list[dict[str, Any]],
     input_tokens: int,
     output_tokens: int,
+    *,
+    status: str = "completed",
 ) -> dict[str, Any]:
     return {
         "id": response_id,
         "object": "response",
         "created_at": int(time.time()),
-        "status": "completed",
+        "status": status,
         "error": None,
-        "incomplete_details": None,
+        "incomplete_details": (
+            {"reason": "max_output_tokens"} if status == "incomplete" else None
+        ),
         "instructions": request.instructions,
         "max_output_tokens": request.max_output_tokens,
         "model": request.model,
         "output": output,
         "parallel_tool_calls": True,
+        "tool_choice": "auto",
         "tools": request.tools,
         "metadata": request.metadata,
         "usage": {
@@ -80,15 +87,44 @@ async def _non_stream_response(
     response_id: str,
     adapter: HarmonyAdapter,
     device: DeviceTokenSource,
-) -> dict[str, Any]:
+) -> tuple[dict[str, Any], list[int]]:
     completion: list[int] = []
+    reached_stop = False
     async for token in device.generate(prompt_tokens, request.max_output_tokens, adapter.stop_tokens):
         completion.append(token)
         if token in adapter.stop_tokens:
+            reached_stop = True
             break
-    messages = adapter.parse_completion(completion)
-    output = adapter.response_items(messages, response_id)
-    return _response_payload(request, response_id, output, len(prompt_tokens), len(completion))
+    if reached_stop:
+        messages = adapter.parse_completion(completion)
+        output = adapter.response_items(messages, response_id)
+        status = "completed"
+    else:
+        output = adapter.partial_response_items(completion, response_id)
+        status = "incomplete"
+    payload = _response_payload(
+        request,
+        response_id,
+        output,
+        len(prompt_tokens),
+        len(completion),
+        status=status,
+    )
+    return payload, completion
+
+
+def _trace_document(device: DeviceTokenSource) -> dict[str, Any] | None:
+    get_trace = getattr(device, "last_generation_trace", None)
+    if not callable(get_trace):
+        return None
+    steps = list(get_trace())
+    if not steps:
+        return None
+    canonical = json.dumps(steps, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return {
+        "sha256": hashlib.sha256(canonical).hexdigest(),
+        "steps": steps,
+    }
 
 
 async def _stream_response(
@@ -262,6 +298,7 @@ def create_app(
     app.state.device_client = device_client
     app.state.transport_supervisor = supervisor
     app.state.harmony = adapter or HarmonyAdapter()
+    app.state.device_traces = OrderedDict()
 
     @app.get("/health")
     async def health() -> dict[str, Any]:
@@ -290,6 +327,23 @@ def create_app(
         except Exception as exc:
             raise HTTPException(status_code=502, detail=f"device runtime unavailable: {exc}") from exc
 
+    @app.get("/device/metrics")
+    async def device_metrics() -> dict:
+        metrics = getattr(app.state.device_client, "metrics", None)
+        if not callable(metrics):
+            raise HTTPException(status_code=501, detail="device metrics are unavailable")
+        try:
+            return await metrics()
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail=f"device metrics unavailable: {exc}") from exc
+
+    @app.get("/device/traces/{trace_sha256}")
+    async def device_trace(trace_sha256: str) -> dict:
+        trace = app.state.device_traces.get(trace_sha256)
+        if trace is None:
+            raise HTTPException(status_code=404, detail="device trace is unavailable")
+        return trace
+
     async def create_response(request: ResponsesRequest):
         try:
             effort = request.reasoning.get("effort") if request.reasoning else None
@@ -315,13 +369,22 @@ def create_app(
                 headers={"cache-control": "no-cache", "x-accel-buffering": "no"},
             )
         try:
-            return await _non_stream_response(
+            payload, completion = await _non_stream_response(
                 request,
                 prompt_tokens,
                 response_id,
                 app.state.harmony,
                 app.state.device_client,
             )
+            headers = {"x-hot40-output-token-ids": ",".join(map(str, completion))}
+            trace = _trace_document(app.state.device_client)
+            if trace is not None:
+                digest = trace["sha256"]
+                app.state.device_traces[digest] = trace
+                while len(app.state.device_traces) > 32:
+                    app.state.device_traces.popitem(last=False)
+                headers["x-hot40-device-trace-sha256"] = digest
+            return JSONResponse(content=payload, headers=headers)
         except Exception as exc:
             raise HTTPException(status_code=502, detail=f"device inference failed: {exc}") from exc
 

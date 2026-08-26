@@ -1,0 +1,4 @@
+resume skip deterministic_simple
+starting function_tool_format
+completed function_tool_format: token=364 round_trip_ms=2760014.334
+wrote benchmarks\service\end_to_end.json: 2 real round trips passed

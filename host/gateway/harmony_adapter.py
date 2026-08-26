@@ -8,9 +8,11 @@ from openai_harmony import (
     Conversation,
     DeveloperContent,
     HarmonyEncodingName,
+    HarmonyError,
     Message,
     ReasoningEffort,
     Role,
+    StreamableParser,
     SystemContent,
     TextContent,
     ToolDescription,
@@ -148,6 +150,52 @@ class HarmonyAdapter:
 
     def parse_completion(self, tokens: Sequence[int]) -> list[Message]:
         return self.encoding.parse_messages_from_completion_tokens(tokens, Role.ASSISTANT, strict=True)
+
+    def partial_response_items(
+        self, tokens: Sequence[int], response_id: str
+    ) -> list[dict[str, Any]]:
+        """Expose only Harmony structure that is valid before a max-token cutoff."""
+        parser = StreamableParser(self.encoding, Role.ASSISTANT, strict=True)
+        try:
+            for token in tokens:
+                parser.process(token)
+        except HarmonyError:
+            return []
+
+        output = self.response_items(parser.messages, response_id)
+        text = parser.current_content
+        recipient = parser.current_recipient
+        suffix = response_id.removeprefix("resp_")
+        index = len(output)
+        if recipient and recipient.startswith("functions."):
+            output.append(
+                {
+                    "id": f"fc_{suffix}_{index}",
+                    "type": "function_call",
+                    "status": "incomplete",
+                    "call_id": f"call_{suffix}_{index}",
+                    "name": recipient.removeprefix("functions."),
+                    "arguments": text,
+                }
+            )
+        elif parser.current_channel in {"final", "commentary"}:
+            output.append(
+                {
+                    "id": f"msg_{suffix}_{index}",
+                    "type": "message",
+                    "status": "incomplete",
+                    "role": "assistant",
+                    "content": [
+                        {
+                            "type": "output_text",
+                            "text": text,
+                            "annotations": [],
+                            "logprobs": [],
+                        }
+                    ],
+                }
+            )
+        return output
 
     @staticmethod
     def message_text(message: Message) -> str:

@@ -1,0 +1,3 @@
+﻿List of devices attached
+112193741U000563       device product:X6528-OP model:Infinix_X6528 device:Infinix-X6528 transport_id:1
+192.168.100.189:5555   device product:X6528-OP model:Infinix_X6528 device:Infinix-X6528 transport_id:2

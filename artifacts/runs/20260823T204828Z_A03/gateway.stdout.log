@@ -1,0 +1,12 @@
+INFO:     127.0.0.1:56556 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56557 - "GET /transport/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56563 - "GET /device/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56575 - "GET /device/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56596 - "GET /transport/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56602 - "GET /device/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56614 - "GET /device/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56626 - "POST /v1/responses HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62349 - "GET /device/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62361 - "GET /device/traces/ecaa9b3ecbec1a33fd6f9ef4552d2dc27a1d426463b0b5f81442b1464ca00416 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62362 - "GET /device/metrics HTTP/1.1" 200 OK

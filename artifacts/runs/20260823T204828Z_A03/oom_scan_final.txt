@@ -1,0 +1,1 @@
+﻿08-27 02:06:05.620  7733  7733 I adbd    : adbd service requested 'shell,v2,raw:logcat -d -t 400 | grep -i -E 'lowmemorykiller|lmkd|out of memory|killed''

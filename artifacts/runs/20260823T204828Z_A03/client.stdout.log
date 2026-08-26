@@ -1,0 +1,3 @@
+starting deterministic_simple
+completed deterministic_simple: token=25 round_trip_ms=1699090.704
+starting function_tool_format

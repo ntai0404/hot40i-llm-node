@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "task_id": "A03",
+  "started_at": "2026-08-23T20:36:52.689789+00:00",
+  "finished_at": "2026-08-26T19:07:39.9512207Z",
+  "status": "pass",
+  "git_commit": "b0679763",
+  "sources": [
+    {
+      "url": "https://github.com/openai/harmony.git",
+      "ref": "abd677f7ac962629c808197caa1feb9e3e95d2b0 / openai-harmony==0.0.8",
+      "note": "Official Harmony tokenizer and request semantics used for both real client scenarios."
+    },
+    {
+      "url": "https://developers.openai.com/api/reference/typescript/resources/beta/subresources/responses/methods/create",
+      "ref": "accessed 2026-08-24",
+      "note": "Responses request, incomplete result, tool input and response object shape used by the gateway."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "python -m pytest -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T204828Z_A03/pytest_full.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python -m py_compile host/gateway/app.py host/gateway/device_client.py host/gateway/harmony_adapter.py host/local_client_demo.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T204828Z_A03/pycompile.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python -m host.local_client_demo --resume --output benchmarks/service/end_to_end.json",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T204828Z_A03/client_wifi.stdout.log",
+      "stderr_file": "artifacts/runs/20260823T204828Z_A03/client_wifi.stderr.log"
+    },
+    {
+      "argv": "adb devices -l; adb -s 192.168.100.189:5555 forward --list; final service/memory/thermal/OOM snapshots",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260823T204828Z_A03/adb_devices_final.txt",
+      "stderr_file": "artifacts/runs/20260823T204828Z_A03/oom_scan_final.txt"
+    },
+    {
+      "argv": "python -c <validate benchmark status, two scenarios, transport, token and correlation fields>",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    }
+  ],
+  "files_changed": [
+    "PROJECT_STATE.yaml",
+    "host/gateway/app.py",
+    "host/gateway/device_client.py",
+    "host/gateway/harmony_adapter.py",
+    "host/local_client_demo.py",
+    "host/local_client_demo.requirements.txt",
+    "docs/local_client_demo.md",
+    "benchmarks/service/end_to_end.json",
+    "artifacts/runs/20260823T204828Z_A03/"
+  ],
+  "verification": [
+    {
+      "name": "End-to-end request returns model response and metrics correlate with device trace.",
+      "passed": true,
+      "detail": "OpenAI Python 2.16.0 called the local Responses gateway for a deterministic simple request and a function-tool-format request. The simple request ran over USB and emitted token 25 (decoded ':'); the tool request ran over verified Wi-Fi ADB and emitted token 364 (decoded '.\\n\\n'). Both Responses objects were accepted by the SDK as incomplete(max_output_tokens) one-token results, and both independently matched device trace SHA, emitted token, input-token count, inference/completion counters and zero failure delta. Device traces show 24 layers, bounded peak RSS and actual flash/cache metrics."
+    },
+    {
+      "name": "Gateway and client protocol checks.",
+      "passed": true,
+      "detail": "Full repository pytest passed 40 tests, py_compile passed, and the OpenAI SDK full-stack mock passed both scenarios with checkpoint/resume behavior."
+    }
+  ],
+  "metrics": {
+    "client_package": "openai",
+    "client_version": "2.16.0",
+    "gateway_base_url": "http://127.0.0.1:18081/v1",
+    "max_retries": 0,
+    "request_timeout": null,
+    "model": "openai/gpt-oss-20b",
+    "harmony_package": "openai-harmony==0.0.8",
+    "device_serial_usb": "112193741U000563",
+    "device_serial_wifi": "192.168.100.189:5555",
+    "simple": {
+      "transport": "usb",
+      "input_tokens": 68,
+      "output_tokens": 1,
+      "token_id": 25,
+      "decoded_token_text": ":",
+      "round_trip_ms": 1699090.704,
+      "device_elapsed_ms": 1697921,
+      "gateway_overhead_ms": 1169.704,
+      "peak_rss_kib": 74176,
+      "rss_budget_kib": 630938,
+      "dense_flash_bytes": 88093488768,
+      "expert_flash_bytes": 56347695360,
+      "cache_hits": 2271,
+      "cache_misses": 4257,
+      "layers_run": 24,
+      "correlation_passed": true
+    },
+    "tool_format": {
+      "transport": "wifi_adb",
+      "input_tokens": 110,
+      "output_tokens": 1,
+      "token_id": 364,
+      "decoded_token_text": ".\\n\\n",
+      "round_trip_ms": 2760014.334,
+      "device_elapsed_ms": 2755647,
+      "gateway_overhead_ms": 4367.334,
+      "peak_rss_kib": 77844,
+      "rss_budget_kib": 630938,
+      "dense_flash_bytes": 141788358528,
+      "expert_flash_bytes": 90418394880,
+      "cache_hits": 3729,
+      "cache_misses": 6831,
+      "layers_run": 24,
+      "correlation_passed": true
+    },
+    "final_service": {
+      "pid": 9179,
+      "service_rss_kib": 2792,
+      "service_peak_rss_kib": 2824,
+      "inference_failures": 0,
+      "rss_budget_kib": 630938
+    },
+    "final_device_memory": {
+      "mem_total_kib": 3844364,
+      "mem_available_kib": 1588184,
+      "swap_total_kib": 2114396,
+      "swap_free_kib": 557904,
+      "cached_kib": 1725464,
+      "thermal_status": 0,
+      "oom_or_lmk_matches": 0
+    },
+    "pytest_passed": 40,
+    "pycompile_passed": true,
+    "scenarios_passed": 2
+  },
+  "artifacts": [
+    "benchmarks/service/end_to_end.json",
+    "artifacts/runs/20260823T204828Z_A03/evidence.json",
+    "artifacts/runs/20260823T204828Z_A03/end_to_end.json",
+    "artifacts/runs/20260823T204828Z_A03/client_wifi.stdout.log",
+    "artifacts/runs/20260823T204828Z_A03/client_wifi.stderr.log",
+    "artifacts/runs/20260823T204828Z_A03/adb_devices_final.txt",
+    "artifacts/runs/20260823T204828Z_A03/adb_forward_final.txt",
+    "artifacts/runs/20260823T204828Z_A03/service_status_final.txt",
+    "artifacts/runs/20260823T204828Z_A03/service_status_proc_final.txt",
+    "artifacts/runs/20260823T204828Z_A03/service_io_final.txt",
+    "artifacts/runs/20260823T204828Z_A03/meminfo_final.txt",
+    "artifacts/runs/20260823T204828Z_A03/thermal_final.txt",
+    "artifacts/runs/20260823T204828Z_A03/oom_scan_final.txt",
+    "artifacts/runs/20260823T204828Z_A03/pytest_full.log",
+    "artifacts/runs/20260823T204828Z_A03/pycompile.log",
+    "artifacts/runs/20260823T204828Z_A03/gateway_clean_stop.txt"
+  ],
+  "limitations": [
+    "A03 uses a one-token max_output_tokens=1 cutoff so the official Harmony parser is never asked to fabricate a complete message from a partial stream; the response status is explicitly incomplete(max_output_tokens).",
+    "The tool-format scenario was completed over Wi-Fi ADB after the USB ADB server reset; the simple scenario provides the USB round-trip proof, and both transports are recorded in the benchmark.",
+    "The stock service currently runs a full 24-layer prefill for each request, so device latency is measured in tens of minutes for these prompts; no client timeout, retry or cached laptop inference was used.",
+    "Android logcat contains unrelated historical process-kill lines, but the final OOM/LMKD scan had no matching inference failure and the service metrics reported zero failures."
+  ],
+  "notes": [
+    "The A03 gateway was restarted after code changes and after the ADB transport recovery; the final service was also cleanly restarted before the evidence run.",
+    "The gateway retains at most 32 trace documents keyed by SHA-256; trace records contain the raw decoder response including flash, cache, timing and RSS fields.",
+    "Wi-Fi ADB was verified with model shell, harmless push/hash test and a managed tcp:18080 forward before the tool scenario."
+  ]
+}
