@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "task": "F00",
+  "suite": {
+    "python_pytest": {
+      "status": "pass",
+      "tests_passed": 40,
+      "warnings": 1,
+      "log": "artifacts/runs/20260827T022000Z_F00/pytest.log"
+    },
+    "native": {
+      "tiny_full_stack_parity": "pass",
+      "gptoss_attention": "pass",
+      "gptoss_expert_mxfp4": "pass",
+      "service_protocol": "pass",
+      "logs": [
+        "artifacts/runs/20260827T022000Z_F00/tiny_parity.log",
+        "artifacts/runs/20260827T022000Z_F00/gptoss_attention.log",
+        "artifacts/runs/20260827T022000Z_F00/gptoss_expert.log",
+        "artifacts/runs/20260827T022000Z_F00/service_protocol.log"
+      ]
+    }
+  },
+  "official_harmony": {
+    "fixture": "tests/fixtures/harmony_gateway_golden.json",
+    "package": "openai-harmony==0.0.8",
+    "tokenization_and_rendering": "pass"
+  },
+  "fixed_end_to_end": {
+    "source": "benchmarks/service/end_to_end.json",
+    "status": "pass",
+    "scenarios": 2,
+    "layers_per_scenario": 24,
+    "one_token_responses": true,
+    "trace_correlations": 2,
+    "device_failure_delta": 0,
+    "validation_log": "artifacts/runs/20260827T022000Z_F00/fixed_e2e_validation.log"
+  },
+  "proof_artifacts": {
+    "first_token": "pass",
+    "128_tokens": "pass",
+    "minimal_decoder": "pass",
+    "long_decode": "pass"
+  },
+  "regressions": []
+}

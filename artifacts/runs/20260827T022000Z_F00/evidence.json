@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "task_id": "F00",
+  "started_at": "2026-08-26T19:10:00.0000000Z",
+  "finished_at": "2026-08-26T19:17:00.0000000Z",
+  "status": "pass",
+  "git_commit": null,
+  "sources": [
+    {
+      "url": "https://github.com/openai/harmony.git",
+      "ref": "abd677f7ac962629c808197caa1feb9e3e95d2b0 / openai-harmony==0.0.8",
+      "note": "Official Harmony rendering and tokenization fixture used by the regression suite."
+    }
+  ],
+  "commands": [
+    {
+      "argv": "python -m pytest -q",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F00/pytest.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "C:\\msys64\\ucrt64\\bin\\g++.exe -std=c++20 -Wall -Wextra -Wpedantic -O2 -I device\\runtime\\include tests\\tiny_parity_test.cpp device\\runtime\\src\\attention.cpp device\\runtime\\src\\router.cpp device\\runtime\\src\\expert_cache.cpp device\\runtime\\src\\flash_tensor_provider.cpp device\\runtime\\src\\model_index.cpp -o artifacts\\runs\\20260827T022000Z_F00\\tiny_parity_test.exe",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "artifacts/runs/20260827T022000Z_F00/tiny_parity_test.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F00/tiny_parity.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "C:\\msys64\\ucrt64\\bin\\g++.exe -std=c++20 -Wall -Wextra -Wpedantic -O2 -I device\\runtime\\include tests\\gptoss_attention_test.cpp device\\runtime\\src\\attention.cpp -o artifacts\\runs\\20260827T022000Z_F00\\gptoss_attention_test.exe",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "artifacts/runs/20260827T022000Z_F00/gptoss_attention_test.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F00/gptoss_attention.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "C:\\msys64\\ucrt64\\bin\\g++.exe -std=c++20 -Wall -Wextra -Wpedantic -O2 -I device\\runtime\\include tests\\gptoss_expert_test.cpp device\\runtime\\src\\gptoss_expert.cpp device\\runtime\\src\\mxfp4.cpp -o artifacts\\runs\\20260827T022000Z_F00\\gptoss_expert_test.exe",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "artifacts/runs/20260827T022000Z_F00/gptoss_expert_test.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F00/gptoss_expert.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "C:\\msys64\\ucrt64\\bin\\g++.exe -std=c++20 -Wall -Wextra -Wpedantic -O2 -I device\\service\\include tests\\service_protocol_test.cpp -o artifacts\\runs\\20260827T022000Z_F00\\service_protocol_test.exe",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "artifacts/runs/20260827T022000Z_F00/service_protocol_test.exe",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F00/service_protocol.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python -c <validate fixed Harmony end-to-end and proof artifacts>",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F00/fixed_e2e_validation.log",
+      "stderr_file": null
+    }
+  ],
+  "files_changed": [
+    "benchmarks/final/correctness.json",
+    "artifacts/runs/20260827T022000Z_F00/"
+  ],
+  "verification": [
+    {
+      "name": "All mandatory correctness tests pass.",
+      "passed": true,
+      "detail": "Fresh Python suite passed 40 tests; fresh native tiny parity, GPT-OSS attention, GPT-OSS MXFP4 expert, and service protocol tests all exited 0. Official Harmony fixture checks passed. Fixed end-to-end validation found two pass scenarios with 24 layers, one-token deterministic responses, matching trace/token/input correlations, and zero device failure delta. Four existing proof artifacts were independently checked as pass. No unexplained correctness regression remains."
+    }
+  ],
+  "metrics": {
+    "pytest_passed": 40,
+    "pytest_warnings": 1,
+    "native_tests_passed": 4,
+    "fixed_end_to_end_scenarios": 2,
+    "fixed_end_to_end_layers": 24,
+    "fixed_end_to_end_trace_correlations": 2,
+    "fixed_end_to_end_device_failure_delta": 0,
+    "proof_artifacts_checked": 4,
+    "attention_reference_max_abs_diff": 0.0,
+    "attention_sliding_vs_full_expected_mask_diff": 0.00792264
+  },
+  "artifacts": [
+    "benchmarks/final/correctness.json",
+    "artifacts/runs/20260827T022000Z_F00/evidence.json",
+    "artifacts/runs/20260827T022000Z_F00/pytest.log",
+    "artifacts/runs/20260827T022000Z_F00/tiny_parity.log",
+    "artifacts/runs/20260827T022000Z_F00/gptoss_attention.log",
+    "artifacts/runs/20260827T022000Z_F00/gptoss_expert.log",
+    "artifacts/runs/20260827T022000Z_F00/service_protocol.log",
+    "artifacts/runs/20260827T022000Z_F00/fixed_e2e_validation.log",
+    "benchmarks/service/end_to_end.json",
+    "benchmarks/proof/first_token.json",
+    "benchmarks/proof/128_tokens.json",
+    "benchmarks/proof/minimal_decoder.json",
+    "benchmarks/proof/long_decode.json",
+    "tests/fixtures/harmony_gateway_golden.json"
+  ],
+  "limitations": [
+    "The fixed end-to-end prompt set reuses the most recent A03 device traces, which were produced after the O00-O07 optimization chain and independently correlated at request time; F00 adds a fresh structural validation without repeating multi-hour inference.",
+    "The native attention log reports a nonzero sliding-vs-full difference because the two configurations intentionally use different causal/window masks; the reference path and test assertions passed."
+  ],
+  "notes": [
+    "No runtime or model source files were changed by F00.",
+    "The one deprecation warning is from the installed Starlette/httpx test client integration and does not affect correctness results."
+  ]
+}
