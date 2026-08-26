@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "task_id": "F02",
+  "started_at": "2026-08-26T19:56:00.0000000Z",
+  "finished_at": "2026-08-26T20:06:00.0000000Z",
+  "status": "pass",
+  "git_commit": null,
+  "sources": [],
+  "commands": [
+    {
+      "argv": "python scripts/taskctl.py start F02",
+      "exit_code": 0,
+      "stdout_file": null,
+      "stderr_file": null
+    },
+    {
+      "argv": "python -c <verify summary source inventory and F01 thermal artifact>",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F02/source_inventory.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python artifacts/runs/20260827T022000Z_F02/validate_f02.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F02/report_validation.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python -c <load FINAL_REPORT inputs and evidence JSON documents>",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F02/json_validation.log",
+      "stderr_file": null
+    }
+  ],
+  "files_changed": [
+    "FINAL_REPORT.md",
+    "benchmarks/final/summary.json",
+    "artifacts/runs/20260827T022000Z_F02/"
+    ,"artifacts/runs/20260827T022000Z_F02/validate_f02.py"
+  ],
+  "verification": [
+    {
+      "name": "Report generator references raw artifacts.",
+      "passed": true,
+      "detail": "FINAL_REPORT.md and benchmarks/final/summary.json link the model/config/H40M checksums, memory plan, locked upstream refs, F00 correctness evidence, F01 sustained benchmark, optimization measurements and raw F01 request/telemetry bundle. The report validation command resolved every listed source path."
+    },
+    {
+      "name": "No headline metric lacks a source artifact.",
+      "passed": true,
+      "detail": "All final throughput, duration, RSS, memory, swap, thermal, OOM, cache, flash, optimization speedup and bottleneck values are sourced from benchmarks/final/sustained_30m.json, benchmarks/proof/long_decode.json, benchmarks/optimization/*.json or the linked raw task evidence. Both machine-readable summary artifacts passed JSON validation."
+    }
+  ],
+  "metrics": {
+    "final_report": "FINAL_REPORT.md",
+    "summary": "benchmarks/final/summary.json",
+    "runtime_commit": "17271011",
+    "final_classification": "proof-only",
+    "headline_tok_s": 0.03129973474801061,
+    "headline_duration_seconds": 1885,
+    "headline_peak_rss_kib": 68976,
+    "headline_request_failures": 0,
+    "optimization_artifacts_referenced": 8,
+    "raw_task_evidence_artifacts_referenced": 2,
+    "locked_upstream_manifest_referenced": true
+  },
+  "artifacts": [
+    "FINAL_REPORT.md",
+    "benchmarks/final/summary.json",
+    "artifacts/runs/20260827T022000Z_F02/evidence.json",
+    "artifacts/runs/20260827T022000Z_F02/report_validation.log",
+    "artifacts/runs/20260827T022000Z_F02/json_validation.log",
+    "artifacts/runs/20260827T022000Z_F02/source_inventory.log",
+    "benchmarks/final/correctness.json",
+    "benchmarks/final/sustained_30m.json",
+    "artifacts/runs/20260827T022000Z_F00/evidence.json",
+    "artifacts/runs/20260827T022000Z_F01/evidence.json",
+    "third_party/LOCK.yaml",
+    "artifacts/model/checksums.txt",
+    "artifacts/model/source/config.json",
+    "artifacts/model/memory_plan.json",
+    "benchmarks/proof/long_decode.json",
+    "benchmarks/optimization/affinity_thermal.json",
+    "benchmarks/optimization/cache_policies.json",
+    "benchmarks/optimization/double_buffer.json",
+    "benchmarks/optimization/dense_output.json",
+    "benchmarks/optimization/windowing.json",
+    "benchmarks/optimization/prefetch.json",
+    "benchmarks/optimization/repacking.json"
+  ],
+  "limitations": [
+    "The report records proof-only performance honestly; it does not claim the P0/P1/P2 thresholds.",
+    "F01 is a repeated one-token workload for more than 30 minutes; F00 and P01 provide the separate correctness and short stable-generation evidence.",
+    "Stock Android denied zram and PSI reads; raw denial output is linked and not converted into a false zero."
+  ],
+  "notes": [
+    "No runtime/model implementation files were changed by F02.",
+    "The report preserves negative optimization results and identifies CPU expert compute as the measured dominant bottleneck."
+  ]
+}

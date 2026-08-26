@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "task": "F02",
+  "status": "pass",
+  "runtime_commit": "17271011",
+  "model": {
+    "name": "openai/gpt-oss-20b",
+    "upstream_commit": "6cee5e81ee83917806bbde320786a8fb61efebee",
+    "harmony_package": "openai-harmony==0.0.8",
+    "harmony_commit": "abd677f7ac962629c808197caa1feb9e3e95d2b0",
+    "layers": 24,
+    "hidden_size": 2880,
+    "query_heads": 64,
+    "key_value_heads": 8,
+    "head_dim": 64,
+    "experts": 32,
+    "experts_per_token": 4,
+    "vocab_size": 201088,
+    "sliding_window": 128,
+    "source_inventory_sha256": "53c467455f35dfd00438ae0d68e1899d432d21c71b1ebc058713a450765896fc",
+    "h40m_manifest_sha256": "b7c74670360e0ed8655d39da60a7464866a607004ec574d604b82b5b867e0391",
+    "production_expert_arena_sha256": "2b1607bf3ea4f164c4df2f78f260bb6b9681c31284c103f10e999cf4cb6c3456"
+  },
+  "device": {
+    "model": "Infinix X6528 / Hot 40i",
+    "soc": "Unisoc T606",
+    "android": "13",
+    "online_cpus": "0-7",
+    "little_cpus": "0-5 Cortex-A55",
+    "big_cpus": "6-7 Cortex-A75",
+    "governor": "schedutil",
+    "affinity_mask": "ff",
+    "dense_threads": 6,
+    "adb_transport": "192.168.100.189:5555",
+    "fallback_usb_serial": "112193741U000563"
+  },
+  "memory": {
+    "safe_rss_budget_bytes": 646080512,
+    "safe_rss_budget_kib": 630938,
+    "initial_plan_bytes": 331306112,
+    "initial_plan_headroom_bytes": 314774400,
+    "minimum_expert_cache_bytes": 52945920,
+    "production_output_head_chunk_rows": 8192,
+    "production_io_overlap": true
+  },
+  "performance": {
+    "classification": "proof-only",
+    "p0_threshold_tok_s": 0.25,
+    "f01_wall_tok_s": 0.03129973474801061,
+    "f01_mean_seconds_per_token": 31.389830508474578,
+    "p02_512_tok_s": 0.035929,
+    "o00_speedup": 1.016554,
+    "o01_speedup": 1.004891944,
+    "o07_six_worker_tok_s": 0.039292924,
+    "o07_speedup_vs_one_worker": 1.121930854,
+    "f01_observed_seconds": 1885,
+    "f01_requests": 59
+  },
+  "stability": {
+    "request_failures": 0,
+    "completed_requests": 59,
+    "peak_decoder_rss_kib": 68976,
+    "mem_available_min_kib": 1411244,
+    "swap_free_min_kib": 659236,
+    "thermal_status_max": 0,
+    "oom_kill_counter": 0,
+    "raw_artifact": "benchmarks/final/sustained_30m.json"
+  },
+  "bottleneck": {
+    "primary": "cpu_expert_compute",
+    "evidence": "benchmarks/proof/long_decode.json",
+    "expert_compute_mean_ms": 248.472,
+    "expert_read_mean_ms": 7.037
+  },
+  "rejected_experiments": [
+    {"task": "O02", "reason": "Approximate expert reuse changed logits materially; exact reuse had no net benefit.", "artifact": "benchmarks/optimization/windowing.json"},
+    {"task": "O03", "reason": "Cross-layer predictor was not retained because later reads were already hidden and first-choice accuracy was low.", "artifact": "benchmarks/optimization/prefetch.json"},
+    {"task": "O04", "reason": "Expert arena v2 did not improve end-to-end throughput.", "artifact": "benchmarks/optimization/repacking.json"},
+    {"task": "O06", "reason": "Fixed-performance mode lost the short affinity screen.", "artifact": "benchmarks/optimization/affinity_thermal.json"}
+  ],
+  "sources": [
+    "FINAL_REPORT.md",
+    "artifacts/model/checksums.txt",
+    "artifacts/model/source/config.json",
+    "artifacts/model/memory_plan.json",
+    "benchmarks/final/correctness.json",
+    "benchmarks/final/sustained_30m.json",
+    "artifacts/runs/20260827T022000Z_F00/evidence.json",
+    "artifacts/runs/20260827T022000Z_F01/evidence.json",
+    "third_party/LOCK.yaml"
+  ]
+}
