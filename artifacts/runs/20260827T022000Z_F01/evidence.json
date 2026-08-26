@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "task_id": "F01",
+  "started_at": "2026-08-26T19:10:36.455418+00:00",
+  "finished_at": "2026-08-26T19:55:00.0000000Z",
+  "status": "pass",
+  "git_commit": null,
+  "sources": [],
+  "commands": [
+    {
+      "argv": "C:\\mobile-remote-tools\\platform-tools\\adb.exe devices -l",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F01/adb_devices_wifi.txt",
+      "stderr_file": null
+    },
+    {
+      "argv": "adb -s 192.168.100.189:5555 SIGTERM old service; launch clean inference_service_a00 with H40_THREADS=6 H40_IO_OVERLAP=1",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F01/f01_service.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "curl http://127.0.0.1:18080/health and curl http://127.0.0.1:18080/metrics",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F01/f01_health_start.http",
+      "stderr_file": null
+    },
+    {
+      "argv": "adb -s 192.168.100.189:5555 shell /data/local/tmp/h40m/f01_sustained.sh",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F01/f01_runner.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "adb pull /data/local/tmp/h40m/f01_raw.tar artifacts/runs/20260827T022000Z_F01/f01_raw.tar; tar -xf f01_raw.tar",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F01/f01_raw_collection.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "python artifacts/runs/20260827T022000Z_F01/analyze_f01.py",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F01/analysis.log",
+      "stderr_file": null
+    },
+    {
+      "argv": "adb -s 192.168.100.189:5555 final vmstat/zram/PSI/thermal/battery/meminfo/logcat snapshots",
+      "exit_code": 0,
+      "stdout_file": "artifacts/runs/20260827T022000Z_F01/f01_vmstat_final.txt",
+      "stderr_file": "artifacts/runs/20260827T022000Z_F01/f01_logcat_final.txt"
+    }
+  ],
+  "files_changed": [
+    "benchmarks/final/sustained_30m.json",
+    "artifacts/runs/20260827T022000Z_F01/"
+  ],
+  "verification": [
+    {
+      "name": "No OOM/crash/unbounded RSS.",
+      "passed": true,
+      "detail": "The 1,885-second run completed 59 of 59 inference requests with zero request failures. The service PID 20742 remained alive after completion. Decoder peak RSS was 68,976 KiB against the explicit 630,938 KiB budget; service RSS HWM was 3,044 KiB. The vmstat oom_kill counter was 0 and no inference-service/minimal-decoder crash, fatal or OOM lines were found in the final logcat scan."
+    },
+    {
+      "name": "Metrics cover full duration.",
+      "passed": true,
+      "detail": "The device runner recorded 1,885 observed seconds, 59 request payloads, 59 per-request metrics payloads and 61 telemetry JSONL samples. Every response was HTTP 200 with decoder status pass, 24 layers, deterministic token 366 and 31-32 second request timing. The time series includes decoder flash/cache/prefetch/RSS values plus MemAvailable, SwapFree, CPU policy frequencies, thermal status and battery temperature."
+    }
+  ],
+  "metrics": {
+    "device_serial": "192.168.100.189:5555",
+    "adb_transport": "wifi_adb",
+    "service_pid": 20742,
+    "configured_duration_seconds": 1860,
+    "observed_duration_seconds": 1885,
+    "request_count": 59,
+    "successful_requests": 59,
+    "request_failures": 0,
+    "telemetry_samples": 61,
+    "tokens_emitted": 59,
+    "emitted_token_id": 366,
+    "mean_seconds_per_token": 31.389830508474578,
+    "wall_tokens_per_second": 0.03129973474801061,
+    "request_compute_tokens_per_second": 0.03185745140388769,
+    "peak_decoder_rss_kib": 68976,
+    "rss_budget_kib": 630938,
+    "rss_headroom_kib": 561962,
+    "service_rss_kib_final": 2232,
+    "service_hwm_kib": 3044,
+    "mem_available_min_kib": 1411244,
+    "mem_available_final_kib": 1604884,
+    "swap_total_kib": 2114396,
+    "swap_free_min_kib": 659236,
+    "swap_free_final_kib": 861156,
+    "dense_flash_bytes_per_token": 2437387008,
+    "expert_flash_bytes_per_token": 1270702080,
+    "total_flash_bytes_per_token": 3708089088,
+    "cache_hits_total": 0,
+    "cache_misses_total": 5664,
+    "cache_hit_rate": 0.0,
+    "prefetch_read_ms_per_token": 2852.3374924745763,
+    "thermal_status_max": 0,
+    "battery_temperature_deci_c_max": 430,
+    "oom_kill_counter": 0,
+    "final_service_inference_requests": 59,
+    "final_service_completed_requests": 59,
+    "final_service_failures": 0
+  },
+  "artifacts": [
+    "benchmarks/final/sustained_30m.json",
+    "artifacts/runs/20260827T022000Z_F01/evidence.json",
+    "artifacts/runs/20260827T022000Z_F01/thermal.jsonl",
+    "artifacts/runs/20260827T022000Z_F01/f01_raw.tar",
+    "artifacts/runs/20260827T022000Z_F01/f01_requests.log",
+    "artifacts/runs/20260827T022000Z_F01/f01_thermal.jsonl",
+    "artifacts/runs/20260827T022000Z_F01/f01_metrics_final.http",
+    "artifacts/runs/20260827T022000Z_F01/f01_health_final.http",
+    "artifacts/runs/20260827T022000Z_F01/f01_service.log",
+    "artifacts/runs/20260827T022000Z_F01/f01_runner.log",
+    "artifacts/runs/20260827T022000Z_F01/analysis.log",
+    "artifacts/runs/20260827T022000Z_F01/analyzer_pycompile.log",
+    "artifacts/runs/20260827T022000Z_F01/adb_devices_wifi.txt",
+    "artifacts/runs/20260827T022000Z_F01/f01_raw_collection.log",
+    "artifacts/runs/20260827T022000Z_F01/f01_vmstat_final.txt",
+    "artifacts/runs/20260827T022000Z_F01/f01_zram_mm_stat_final.txt",
+    "artifacts/runs/20260827T022000Z_F01/f01_zram_bd_stat_final.txt",
+    "artifacts/runs/20260827T022000Z_F01/f01_psi_final.txt",
+    "artifacts/runs/20260827T022000Z_F01/f01_thermal_final.txt",
+    "artifacts/runs/20260827T022000Z_F01/f01_battery_final.txt",
+    "artifacts/runs/20260827T022000Z_F01/f01_meminfo_service_final.txt",
+    "artifacts/runs/20260827T022000Z_F01/f01_logcat_final.txt"
+  ],
+  "limitations": [
+    "Stock Android shell access denied zram mm_stat/bd_stat and PSI reads; the denied probes and SELinux audit evidence are retained.",
+    "The thermal HAL exposed status 0 but no readable sensor list; battery temperature was available through dumpsys battery in deci-degrees Celsius.",
+    "The repeated workload emits one deterministic token per request, so this is sustained service/decode stability evidence rather than a continuous multi-token generation benchmark.",
+    "The final logcat contains unrelated system warnings; the analyzer only treats inference_service_a00/minimal_decoder lines containing crash, fatal, killed or OOM as task failures."
+  ],
+  "notes": [
+    "The run used the final production service configuration H40_THREADS=6 and H40_IO_OVERLAP=1 over verified Wi-Fi ADB.",
+    "The old service instance with two malformed probe failures was discarded before the final clean zero-counter run.",
+    "All raw request and per-request metrics payloads are included in f01_raw.tar and extracted alongside this evidence."
+  ]
+}

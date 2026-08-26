@@ -1,0 +1,6 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 188
+Connection: close
+
+{"requests":110,"inference_requests":53,"completed_inference_requests":53,"failures":0,"last_peak_rss_kib":55724,"service_rss_kib":2544,"service_peak_rss_kib":3044,"rss_budget_kib":630938}

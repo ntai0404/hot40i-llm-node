@@ -1,0 +1,2 @@
+/data/local/tmp/h40m/f01_raw.tar: 1 file pulled, 0 skipped. 2.6 MB/s (262144 bytes in 0.095s)
+tar -xf artifacts/runs/20260827T022000Z_F01/f01_raw.tar completed with exit code 0.

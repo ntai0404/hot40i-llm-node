@@ -1,0 +1,37 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 852
+Connection: close
+
+{
+  "schema_version": 1,
+  "status": "pass",
+  "mode": "single_token_full_24_layer_h40m_decode",
+  "input_tokens": 1,
+  "layers_run": 24,
+  "emitted_token_id": 366,
+  "emitted_token_text": null,
+  "emitted_token_logit": 10.402,
+  "dense_flash_bytes": 2437387008,
+  "expert_flash_bytes": 1270702080,
+  "cache_hits": 0,
+  "cache_misses": 96,
+  "cache_policy": "per_layer_hotset",
+  "expert_reuse_mode": "off",
+  "expert_reuse_window": 0,
+  "expert_reuse_hits": 0,
+  "expert_reuse_misses": 0,
+  "peak_rss_kib": 55688,
+  "io_overlap_enabled": true,
+  "prefetched_experts": 72,
+  "prefetch_read_ns": 2737263770,
+  "prefetch_wait_ns": 67575,
+  "embedding_ns": 1104731,
+  "dense_matvec_ns": 3631228496,
+  "attention_ns": 1612845,
+  "moe_ns": 24954076752,
+  "lm_head_ns": 2632070075,
+  "dense_threads": 6,
+  "lm_head_chunk_rows": 8192,
+  "elapsed_ms": 31373
+}

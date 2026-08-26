@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "task": "F01",
+  "status": "pass",
+  "device": {
+    "serial": "192.168.100.189:5555",
+    "model": "Infinix X6528",
+    "adb_transport": "wifi_adb",
+    "service_pid": 20742
+  },
+  "duration": {
+    "required_seconds": 1800,
+    "configured_seconds": 1860,
+    "observed_seconds": 1885,
+    "request_count": 59,
+    "telemetry_samples": 61,
+    "request_success_count": 59,
+    "request_failure_count": 0
+  },
+  "throughput": {
+    "tokens_emitted": 59,
+    "tokens_per_second_wall": 0.03129973474801061,
+    "tokens_per_second_request_compute": 0.03185745140388769,
+    "seconds_per_token_mean": 31.389830508474578,
+    "seconds_per_token_min": 31,
+    "seconds_per_token_max": 32
+  },
+  "correctness": {
+    "all_http_status_pass": true,
+    "all_layers_run_24": true,
+    "emitted_token_ids": [
+      366
+    ],
+    "emitted_token_agreement": true,
+    "emitted_logit_agreement": true
+  },
+  "decoder": {
+    "dense_threads": [
+      6
+    ],
+    "io_overlap_enabled": [
+      true
+    ],
+    "lm_head_chunk_rows": [
+      8192
+    ],
+    "peak_decoder_rss_kib": 68976,
+    "rss_budget_kib": 630938,
+    "rss_headroom_kib": 561962,
+    "flash_bytes_total": 218777256192,
+    "flash_bytes_per_token": 3708089088.0,
+    "dense_flash_bytes_per_token": 2437387008.0,
+    "expert_flash_bytes_per_token": 1270702080.0,
+    "cache_hits_total": 0,
+    "cache_misses_total": 5664,
+    "cache_hit_rate": 0.0,
+    "prefetch_read_ns_total": 168287912056,
+    "prefetch_read_ms_per_token": 2852.3374924745763
+  },
+  "system_telemetry": {
+    "service_rss_kib_min": 2232,
+    "service_rss_kib_max": 3044,
+    "service_hwm_kib_max": 3044,
+    "mem_available_kib_min": 1411244,
+    "mem_available_kib_final": 1613984,
+    "swap_free_kib_min": 659236,
+    "swap_free_kib_final": 835564,
+    "swap_total_kib": 2114396,
+    "cpu_frequency_khz_min": 614400,
+    "cpu_frequency_khz_max": 1612000,
+    "thermal_status_max": 0,
+    "battery_temperature_deci_c_min": 376,
+    "battery_temperature_deci_c_max": 430,
+    "oom_kill_counter": 0,
+    "inference_logcat_crash_or_oom_matches": 0,
+    "zram_mm_stat": "zram_mm_stat_unavailable",
+    "zram_bd_stat": "zram_bd_stat_unavailable",
+    "psi": "==== /proc/pressure/memory\r\nunavailable\r\n==== /proc/pressure/io\r\nunavailable"
+  },
+  "service_metrics_final": {
+    "requests": 123,
+    "inference_requests": 59,
+    "completed_inference_requests": 59,
+    "failures": 0,
+    "last_peak_rss_kib": 55736,
+    "service_rss_kib": 2232,
+    "service_peak_rss_kib": 3044,
+    "rss_budget_kib": 630938
+  },
+  "raw_artifacts": {
+    "thermal": "artifacts/runs/20260827T022000Z_F01/thermal.jsonl",
+    "request_log": "artifacts/runs/20260827T022000Z_F01/f01_requests.log",
+    "raw_bundle": "artifacts/runs/20260827T022000Z_F01/f01_raw.tar",
+    "final_metrics": "artifacts/runs/20260827T022000Z_F01/f01_metrics_final.http",
+    "final_health": "artifacts/runs/20260827T022000Z_F01/f01_health_final.http"
+  },
+  "limitations": [
+    "Stock Android shell access denied zram mm_stat/bd_stat and PSI reads; the denied probes are retained verbatim.",
+    "Battery temperature is reported by dumpsys battery in deci-degrees Celsius; thermal HAL exposes status but no readable sensor list.",
+    "Each request emits one deterministic token, so F01 measures repeated service usability and decode stability rather than a continuous multi-token stream."
+  ]
+}
